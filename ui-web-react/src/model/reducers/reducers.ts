@@ -1,35 +1,74 @@
-import { combineReducers } from "redux";
-import { LOG_IN, AUTHENTICATE } from "../actions/actions";
+import { AnyAction, combineReducers } from "redux";
+import { News, Races, StoredState, User } from "../types/datatypes";
+import {
+  NEWS_LOADED,
+  NEWS_REQUESTED,
+  NewsLoadedAction,
+  RACES_LOADED,
+  RACES_REQUESTED,
+  RacesLoadedAction
+} from "../actions/actions";
 
-const INITIAL_USER_INFO = {
-  user: undefined,
-  email: undefined,
-  role: undefined
+export const INITIAL_USER: User = {
+  isFetching: false,
+  info: {
+    id: 1,
+    name: "Dima"
+  }
 };
 
-function userInfo(state: any = INITIAL_USER_INFO, action: any) {
+export const INITIAL_NEWS: News = {
+  isFetching: false,
+  items: []
+};
+
+export const INITIAL_RACES: Races = {
+  isFetching: false,
+  items: []
+};
+
+function userReducer(state: User = INITIAL_USER, action: AnyAction) {
+  return state;
+}
+
+function newsReducer(state: News = INITIAL_NEWS, action: AnyAction) {
   switch (action.type) {
-    case AUTHENTICATE:
+    case NEWS_REQUESTED:
       return {
-        ...state
+        isFetching: true,
+        items: INITIAL_NEWS.items
+      };
+    case NEWS_LOADED:
+      return {
+        isFetching: false,
+        items: (action as NewsLoadedAction).items
       };
     default:
       return state;
   }
 }
 
-function login(state: boolean = false, action: any) {
+function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
   switch (action.type) {
-    case LOG_IN:
-      return state;
+    case RACES_REQUESTED:
+      return {
+        isFetching: true,
+        items: INITIAL_RACES.items
+      };
+    case RACES_LOADED:
+      return {
+        isFetching: false,
+        items: (action as RacesLoadedAction).items
+      };
     default:
       return state;
   }
 }
 
-const raceLogAppState = combineReducers({
-  userInfo,
-  login
+const raceLogAppState = combineReducers<StoredState>({
+  user: userReducer,
+  news: newsReducer,
+  races: racesReducer
 });
 
 export default raceLogAppState;

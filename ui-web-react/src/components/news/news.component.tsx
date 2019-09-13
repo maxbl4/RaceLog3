@@ -5,10 +5,14 @@ import { NewsItemComponent } from "./newsitem.component";
 
 export type NewsComponentProps = {
   news: News;
-  onItemSelect: any;
+  onDataReload: any;
 };
 
 export class NewsComponent extends React.Component<NewsComponentProps> {
+  componentDidMount(): void {
+    this.props.onDataReload();
+  }
+
   render() {
     if (this.props.news.isFetching) {
       return <FetchingComponent />;
@@ -16,10 +20,7 @@ export class NewsComponent extends React.Component<NewsComponentProps> {
       return (
         <>
           {this.props.news.items.map(item => (
-            <NewsItemComponent
-              item={item}
-              onItemSelect={this.props.onItemSelect}
-            />
+            <NewsItemComponent item={item} />
           ))}
         </>
       );

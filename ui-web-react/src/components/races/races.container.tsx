@@ -1,22 +1,22 @@
 import { StoredState } from "../../model/types/datatypes";
-import { NewsComponent } from "./news.component";
+import { RacesComponent } from "./races.component";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { newsRequested } from "../../model/actions/actions";
+import { racesRequested } from "../../model/actions/actions";
 
 const mapStateToProps = (state: StoredState) => {
   return {
-    news: state.news
+    races: state.races
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onDataReload: () => dispatch(newsRequested())
+  onDataReload: () => dispatch(racesRequested())
 });
 
-const NewsContainer = connect(
+const RacesContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(NewsComponent);
+)(RacesComponent);
 
-export default NewsContainer;
+export default RacesContainer;
