@@ -1,0 +1,1 @@
+export const BIKE_RIDER = "./bike-rider_1280.jpg";
