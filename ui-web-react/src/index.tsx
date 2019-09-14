@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import "./index.scss";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-import { createStore, applyMiddleware, AnyAction } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import raceLogAppState from "./model/reducers/reducers";
 import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
@@ -11,7 +11,7 @@ import { StoredState } from "./model/types/datatypes";
 import raceLogSaga from "./model/sagas/sagas";
 
 const sagaMiddleware = createSagaMiddleware();
-const store = createStore<StoredState, AnyAction, {}, {}>(
+const store = createStore<StoredState, any, {}, {}>(
   raceLogAppState,
   applyMiddleware(sagaMiddleware)
 );
