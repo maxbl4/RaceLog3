@@ -1,5 +1,6 @@
 import { AnyAction } from "redux";
 import { NewsItem, RaceItem } from "../types/datatypes";
+import { Optional, some } from "../utils/optional";
 
 export const NEWS_REQUESTED = "NEWS_REQUESTED";
 export const NEWS_LOADED = "NEWS_LOADED";
@@ -9,12 +10,12 @@ export const RACES_LOADED = "RACES_LOADED";
 
 export type NewsRequestedAction = AnyAction;
 export type NewsLoadedAction = AnyAction & {
-  items: NewsItem[];
+  items: Optional<NewsItem[]>;
 };
 
 export type RacesRequestedAction = AnyAction;
 export type RacesLoadedAction = AnyAction & {
-  items: RaceItem[];
+  items: Optional<RaceItem[]>;
 };
 
 export const newsRequested = (): NewsRequestedAction => ({
@@ -22,7 +23,7 @@ export const newsRequested = (): NewsRequestedAction => ({
 });
 export const newsLoaded = (items: NewsItem[]): NewsLoadedAction => ({
   type: NEWS_LOADED,
-  items: items
+  items: some(items)
 });
 
 export const racesRequested = (): RacesRequestedAction => ({
@@ -30,5 +31,5 @@ export const racesRequested = (): RacesRequestedAction => ({
 });
 export const racesLoaded = (items: RaceItem[]): RacesLoadedAction => ({
   type: RACES_LOADED,
-  items: items
+  items: some(items)
 });

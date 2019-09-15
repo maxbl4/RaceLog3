@@ -17,13 +17,17 @@ export class RaceListComponent extends React.Component<RaceListComponentProps> {
     if (this.props.races.isFetching) {
       return <FetchingComponent />;
     } else {
-      return (
-        <>
-          {this.props.races.items.map(item => (
-            <RaceItemComponent key={item.id} item={item} />
-          ))}
-        </>
-      );
+      if (this.props.races.items.isNone()) {
+        return <div>There is data for races</div>;
+      } else {
+        return (
+          <>
+            {this.props.races.items.getOrElse([]).map(item => (
+              <RaceItemComponent key={item.id} item={item} />
+            ))}
+          </>
+        );
+      }
     }
   }
 }

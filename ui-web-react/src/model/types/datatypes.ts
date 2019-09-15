@@ -1,3 +1,5 @@
+import { Optional } from "../utils/optional"
+
 export type StoredState = {
     user: User;
     news: News;
@@ -13,15 +15,15 @@ export type Fetchable = {
 // Storing data in state
 // ----------------------------------------------------------------------
 export type User = Fetchable & {
-    info: UserInfo | undefined;
+    info: Optional<UserInfo>;
 }
 
 export type News = Fetchable & {
-    items: NewsItem[];
+    items: Optional<NewsItem[]>;
 }
 
 export type Races = Fetchable & {
-    items: RaceItem[];
+    items: Optional<RaceItem[]>;
 }
 
 // ----------------------------------------------------------------------

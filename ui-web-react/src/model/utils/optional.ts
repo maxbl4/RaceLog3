@@ -104,6 +104,6 @@ class None<T> implements Optional<T> {
 
 }
 
-export const none: None<never> = new None<never>();
+export const none: None<any> = new None<any>();
 export const some = <T> (value: T) => new Some<T>(value);
-// export const fromNullable = <T>(value?: T): Optional<T> => value ? some(value) : none;
+export const fromNullable = <T>(value?: T): Optional<T> => value ? some(value) : none;

@@ -2,13 +2,15 @@ import React from "react";
 import { Nav, Navbar, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { UserInfo } from "../../model/types/datatypes";
+import { Optional } from "../../model/utils/optional";
 
 export type HeaderComponentProps = {
-  userInfo: UserInfo | undefined;
+  userInfo: Optional<UserInfo>;
 };
 
 export class HeaderComponent extends React.Component<HeaderComponentProps> {
   render() {
+    const info = this.props.userInfo.getNullable();
     return (
       <>
         <Navbar bg="dark" variant="dark">
@@ -21,10 +23,8 @@ export class HeaderComponent extends React.Component<HeaderComponentProps> {
             </Nav.Link>
           </Nav>
           <Navbar.Collapse className="justify-content-end">
-            {this.props.userInfo ? (
-              <Navbar.Text>
-                Signed in as: <a href="#login">{this.props.userInfo.name}</a>
-              </Navbar.Text>
+            {info ? (
+              <Navbar.Text>Signed in as: {info.name}</Navbar.Text>
             ) : (
               <Button variant="success">Войти</Button>
             )}

@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 const mapStateToProps = (state: StoredState) => {
   return {
-    userInfo: state.user ? state.user.info : undefined
+    userInfo: state.user.info
   };
 };
 

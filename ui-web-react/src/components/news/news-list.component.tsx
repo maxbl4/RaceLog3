@@ -17,13 +17,17 @@ export class NewsListComponent extends React.Component<NewsListComponentProps> {
     if (this.props.news.isFetching) {
       return <FetchingComponent />;
     } else {
-      return (
-        <>
-          {this.props.news.items.map(item => (
-            <NewsItemComponent key={item.id} item={item} />
-          ))}
-        </>
-      );
+      if (this.props.news.items.isNone()) {
+        return <div>There is data for races</div>;
+      } else {
+        return (
+          <>
+            {this.props.news.items.getOrElse([]).map(item => (
+              <NewsItemComponent key={item.id} item={item} />
+            ))}
+          </>
+        );
+      }
     }
   }
 }

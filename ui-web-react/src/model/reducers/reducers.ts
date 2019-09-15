@@ -8,20 +8,21 @@ import {
   RACES_REQUESTED,
   RacesLoadedAction
 } from "../actions/actions";
+import { none } from "../utils/optional";
 
 export const INITIAL_USER: User = {
   isFetching: false,
-  info: undefined
+  info: none
 };
 
 export const INITIAL_NEWS: News = {
   isFetching: false,
-  items: []
+  items: none
 };
 
 export const INITIAL_RACES: Races = {
   isFetching: false,
-  items: []
+  items: none
 };
 
 function userReducer(state: User = INITIAL_USER, action: AnyAction) {
