@@ -1,12 +1,12 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 
-interface RaceInfoParams {
+interface NewsInfoParams {
   id: string;
 }
 
-export class RaceInfoComponent extends React.Component<
-  RouteComponentProps<RaceInfoParams>
+export class NewsInfoComponent extends React.Component<
+  RouteComponentProps<NewsInfoParams>
 > {
   componentDidMount() {
     // request data with this.props.match.params.id;
@@ -15,7 +15,7 @@ export class RaceInfoComponent extends React.Component<
   render() {
     return (
       <div>
-        Here should be info about race with id = {this.props.match.params.id}
+        Here should be info about news with id = {this.props.match.params.id}
       </div>
     );
   }
