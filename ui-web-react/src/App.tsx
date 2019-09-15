@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.scss";
-import { HeaderComponent } from "./components/header/header.component";
+import HeaderContainer from "./components/header/header.container";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { HomeComponent } from "./components/home/home.component";
 import { LoginComponent } from "./components/login/login.component";
@@ -10,7 +10,7 @@ const App: React.FC = () => {
   return (
     <>
       <Router>
-        <HeaderComponent />
+        <HeaderContainer />
         <div>
           <Route exact path={DEFAULT} component={HomeComponent} />
           <Route path={LOGIN} component={LoginComponent} />

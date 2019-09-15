@@ -1,8 +1,13 @@
 import React from "react";
-import { Nav, Navbar } from "react-bootstrap";
+import { Nav, Navbar, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { UserInfo } from "../../model/types/datatypes";
 
-export class HeaderComponent extends React.Component {
+export type HeaderComponentProps = {
+  userInfo: UserInfo | undefined;
+};
+
+export class HeaderComponent extends React.Component<HeaderComponentProps> {
   render() {
     return (
       <>
@@ -16,9 +21,13 @@ export class HeaderComponent extends React.Component {
             </Nav.Link>
           </Nav>
           <Navbar.Collapse className="justify-content-end">
-            <Navbar.Text>
-              Signed in as: <a href="#login">Admin</a>
-            </Navbar.Text>
+            {this.props.userInfo ? (
+              <Navbar.Text>
+                Signed in as: <a href="#login">{this.props.userInfo.name}</a>
+              </Navbar.Text>
+            ) : (
+              <Button variant="success">Войти</Button>
+            )}
           </Navbar.Collapse>
         </Navbar>
       </>

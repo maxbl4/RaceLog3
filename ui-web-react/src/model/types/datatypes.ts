@@ -13,7 +13,7 @@ export type Fetchable = {
 // Storing data in state
 // ----------------------------------------------------------------------
 export type User = Fetchable & {
-    info: UserInfo;
+    info: UserInfo | undefined;
 }
 
 export type News = Fetchable & {

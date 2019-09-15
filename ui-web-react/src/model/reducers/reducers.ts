@@ -11,10 +11,7 @@ import {
 
 export const INITIAL_USER: User = {
   isFetching: false,
-  info: {
-    id: 1,
-    name: "Dima"
-  }
+  info: undefined
 };
 
 export const INITIAL_NEWS: News = {
