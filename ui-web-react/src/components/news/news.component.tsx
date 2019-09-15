@@ -20,7 +20,7 @@ export class NewsComponent extends React.Component<NewsComponentProps> {
       return (
         <>
           {this.props.news.items.map(item => (
-            <NewsItemComponent item={item} />
+            <NewsItemComponent key={item.id} item={item} />
           ))}
         </>
       );

@@ -20,7 +20,7 @@ export class RacesComponent extends React.Component<RacesComponentProps> {
       return (
         <>
           {this.props.races.items.map(item => (
-            <RaceItemComponent item={item} />
+            <RaceItemComponent key={item.id} item={item} />
           ))}
         </>
       );
