@@ -1,6 +1,6 @@
 import React from "react";
 import { RaceItem } from "../../model/types/datatypes";
-import { Nav, Row, Col } from "react-bootstrap";
+import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { DELIMITER, RACES } from "../../model/routing/paths";
 
@@ -16,11 +16,9 @@ export class RaceItemComponent extends React.Component<RaceItemProps> {
           <span>{new Date(this.props.item.date).toDateString()}</span>
         </Col>
         <Col>
-          <Nav.Link>
-            <Link to={RACES + DELIMITER + this.props.item.id}>
-              {this.props.item.name}
-            </Link>
-          </Nav.Link>
+          <Link to={RACES + DELIMITER + this.props.item.id}>
+            {this.props.item.name}
+          </Link>
         </Col>
       </Row>
     );
