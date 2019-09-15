@@ -1,5 +1,5 @@
 import { StoredState } from "../../model/types/datatypes";
-import { RacesComponent } from "./races.component";
+import { RaceListComponent } from "./race-list.component";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { racesRequested } from "../../model/actions/actions";
@@ -14,9 +14,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onDataReload: () => dispatch(racesRequested())
 });
 
-const RacesContainer = connect(
+const RaceListContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(RacesComponent);
+)(RaceListComponent);
 
-export default RacesContainer;
+export default RaceListContainer;

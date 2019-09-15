@@ -16,6 +16,6 @@ export class RaceInfoComponent extends React.Component<RaceInfoProps> {
   }
 
   render() {
-    return <div>News not found!</div>;
+    return <div>Race Info not found!</div>;
   }
 }

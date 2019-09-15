@@ -1,14 +1,14 @@
 import React from "react";
 import { Races } from "../../model/types/datatypes";
 import { FetchingComponent } from "../fetching/fetching.component";
-import { RaceItemComponent } from "./raceitem.component";
+import { RaceItemComponent } from "./race-item.component";
 
-export type RacesComponentProps = {
+export type RaceListComponentProps = {
   races: Races;
   onDataReload: any;
 };
 
-export class RacesComponent extends React.Component<RacesComponentProps> {
+export class RaceListComponent extends React.Component<RaceListComponentProps> {
   componentDidMount(): void {
     this.props.onDataReload();
   }

@@ -1,6 +1,6 @@
 import React from "react";
-import NewsContainer from "../news/news.container";
-import RacesContainer from "../races/races.container";
+import NewsListContainer from "../news/news-list.container";
+import RaceListContainer from "../races/race-list.container";
 import { Row, Col } from "react-bootstrap";
 
 export class HomeComponent extends React.Component {
@@ -12,10 +12,10 @@ export class HomeComponent extends React.Component {
         </Row>
         <Row>
           <Col>
-            <NewsContainer />
+            <NewsListContainer />
           </Col>
           <Col>
-            <RacesContainer />
+            <RaceListContainer />
           </Col>
         </Row>
       </>

@@ -1,5 +1,5 @@
 import { StoredState } from "../../model/types/datatypes";
-import { NewsComponent } from "./news.component";
+import { NewsListComponent } from "./news-list.component";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { newsRequested } from "../../model/actions/actions";
@@ -14,9 +14,9 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   onDataReload: () => dispatch(newsRequested())
 });
 
-const NewsContainer = connect(
+const NewsListContainer = connect(
   mapStateToProps,
   mapDispatchToProps
-)(NewsComponent);
+)(NewsListComponent);
 
-export default NewsContainer;
+export default NewsListContainer;
