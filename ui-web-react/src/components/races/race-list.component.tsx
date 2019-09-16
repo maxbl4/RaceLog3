@@ -23,7 +23,7 @@ export class RaceListComponent extends React.Component<RaceListComponentProps> {
         return (
           <>
             {this.props.races.items.getOrElse([]).map(item => (
-              <RaceItemComponent key={item.id} item={item} />
+              <RaceItemComponent key={item.id.getOrUndefined()} item={item} />
             ))}
           </>
         );

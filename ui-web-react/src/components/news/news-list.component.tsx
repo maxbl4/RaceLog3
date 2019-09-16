@@ -23,7 +23,7 @@ export class NewsListComponent extends React.Component<NewsListComponentProps> {
         return (
           <>
             {this.props.news.items.getOrElse([]).map(item => (
-              <NewsItemComponent key={item.id} item={item} />
+              <NewsItemComponent key={item.id.getOrUndefined()} item={item} />
             ))}
           </>
         );
