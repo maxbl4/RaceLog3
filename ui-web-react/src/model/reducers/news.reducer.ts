@@ -6,7 +6,8 @@ import {
   NEWS_LOADED,
   NewsLoadedAction,
   SELECTED_NEWS_REQUESTED,
-  SELECTED_NEWS_LOADED
+  SELECTED_NEWS_LOADED,
+  SelectedNewsLoadedAction
 } from "../actions/actions";
 
 export const INITIAL_NEWS: News = {
@@ -51,7 +52,7 @@ export function selectedNewsReducer(
       };
     case SELECTED_NEWS_LOADED:
       return {
-        ...state,
+        ...(action as SelectedNewsLoadedAction).newsItemExt,
         isFetching: false
       };
     default:
