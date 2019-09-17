@@ -5,7 +5,8 @@ import {
   RACES_LOADED,
   RacesLoadedAction,
   SELECTED_RACE_REQUESTED,
-  SELECTED_RACE_LOADED
+  SELECTED_RACE_LOADED,
+  SelectedRaceLoadedAction
 } from "../actions/actions";
 import { AnyAction } from "redux";
 
@@ -52,7 +53,7 @@ export function selectedRaceReducer(
       };
     case SELECTED_RACE_LOADED:
       return {
-        ...state,
+        ...(action as SelectedRaceLoadedAction).raceItemExt,
         isFetching: false
       };
     default:

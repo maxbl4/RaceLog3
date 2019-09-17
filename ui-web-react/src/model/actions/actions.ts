@@ -77,6 +77,6 @@ export const selectedRaceRequested = (id: number): SelectedRaceRequestedAction =
   id: id
 });
 export const selectedRaceLoaded = (raceItemExt: RaceItemExt): SelectedRaceLoadedAction => ({
-  type: SELECTED_NEWS_LOADED,
+  type: SELECTED_RACE_LOADED,
   raceItemExt: raceItemExt
 });
