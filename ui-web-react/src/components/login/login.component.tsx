@@ -1,7 +1,12 @@
 import React from "react";
 import { Tabs, Tab, Form, Button } from "react-bootstrap";
 
-export class LoginComponent extends React.Component {
+export type LoginComponentProps = {
+  onLogin: any;
+  onRegister: any;
+};
+
+export class LoginComponent extends React.Component<LoginComponentProps> {
   render() {
     return (
       <Tabs defaultActiveKey="signIn" id="loginTabs">

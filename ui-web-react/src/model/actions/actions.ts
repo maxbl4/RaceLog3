@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { NewsItem, RaceItem, NewsItemExt, RaceItemExt } from "../types/datatypes";
+import { NewsItem, RaceItem, NewsItemExt, RaceItemExt, UserInfo } from "../types/datatypes";
 import { Optional, some } from "../utils/optional";
 
 // ----------------------------------------------------------------------
@@ -16,6 +16,12 @@ export const SELECTED_NEWS_LOADED = "SELECTED_NEWS_LOADED";
 
 export const SELECTED_RACE_REQUESTED = "SELECTED_RACE_REQUESTED";
 export const SELECTED_RACE_LOADED = "SELECTED_RACE_LOADED";
+
+export const USER_REGISTRATION = "USER_REGISTRATION";
+export const USER_LOGIN = "USER_LOGIN";
+export const USER_LOGOUT = "USER_LOGOUT";
+export const USER_AUTHORIZED_OK = "USER_AUTHORIZED_OK";
+export const USER_AUTHORIZED_FAIL = "USER_AUTHORIZED_FAIL";
 
 // ----------------------------------------------------------------------
 // Actions classes
@@ -42,6 +48,13 @@ export type SelectedRaceRequestedAction = AnyAction & {
 };
 export type SelectedRaceLoadedAction = AnyAction & {
   raceItemExt: RaceItemExt;
+};
+
+export type UserInfoRequestAction = AnyAction & {
+  userInfo: UserInfo;
+};
+export type UserInfoAuthorizedAction = AnyAction & {
+  userInfo: Optional<UserInfo>;
 };
 
 // ----------------------------------------------------------------------
@@ -79,4 +92,20 @@ export const selectedRaceRequested = (id: number): SelectedRaceRequestedAction =
 export const selectedRaceLoaded = (raceItemExt: RaceItemExt): SelectedRaceLoadedAction => ({
   type: SELECTED_RACE_LOADED,
   raceItemExt: raceItemExt
+});
+
+export const userReqistration = (userInfo: UserInfo): UserInfoRequestAction => ({
+  type: USER_REGISTRATION,
+  userInfo: userInfo
+});
+export const userLogin = (userInfo: UserInfo): UserInfoRequestAction => ({
+  type: USER_LOGIN,
+  userInfo: userInfo
+});
+export const userAuthorizedOk = (userInfo: UserInfo): UserInfoAuthorizedAction => ({
+  type: USER_AUTHORIZED_OK,
+  userInfo: some(userInfo)
+});
+export const userAuthorizedFail = (): AnyAction => ({
+  type: USER_AUTHORIZED_FAIL
 });

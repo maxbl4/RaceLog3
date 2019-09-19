@@ -1,4 +1,6 @@
 import { Optional } from "../utils/optional"
+import { Role } from "./roles.model"
+import { ClassCompetition } from "./class-competition.model"
 
 export type StoredState = {
     user: User;
@@ -36,7 +38,11 @@ export type Races = Fetchable & {
 export type UserInfo = {
     id: number;
     name: string;
+    password: string;
     email: string;
+    bikeNumber: number;
+    classCompetition: ClassCompetition;
+    role: Role;
     raceStatistics: Optional<RaceStatistics[]>;
 }
 
