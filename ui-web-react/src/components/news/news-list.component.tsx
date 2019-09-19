@@ -18,7 +18,7 @@ export class NewsListComponent extends React.Component<NewsListComponentProps> {
       return <FetchingComponent />;
     } else {
       if (this.props.news.items.isNone()) {
-        return <div>There is data for races</div>;
+        return <div>В данный момент у нас нет для вас новостей.</div>;
       } else {
         return (
           <>

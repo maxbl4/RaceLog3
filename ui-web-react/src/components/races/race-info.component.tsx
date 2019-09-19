@@ -26,34 +26,34 @@ export class RaceInfoComponent extends React.Component<RaceInfoComponentProps> {
     } else if (this.props.raceItemExt.id.isNone()) {
       return (
         <div>
-          There is no info about this race. Please try later.
+          Упс... Что то мы ничего не знаем об этой гонке.
         </div>
       );
     } else {
       return (
         <div>
           <Row>
-            <Col>Name: </Col>
+            <Col>Название: </Col>
             <Col>{this.props.raceItemExt.name.getNullable()}</Col>
           </Row>
           <Row>
-            <Col>Date: </Col>
+            <Col>Дата: </Col>
             <Col>{new Date(
               this.props.raceItemExt.date.getOrElse(DEFAULT_DATE)
             ).toDateString()}</Col>
           </Row>
           <Row>
-            <Col>Location: </Col>
+            <Col>Место провиденя: </Col>
             <Col>{this.props.raceItemExt.location.getNullable()}</Col>
           </Row>
           <Row>
-            <Col>Participants: </Col>
+            <Col>Участники: </Col>
           </Row>
           <Row>
             <table>
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>Имя</th>
                 </tr>
               </thead>
               <tbody>

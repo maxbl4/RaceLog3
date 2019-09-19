@@ -8,7 +8,7 @@ export class HomeComponent extends React.Component {
     return (
       <>
         <Row>
-          <h1>Here shoueld be some image</h1>
+          <h1>Здесь должна быть картинка с байкером или еще что то :-)</h1>
         </Row>
         <Row>
           <Col>

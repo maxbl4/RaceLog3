@@ -16,17 +16,17 @@ function* fetchRaces() {
       racesLoaded([
         {
           id: some(1),
-          name: some("Race 1"),
+          name: some("Гонка 1"),
           date: some(1568235600000)
         },
         {
           id: some(2),
-          name: some("Race 2"),
+          name: some("Гонка 2"),
           date: some(1568322000000)
         },
         {
           id: some(3),
-          name: some("Race 3"),
+          name: some("Гонка 3"),
           date: some(1568408400000)
         }
       ])
@@ -43,17 +43,17 @@ function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
       selectedRaceLoaded({
         isFetching: false,
         id: some(action.id),
-        name: some("Some Race Name"),
+        name: some("Гонка в Тучково"),
         date: some(1568235600000),
-        location: some("Moscow"),
+        location: some("Тучково Raceway"),
         participants: some([
           {
             racerID: 1,
-            racerName: "Dima"
+            racerName: "Дима"
           },
           {
             racerID: 2,
-            racerName: "Vova"
+            racerName: "Вова"
           }
         ])
       })

@@ -24,7 +24,7 @@ export class NewsInfoComponent extends React.Component<NewsInfoComponentProps> {
     if (this.props.newsItemExt.isFetching) {
       return <FetchingComponent />;
     } else if (this.props.newsItemExt.id.isNone()) {
-      return <div>There is no info about this news. Please try later.</div>;
+      return <div>Упс... Что то мы ничего не знаем об этой новости.</div>;
     } else {
       return (
         <div>

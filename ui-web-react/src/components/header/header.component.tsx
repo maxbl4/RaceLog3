@@ -21,7 +21,7 @@ export class HeaderComponent extends React.Component<HeaderComponentProps> {
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             {info ? (
-              <Navbar.Text>Signed in as: {info.name}</Navbar.Text>
+              <Navbar.Text>Привет, {info.name}</Navbar.Text>
             ) : (
               /* <Link to={LOGIN}>Войти</Link> */
               <Nav.Link href={LOGIN}>Войти</Nav.Link>

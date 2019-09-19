@@ -18,7 +18,7 @@ export class RaceListComponent extends React.Component<RaceListComponentProps> {
       return <FetchingComponent />;
     } else {
       if (this.props.races.items.isNone()) {
-        return <div>There is data for races</div>;
+        return <div>В данный момент у нет гонок.</div>;
       } else {
         return (
           <>
