@@ -1,8 +1,7 @@
 import React from "react";
 import { Tabs, Tab } from "react-bootstrap";
 import { UserInfo } from "../../model/types/datatypes";
-import { UserLoginPanelComponent } from "./user.login.login-panel";
-import { UserRegistrationPanelComponent } from "./user.login.registration-panel";
+import { UserLoginPanelComponent } from "./user.login.panel.component";
 
 export type UserLoginComponentProps = {
   onLogin: (userInfo: UserInfo) => void;
@@ -16,10 +15,13 @@ export class UserLoginComponent extends React.Component<
     return (
       <Tabs defaultActiveKey="signIn" id="userLoginTabs">
         <Tab eventKey="signIn" title="Войти">
-          <UserLoginPanelComponent onLogin={this.props.onLogin} />
+          <UserLoginPanelComponent mode="login" onSubmit={this.props.onLogin} />
         </Tab>
         <Tab eventKey="register" title="Зарегистрироваться">
-          <UserRegistrationPanelComponent onRegister={this.props.onRegister} />
+          <UserLoginPanelComponent
+            mode="register"
+            onSubmit={this.props.onRegister}
+          />
         </Tab>
       </Tabs>
     );
