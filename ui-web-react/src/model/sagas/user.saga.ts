@@ -4,7 +4,8 @@ import {
   USER_LOGIN,
   UserInfoRequestAction,
   userAuthorizedOk,
-  userAuthorizedFail
+  userAuthorizedFail,
+  USER_LOGOUT
 } from "../actions/actions";
 import { delay } from "./sagas";
 import { none } from "../utils/optional";
@@ -49,10 +50,23 @@ function* tryLogin(action: UserInfoRequestAction) {
   }
 }
 
+function* tryLogout(action: UserInfoRequestAction) {
+  try {
+    yield delay(1000);
+    // send here logout message to server
+  } catch (e) {
+    // yield put(userAuthorizedFail());
+  }
+}
+
 export function* userRegistrationSaga() {
   yield takeLatest(USER_REGISTRATION, tryRegistrate);
 }
 
 export function* userLoginSaga() {
   yield takeLatest(USER_LOGIN, tryLogin);
+}
+
+export function* userLogoutSaga() {
+  yield takeLatest(USER_LOGOUT, tryLogout);
 }

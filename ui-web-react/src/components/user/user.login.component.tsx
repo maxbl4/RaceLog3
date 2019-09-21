@@ -3,22 +3,22 @@ import { Tabs, Tab, Form, Button, InputGroup } from "react-bootstrap";
 import { UserInfo } from "../../model/types/datatypes";
 import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
 
-export type LoginComponentProps = {
+export type UserLoginComponentProps = {
   onLogin: (userInfo: UserInfo) => void;
   onRegister: (userInfo: UserInfo) => void;
 };
 
-export type LoginComponentState = {
+export type UserLoginComponentState = {
   email: string;
   password: string;
   validated: boolean;
 };
 
-export class LoginComponent extends React.Component<
-  LoginComponentProps,
-  LoginComponentState
+export class UserLoginComponent extends React.Component<
+  UserLoginComponentProps,
+  UserLoginComponentState
 > {
-  constructor(props: LoginComponentProps) {
+  constructor(props: UserLoginComponentProps) {
     super(props);
 
     this.state = {

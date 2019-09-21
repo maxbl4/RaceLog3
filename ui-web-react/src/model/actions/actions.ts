@@ -102,6 +102,10 @@ export const userLogin = (userInfo: UserInfo): UserInfoRequestAction => ({
   type: USER_LOGIN,
   userInfo: userInfo
 });
+export const userLogout = (userInfo: UserInfo): UserInfoRequestAction => ({
+  type: USER_LOGOUT,
+  userInfo: userInfo
+});
 export const userAuthorizedOk = (userInfo: UserInfo): UserInfoAuthorizedAction => ({
   type: USER_AUTHORIZED_OK,
   userInfo: some(userInfo)

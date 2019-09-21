@@ -3,7 +3,7 @@ import { Nav, Navbar } from "react-bootstrap";
 // import { Link } from "react-router-dom";
 import { UserInfo } from "../../model/types/datatypes";
 import { Optional } from "../../model/utils/optional";
-import { DEFAULT, LOGIN } from "../../model/routing/paths";
+import { DEFAULT, USER } from "../../model/routing/paths";
 
 export type HeaderComponentProps = {
   userInfo: Optional<UserInfo>;
@@ -21,10 +21,11 @@ export class HeaderComponent extends React.Component<HeaderComponentProps> {
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             {info ? (
-              <Navbar.Text>Привет, {info.name}</Navbar.Text>
+              /* <Link to={LOGIN}>Привет, {info.name}</Link> */
+              <Nav.Link href={USER}>Привет, {info.name}</Nav.Link>
             ) : (
               /* <Link to={LOGIN}>Войти</Link> */
-              <Nav.Link href={LOGIN}>Войти</Nav.Link>
+              <Nav.Link href={USER}>Войти</Nav.Link>
             )}
           </Navbar.Collapse>
         </Navbar>
