@@ -10,17 +10,15 @@ import UserContainer from "./components/user/user.container";
 
 const App: React.FC = () => {
   return (
-    <>
-      <Router>
-        <HeaderContainer />
-        <div>
-          <Route exact path={DEFAULT} component={HomeComponent} />
-          <Route path={USER} component={UserContainer} />
-          <Route path={RACES_INFO} component={RaceInfoContainer} />
-          <Route path={NEWS_INFO} component={NewsInfoContainer} />
-        </div>
-      </Router>
-    </>
+    <Router>
+      <HeaderContainer />
+      <div>
+        <Route exact path={DEFAULT} component={HomeComponent} />
+        <Route path={USER} component={UserContainer} />
+        <Route path={RACES_INFO} component={RaceInfoContainer} />
+        <Route path={NEWS_INFO} component={NewsInfoContainer} />
+      </div>
+    </Router>
   );
 };
 
