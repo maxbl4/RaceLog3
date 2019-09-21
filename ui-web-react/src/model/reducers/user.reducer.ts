@@ -28,7 +28,6 @@ export const INITIAL_USER_INFO: UserInfo = {
 };
 
 export function userReducer(state: User = INITIAL_USER, action: AnyAction) {
-  console.log(JSON.stringify(action));
   switch (action.type) {
     case USER_LOGIN:
     case USER_REGISTRATION:
