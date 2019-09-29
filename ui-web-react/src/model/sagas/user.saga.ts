@@ -10,7 +10,7 @@ import {
 import { delay } from "./sagas";
 import { none } from "../utils/optional";
 
-function* tryRegistrate(action: UserInfoRequestAction) {
+function* tryRegister(action: UserInfoRequestAction) {
   try {
     yield delay(1000);
     yield put(
@@ -60,7 +60,7 @@ function* tryLogout(action: UserInfoRequestAction) {
 }
 
 export function* userRegistrationSaga() {
-  yield takeLatest(USER_REGISTRATION, tryRegistrate);
+  yield takeLatest(USER_REGISTRATION, tryRegister);
 }
 
 export function* userLoginSaga() {

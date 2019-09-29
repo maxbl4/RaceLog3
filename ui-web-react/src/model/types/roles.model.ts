@@ -9,6 +9,6 @@ export function getRoleName(role: Role): string {
     case "user":
       return "Пользователь";
     default:
-      return "Неизветсная роль";
+      return "Неизвестная роль";
   }
 }
