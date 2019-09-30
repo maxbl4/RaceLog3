@@ -23,21 +23,21 @@ export class NewsInfoComponent extends React.Component<NewsInfoComponentProps> {
   render() {
     if (this.props.newsItemExt.isFetching) {
       return <FetchingComponent />;
-    } else if (this.props.newsItemExt.id.isNone()) {
+    } else if (!this.props.newsItemExt.id.isPresent()) {
       return <div>Упс... Что то мы ничего не знаем об этой новости.</div>;
     } else {
       return (
         <div>
           <Row>
-            <Col>{this.props.newsItemExt.header.getOrUndefined()}</Col>
+            <Col>{this.props.newsItemExt.header.orElse("")}</Col>
           </Row>
           <Row>
-            <Col>{this.props.newsItemExt.text.getOrUndefined()}</Col>
+            <Col>{this.props.newsItemExt.text.orElse("")}</Col>
           </Row>
           <Row>
             <Col>
               {new Date(
-                this.props.newsItemExt.date.getOrElse(DEFAULT_DATE)
+                this.props.newsItemExt.date.orElse(DEFAULT_DATE)
               ).toDateString()}
             </Col>
           </Row>

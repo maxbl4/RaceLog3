@@ -1,5 +1,5 @@
-import { Races, RaceItemExt } from "../types/datatypes";
-import { none } from "../utils/optional";
+import { Races, RaceItemExt, RaceParticipant, RaceItem } from "../types/datatypes";
+import Optional from "optional-js";
 import {
   RACES_REQUESTED,
   RACES_LOADED,
@@ -13,16 +13,16 @@ import { logReduce } from "../utils/logger";
 
 export const INITIAL_RACES: Races = {
   isFetching: false,
-  items: none
+  items: Optional.empty<RaceItem[]>()
 };
 
 export const INITIAL_SELECTED_RACE = {
   isFetching: false,
-  id: none,
-  name: none,
-  date: none,
-  location: none,
-  participants: none
+  id: Optional.empty<number>(),
+  name: Optional.empty<string>(),
+  date: Optional.empty<number>(),
+  location: Optional.empty<string>(),
+  participants: Optional.empty<RaceParticipant[]>()
 };
 
 export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {

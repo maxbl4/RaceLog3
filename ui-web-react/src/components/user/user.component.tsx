@@ -20,7 +20,7 @@ export class UserComponent extends React.Component<UserComponentProps> {
     } else {
       const userID = this.props.user.info
         .map(uf => uf.id)
-        .getOrElse(DEFAULT_ID);
+        .orElse(DEFAULT_ID);
       if (userID === DEFAULT_ID) {
         return (
           <UserLoginComponent
@@ -31,7 +31,7 @@ export class UserComponent extends React.Component<UserComponentProps> {
       } else {
         return (
           <UserProfileComponent
-            info={this.props.user.info.getOrElse(INITIAL_USER_INFO)}
+            info={this.props.user.info.orElse(INITIAL_USER_INFO)}
             onLogout={this.props.onLogout}
           />
         );

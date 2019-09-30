@@ -16,16 +16,16 @@ export class NewsItemComponent extends React.Component<NewsItemProps> {
         <Col>
           <span>
             {new Date(
-              this.props.item.date.getOrElse(DEFAULT_DATE)
+              this.props.item.date.orElse(DEFAULT_DATE)
             ).toDateString()}
           </span>
         </Col>
         <Col>
           <NavLink
             exact
-            to={NEWS + DELIMITER + this.props.item.id.getOrElse(DEFAULT_ID)}
+            to={NEWS + DELIMITER + this.props.item.id.orElse(DEFAULT_ID)}
           >
-            {this.props.item.header.getOrElse("")}
+            {this.props.item.header.orElse("")}
           </NavLink>
         </Col>
       </Row>

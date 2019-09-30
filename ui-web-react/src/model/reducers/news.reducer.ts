@@ -1,5 +1,4 @@
-import { News, NewsItemExt } from "../types/datatypes";
-import { none } from "../utils/optional";
+import { News, NewsItemExt, NewsItem } from "../types/datatypes";
 import { AnyAction } from "redux";
 import {
   NEWS_REQUESTED,
@@ -10,18 +9,19 @@ import {
   SelectedNewsLoadedAction
 } from "../actions/actions";
 import { logReduce } from "../utils/logger";
+import Optional from "optional-js";
 
 export const INITIAL_NEWS: News = {
   isFetching: false,
-  items: none
+  items: Optional.empty<NewsItem[]>()
 };
 
 export const INITIAL_SELECTED_NEWS = {
   isFetching: false,
-  id: none,
-  header: none,
-  date: none,
-  text: none
+  id: Optional.empty<number>(),
+  header: Optional.empty<string>(),
+  date: Optional.empty<number>(),
+  text: Optional.empty<string>()
 };
 
 export function newsReducer(state: News = INITIAL_NEWS, action: AnyAction) {

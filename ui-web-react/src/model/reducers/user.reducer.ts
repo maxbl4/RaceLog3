@@ -1,5 +1,5 @@
-import { User, UserInfo } from "../types/datatypes";
-import { none } from "../utils/optional";
+import { User, UserInfo, RaceStatistics } from "../types/datatypes";
+import Optional from "optional-js";
 import { AnyAction } from "redux";
 import {
   USER_LOGIN,
@@ -14,7 +14,7 @@ import { logReduce } from "../utils/logger";
 
 export const INITIAL_USER: User = {
   isFetching: false,
-  info: none
+  info: Optional.empty<UserInfo>()
 };
 
 export const INITIAL_USER_INFO: UserInfo = {
@@ -25,7 +25,7 @@ export const INITIAL_USER_INFO: UserInfo = {
   bikeNumber: DEFAULT_ID,
   role: "user",
   classCompetition: "125cm3",
-  raceStatistics: none
+  raceStatistics: Optional.empty<RaceStatistics[]>()
 };
 
 export function userReducer(state: User = INITIAL_USER, action: AnyAction) {
@@ -35,17 +35,17 @@ export function userReducer(state: User = INITIAL_USER, action: AnyAction) {
     case USER_REGISTRATION:
       return {
         isFetching: true,
-        info: none
+        info: Optional.empty<UserInfo>()
       };
     case USER_LOGOUT:
       return {
         isFetching: false,
-        info: none
+        info: Optional.empty<UserInfo>()
       };
     case USER_AUTHORIZED_FAIL:
       return {
         isFetching: false,
-        info: none
+        info: Optional.empty<UserInfo>()
       };
     case USER_AUTHORIZED_OK:
       return {

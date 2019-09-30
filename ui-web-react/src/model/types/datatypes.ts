@@ -1,6 +1,6 @@
-import { Optional } from "../utils/optional"
 import { Role } from "./roles.model"
 import { ClassCompetition } from "./class-competition.model"
+import Optional from "optional-js";
 
 export type StoredState = {
     user: User;

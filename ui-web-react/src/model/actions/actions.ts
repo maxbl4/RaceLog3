@@ -1,6 +1,6 @@
 import { AnyAction } from "redux";
 import { NewsItem, RaceItem, NewsItemExt, RaceItemExt, UserInfo } from "../types/datatypes";
-import { Optional, some } from "../utils/optional";
+import Optional from "optional-js";
 
 // ----------------------------------------------------------------------
 // Action lables
@@ -65,7 +65,7 @@ export const newsRequested = (): NewsRequestedAction => ({
 });
 export const newsLoaded = (items: NewsItem[]): NewsLoadedAction => ({
   type: NEWS_LOADED,
-  items: some(items)
+  items: Optional.of(items)
 });
 
 export const racesRequested = (): RacesRequestedAction => ({
@@ -73,7 +73,7 @@ export const racesRequested = (): RacesRequestedAction => ({
 });
 export const racesLoaded = (items: RaceItem[]): RacesLoadedAction => ({
   type: RACES_LOADED,
-  items: some(items)
+  items: Optional.of(items)
 });
 
 export const selectedNewsRequested = (id: number): SelectedNewsRequestedAction => ({
@@ -108,7 +108,7 @@ export const userLogout = (userInfo: UserInfo): UserInfoRequestAction => ({
 });
 export const userAuthorizedOk = (userInfo: UserInfo): UserInfoAuthorizedAction => ({
   type: USER_AUTHORIZED_OK,
-  userInfo: some(userInfo)
+  userInfo: Optional.of(userInfo)
 });
 export const userAuthorizedFail = (): AnyAction => ({
   type: USER_AUTHORIZED_FAIL

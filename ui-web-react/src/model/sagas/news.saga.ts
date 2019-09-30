@@ -1,7 +1,7 @@
 import { put, takeLatest } from "redux-saga/effects";
 import { NEWS_REQUESTED, newsLoaded, SELECTED_NEWS_REQUESTED, SelectedNewsRequestedAction, selectedNewsLoaded } from "../actions/actions";
 import { delay } from "./sagas";
-import { some } from "../utils/optional";
+import Optional from "optional-js";
 
 function* fetchNews() {
   try {
@@ -9,14 +9,14 @@ function* fetchNews() {
     yield put(
       newsLoaded([
         {
-          id: some(1),
-          header: some("Какая то новость 1"),
-          date: some(1568235600000)
+          id: Optional.of(1),
+          header: Optional.of("Какая то новость 1"),
+          date: Optional.of(1568235600000)
         },
         {
-          id: some(2),
-          header: some("Какая то новость 2"),
-          date: some(1568322000000)
+          id: Optional.of(2),
+          header: Optional.of("Какая то новость 2"),
+          date: Optional.of(1568322000000)
         }
       ])
     );
@@ -31,10 +31,10 @@ function* fetchSelectedNews(action: SelectedNewsRequestedAction) {
     yield put(
       selectedNewsLoaded({
         isFetching: false,
-        id: some(action.id),
-        header: some("Какая то новость 1"),
-        date: some(1568235600000),
-        text: some("Voluptate irure labore enim adipisicing consectetur. Id adipisicing aliqua aute commodo. Dolor excepteur laborum et dolor nisi adipisicing deserunt officia esse qui in officia do. Ad non fugiat sint eu sint fugiat est esse ex aliquip. Laborum adipisicing consectetur eu sit nisi eiusmod cillum sunt. Pariatur officia voluptate sunt exercitation ea anim esse aliqua. Consectetur cillum dolor pariatur ipsum.")
+        id: Optional.of(action.id),
+        header: Optional.of("Какая то новость 1"),
+        date: Optional.of(1568235600000),
+        text: Optional.of("Voluptate irure labore enim adipisicing consectetur. Id adipisicing aliqua aute commodo. Dolor excepteur laborum et dolor nisi adipisicing deserunt officia esse qui in officia do. Ad non fugiat sint eu sint fugiat est esse ex aliquip. Laborum adipisicing consectetur eu sit nisi eiusmod cillum sunt. Pariatur officia voluptate sunt exercitation ea anim esse aliqua. Consectetur cillum dolor pariatur ipsum.")
       })
     );
   } catch (e) {

@@ -1,7 +1,7 @@
 import React from "react";
 import { Nav, Navbar } from "react-bootstrap";
 import { UserInfo } from "../../model/types/datatypes";
-import { Optional } from "../../model/utils/optional";
+import Optional from "optional-js";
 import { DEFAULT, USER } from "../../model/routing/paths";
 import { NavLink } from "react-router-dom";
 
@@ -11,7 +11,6 @@ export type HeaderComponentProps = {
 
 export class HeaderComponent extends React.Component<HeaderComponentProps> {
   render() {
-    const info = this.props.userInfo.getNullable();
     return (
       <>
         <Navbar bg="dark" variant="dark">
@@ -22,7 +21,7 @@ export class HeaderComponent extends React.Component<HeaderComponentProps> {
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             <NavLink exact to={USER}>
-              {info ? "Привет, " + info.name : "Войти"}
+              {this.props.userInfo.map(info => "Привет, " + info.name).orElse("Войти")}
             </NavLink>
           </Navbar.Collapse>
         </Navbar>

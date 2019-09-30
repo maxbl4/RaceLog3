@@ -8,7 +8,8 @@ import {
   USER_LOGOUT
 } from "../actions/actions";
 import { delay } from "./sagas";
-import { none } from "../utils/optional";
+import Optional from "optional-js";
+import { RaceStatistics } from "../types/datatypes";
 
 function* tryRegister(action: UserInfoRequestAction) {
   try {
@@ -22,7 +23,7 @@ function* tryRegister(action: UserInfoRequestAction) {
         bikeNumber: action.userInfo.bikeNumber,
         role: action.userInfo.role,
         classCompetition: action.userInfo.classCompetition,
-        raceStatistics: none
+        raceStatistics: Optional.empty<RaceStatistics[]>()
       })
     );
   } catch (e) {
@@ -42,7 +43,7 @@ function* tryLogin(action: UserInfoRequestAction) {
         bikeNumber: 87,
         role: "admin",
         classCompetition: "500cm3",
-        raceStatistics: none
+        raceStatistics: Optional.empty<RaceStatistics[]>()
       })
     );
   } catch (e) {

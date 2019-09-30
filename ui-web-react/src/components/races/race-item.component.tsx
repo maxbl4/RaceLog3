@@ -16,16 +16,16 @@ export class RaceItemComponent extends React.Component<RaceItemProps> {
         <Col>
           <span>
             {new Date(
-              this.props.item.date.getOrElse(DEFAULT_DATE)
+              this.props.item.date.orElse(DEFAULT_DATE)
             ).toDateString()}
           </span>
         </Col>
         <Col>
           <NavLink
             exact
-            to={RACES + DELIMITER + this.props.item.id.getOrElse(DEFAULT_ID)}
+            to={RACES + DELIMITER + this.props.item.id.orElse(DEFAULT_ID)}
           >
-            {this.props.item.name.getOrElse("")}
+            {this.props.item.name.orElse("")}
           </NavLink>
         </Col>
       </Row>

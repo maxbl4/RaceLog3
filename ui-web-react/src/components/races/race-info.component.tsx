@@ -23,7 +23,7 @@ export class RaceInfoComponent extends React.Component<RaceInfoComponentProps> {
   render() {
     if (this.props.raceItemExt.isFetching) {
       return <FetchingComponent />;
-    } else if (this.props.raceItemExt.id.isNone()) {
+    } else if (!this.props.raceItemExt.id.isPresent()) {
       return (
         <div>
           Упс... Что то мы ничего не знаем об этой гонке.
@@ -34,17 +34,17 @@ export class RaceInfoComponent extends React.Component<RaceInfoComponentProps> {
         <div>
           <Row>
             <Col>Название: </Col>
-            <Col>{this.props.raceItemExt.name.getNullable()}</Col>
+            <Col>{this.props.raceItemExt.name.orElse("")}</Col>
           </Row>
           <Row>
             <Col>Дата: </Col>
             <Col>{new Date(
-              this.props.raceItemExt.date.getOrElse(DEFAULT_DATE)
+              this.props.raceItemExt.date.orElse(DEFAULT_DATE)
             ).toDateString()}</Col>
           </Row>
           <Row>
             <Col>Место провиденя: </Col>
-            <Col>{this.props.raceItemExt.location.getNullable()}</Col>
+            <Col>{this.props.raceItemExt.location.orElse("")}</Col>
           </Row>
           <Row>
             <Col>Участники: </Col>
@@ -57,7 +57,7 @@ export class RaceInfoComponent extends React.Component<RaceInfoComponentProps> {
                 </tr>
               </thead>
               <tbody>
-                {this.props.raceItemExt.participants.getOrElse([]).map(item => (
+                {this.props.raceItemExt.participants.orElse([]).map(item => (
                   <tr key={item.racerName}>
                     <td>{item.racerName}</td>
                   </tr>

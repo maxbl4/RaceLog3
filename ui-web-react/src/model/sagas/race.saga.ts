@@ -7,7 +7,7 @@ import {
   SelectedRaceRequestedAction
 } from "../actions/actions";
 import { delay } from "./sagas";
-import { some } from "../utils/optional";
+import Optional from "optional-js";
 
 function* fetchRaces() {
   try {
@@ -15,19 +15,19 @@ function* fetchRaces() {
     yield put(
       racesLoaded([
         {
-          id: some(1),
-          name: some("Гонка 1"),
-          date: some(1568235600000)
+          id: Optional.of(1),
+          name: Optional.of("Гонка 1"),
+          date: Optional.of(1568235600000)
         },
         {
-          id: some(2),
-          name: some("Гонка 2"),
-          date: some(1568322000000)
+          id: Optional.of(2),
+          name: Optional.of("Гонка 2"),
+          date: Optional.of(1568322000000)
         },
         {
-          id: some(3),
-          name: some("Гонка 3"),
-          date: some(1568408400000)
+          id: Optional.of(3),
+          name: Optional.of("Гонка 3"),
+          date: Optional.of(1568408400000)
         }
       ])
     );
@@ -42,11 +42,11 @@ function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
     yield put(
       selectedRaceLoaded({
         isFetching: false,
-        id: some(action.id),
-        name: some("Гонка в Тучково"),
-        date: some(1568235600000),
-        location: some("Тучково Raceway"),
-        participants: some([
+        id: Optional.of(action.id),
+        name: Optional.of("Гонка в Тучково"),
+        date: Optional.of(1568235600000),
+        location: Optional.of("Тучково Raceway"),
+        participants: Optional.of([
           {
             racerID: 1,
             racerName: "Дима"
