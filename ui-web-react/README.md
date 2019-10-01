@@ -1,0 +1,1 @@
+This is a Web UI for RaceLog3 project. Code is written on React.
