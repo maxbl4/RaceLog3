@@ -9,7 +9,7 @@ import {
   SelectedRaceLoadedAction
 } from "../actions/actions";
 import { AnyAction } from "redux";
-import { logReduce } from "../utils/logger";
+import { LoggingService } from "../utils/logging-service";
 
 export const INITIAL_RACES: Races = {
   isFetching: false,
@@ -26,7 +26,7 @@ export const INITIAL_SELECTED_RACE = {
 };
 
 export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
-  logReduce("racesReducer", state, action);
+  LoggingService.getInstance().logReducer(action, state);
   switch (action.type) {
     case RACES_REQUESTED:
       return {
@@ -47,7 +47,7 @@ export function selectedRaceReducer(
   state: RaceItemExt = INITIAL_SELECTED_RACE,
   action: AnyAction
 ) {
-  logReduce("selectedRaceReducer", state, action);
+  LoggingService.getInstance().logReducer(action, state);
   switch (action.type) {
     case SELECTED_RACE_REQUESTED:
       return {
