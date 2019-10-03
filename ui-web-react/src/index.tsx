@@ -17,9 +17,10 @@ const store = createStore<StoredState, any, {}, {}>(
 );
 sagaMiddleware.run(raceLogSaga);
 
-const prodBuild = false;
+const prodBuild = true;
 LoggingService.getInstance().init({
-  sendLogsToServer: prodBuild
+  sendLogsToServer: prodBuild,
+  url: "http://localhost:3001/logger"
 });
 
 ReactDOM.render(
