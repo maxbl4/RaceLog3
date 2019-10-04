@@ -8,6 +8,7 @@ import {
 } from "../actions/actions";
 import { delay } from "./sagas";
 import Optional from "optional-js";
+import { LoggingService } from "../utils/logging-service";
 
 function* fetchRaces() {
   try {
@@ -32,7 +33,7 @@ function* fetchRaces() {
       ])
     );
   } catch (e) {
-    // yield put("ERROR", message: e.message)
+    LoggingService.getInstance().logSagaError(e);
   }
 }
 
@@ -59,7 +60,7 @@ function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
       })
     );
   } catch (e) {
-    // yield put("ERROR", message: e.message)
+    LoggingService.getInstance().logSagaError(e, action);
   }
 }
 

@@ -5,8 +5,6 @@ import remote from "loglevel-plugin-remote";
 import { DEFAULT_ID } from "./constants";
 import { AnyAction } from "redux";
 
-const logLevelNames = ["TRACE", "DEBUG", "INFO", "WARN", "ERROR", "SILENT"];
-
 export type LoggingServiceProps = {
   sendLogsToServer: boolean;
   url?: string;
@@ -34,7 +32,7 @@ export class LoggingService {
     if (props.sendLogsToServer) {
       remote.apply(log, {
         url: props.url,
-        timestamp: () => {}
+        level: "info"
       });
     }
   }
@@ -44,26 +42,30 @@ export class LoggingService {
   }
 
   public debug(...msg: any[]): void {
-    log.debug(this.prefix(log.levels.DEBUG), ...msg);
+    log.debug(this.prefix(), ...msg);
   }
 
   public error(...msg: any[]): void {
-    log.error(this.prefix(log.levels.ERROR), ...msg);
+    log.error(this.prefix(), ...msg);
   }
 
   public warn(...msg: any[]): void {
-    log.warn(this.prefix(log.levels.WARN), ...msg);
+    log.warn(this.prefix(), ...msg);
   }
 
-  private prefix(logLevel: number): string {
-    return `${new Date().toISOString()} [${
-      logLevelNames[logLevel]
-    }] [User ID: ${this.userInfo.map(info => info.id).orElse(DEFAULT_ID)}]: `;
+  private prefix(): string {
+    return `[User ID: ${this.userInfo.map(info => info.id).orElse(DEFAULT_ID)}]`;
   }
 
   public logReducer(action: AnyAction, state: any): void {
     this.debug(
       `action='${JSON.stringify(action)}', state='${JSON.stringify(state)}'`
+    );
+  }
+
+  public logSagaError(error: Error, action?: AnyAction): void {
+    this.error(
+      `action='${JSON.stringify(action)}', error='${JSON.stringify(error)}'`
     );
   }
 }

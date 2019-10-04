@@ -2,6 +2,7 @@ import { put, takeLatest } from "redux-saga/effects";
 import { NEWS_REQUESTED, newsLoaded, SELECTED_NEWS_REQUESTED, SelectedNewsRequestedAction, selectedNewsLoaded } from "../actions/actions";
 import { delay } from "./sagas";
 import Optional from "optional-js";
+import { LoggingService } from "../utils/logging-service";
 
 function* fetchNews() {
   try {
@@ -21,7 +22,7 @@ function* fetchNews() {
       ])
     );
   } catch (e) {
-    // yield put("ERROR", message: e.message)
+    LoggingService.getInstance().logSagaError(e);
   }
 }
 
@@ -38,7 +39,7 @@ function* fetchSelectedNews(action: SelectedNewsRequestedAction) {
       })
     );
   } catch (e) {
-    // yield put("ERROR", message: e.message)
+    LoggingService.getInstance().logSagaError(e, action);
   }
 }
 

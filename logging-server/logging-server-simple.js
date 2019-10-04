@@ -15,19 +15,6 @@ const server = http.createServer(function(request, response) {
       response.writeHead(200, {'Content-Type': 'text/html', 'Access-Control-Allow-Origin': '*'})
       response.end('post received')
     })
-  } else {
-    console.log('GET')
-    var html = `
-            <html>
-                <body>
-                    <form method="post" action="http://localhost:3000">Name: 
-                        <input type="text" name="name" />
-                        <input type="submit" value="Submit" />
-                    </form>
-                </body>
-            </html>`
-    response.writeHead(200, {'Content-Type': 'text/html'})
-    response.end(html)
   }
 })
 

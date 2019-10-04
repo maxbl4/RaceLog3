@@ -10,6 +10,7 @@ import {
 import { delay } from "./sagas";
 import Optional from "optional-js";
 import { RaceStatistics } from "../types/datatypes";
+import { LoggingService } from "../utils/logging-service";
 
 function* tryRegister(action: UserInfoRequestAction) {
   try {
@@ -27,6 +28,7 @@ function* tryRegister(action: UserInfoRequestAction) {
       })
     );
   } catch (e) {
+    LoggingService.getInstance().logSagaError(e, action);
     yield put(userAuthorizedFail());
   }
 }
@@ -47,6 +49,7 @@ function* tryLogin(action: UserInfoRequestAction) {
       })
     );
   } catch (e) {
+    LoggingService.getInstance().logSagaError(e, action);
     yield put(userAuthorizedFail());
   }
 }
@@ -56,6 +59,7 @@ function* tryLogout(action: UserInfoRequestAction) {
     yield delay(1000);
     // send here logout message to server
   } catch (e) {
+    LoggingService.getInstance().logSagaError(e, action);
     // yield put(userAuthorizedFail());
   }
 }
