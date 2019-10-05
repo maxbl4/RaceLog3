@@ -1,4 +1,13 @@
 const http = require('http')
+const logzioLogger = require('logzio-nodejs').createLogger({
+  token: 'xMmDBYSIUNCxOWbhHstIlamPvOKJMUAB',
+  host: 'listener-eu.logz.io',
+  type: 'YourLogType'     // OPTIONAL (If none is set, it will be 'nodejs')
+});
+
+function sendLogToLogzIO(data) {
+  logzioLogger.log(data);
+}
 
 const server = http.createServer(function(request, response) {
   console.dir(request.param)
@@ -12,6 +21,7 @@ const server = http.createServer(function(request, response) {
     })
     request.on('end', function() {
       console.log('Body: ' + body)
+      sendLogToLogzIO(body)
       response.writeHead(200, {'Content-Type': 'text/html', 'Access-Control-Allow-Origin': '*'})
       response.end('post received')
     })
