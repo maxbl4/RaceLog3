@@ -1,180 +1,151 @@
 import React from "react";
-import { Form, Button, InputGroup } from "react-bootstrap";
 import { UserInfo } from "../../model/types/datatypes";
 import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
 import {
   ClassCompetition,
   getClassCompetitionName
 } from "../../model/types/class-competition.model";
+import { Formik, Form, Field, ErrorMessage, FormikActions, FormikProps } from "formik";
+import * as Yup from "yup";
+
+const loginSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Неверный формат почты")
+    .required("Введите пожалуйста почту"),
+  password: Yup.string()
+    .min(5, "Пароль должен быть не менее 5-ти символов")
+    .required("Введите пожалуйста пароль")
+});
+
+const registerSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Неверный формат почты")
+    .required("Введите пожалуйста почту"),
+  password: Yup.string()
+    .min(5, "Пароль должен быть не менее 5-ти символов")
+    .required("Введите пожалуйста пароль"),
+  name: Yup.string()
+    .min(2, "Имя должно быть не менее 2-х символов")
+    .required("Введите пожалуйста имя"),
+  bikeNumber: Yup.number()
+    .positive("Номер байка должен быть положительным")
+    .integer("Номер байка должен быть целым числом")
+    .required("Введите пожалуйста номер байка")
+});
+
+interface UserInfoValues {
+  name: string;
+  password: string;
+  email: string;
+  bikeNumber: number;
+  classCompetition: ClassCompetition;
+}
 
 export type UserLoginPanelComponentProps = {
   mode: "login" | "register";
   onSubmit: (userInfo: UserInfo) => void;
 };
 
-export type UserLoginPanelComponentState = {
-  name: string;
-  password: string;
-  email: string;
-  bikeNumber: number;
-  classCompetition: ClassCompetition;
-  validated: boolean;
-};
-
-export class UserLoginPanelComponent extends React.Component<
-  UserLoginPanelComponentProps,
-  UserLoginPanelComponentState
-> {
-  constructor(props: UserLoginPanelComponentProps) {
-    super(props);
-
-    this.state = {
-      name: INITIAL_USER_INFO.name,
-      password: INITIAL_USER_INFO.password,
-      email: INITIAL_USER_INFO.email,
-      bikeNumber: INITIAL_USER_INFO.bikeNumber,
-      classCompetition: INITIAL_USER_INFO.classCompetition,
-      validated: false
-    };
-  }
-
-  handleSubmitClick = (event: any) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    } else {
-      this.props.onSubmit({
-        ...INITIAL_USER_INFO,
-        name: this.state.name,
-        password: this.state.password,
-        email: this.state.email,
-        bikeNumber: this.state.bikeNumber,
-        classCompetition: this.state.classCompetition
-      });
-    }
-
-    this.setState({ validated: true });
-  };
+export class UserLoginPanelComponent extends React.Component<UserLoginPanelComponentProps> {
+  isLoginMode = (): boolean => this.props.mode === "login";
 
   getControlID = (name: string): string => this.props.mode + "_" + name;
 
   render() {
     return (
-      <Form
-        noValidate
-        validated={this.state.validated}
-        onSubmit={this.handleSubmitClick}
-      >
-        <Form.Group controlId={this.getControlID("formEmail")}>
-          <Form.Label>Почта</Form.Label>
-          <InputGroup>
-            <Form.Control
-              type="email"
-              placeholder="name@example.com"
-              onChange={(event: any) =>
-                this.setState({
-                  email: event.currentTarget.value
-                })
-              }
-              required
-            />
-            <Form.Control.Feedback type="invalid">
-              Почта не может быть пустой
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Form.Group>
-        <Form.Group controlId={this.getControlID("formPassword")}>
-          <Form.Label>Пароль</Form.Label>
-          <InputGroup>
-            <Form.Control
-              type="password"
-              placeholder="Введите пароль"
-              onChange={(event: any) =>
-                this.setState({
-                  password: event.currentTarget.value
-                })
-              }
-              required
-            />
-            <Form.Control.Feedback type="invalid">
-              Пароль не может быть пустым
-            </Form.Control.Feedback>
-          </InputGroup>
-        </Form.Group>
-        {this.props.mode === "register" && (
-          <>
-            <Form.Group controlId={this.getControlID("formName")}>
-              <Form.Label>Имя</Form.Label>
-              <InputGroup>
-                <Form.Control
-                  type="text"
-                  placeholder="Введите имя"
-                  onChange={(event: any) =>
-                    this.setState({
-                      name: event.currentTarget.value
-                    })
-                  }
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Имя не может быть пустым
-                </Form.Control.Feedback>
-              </InputGroup>
-            </Form.Group>
+      <div className="row col-lg-12">
+        <Formik
+          initialValues={{
+            ...INITIAL_USER_INFO
+          }}
+          validationSchema={this.isLoginMode() ? loginSchema : registerSchema}
+          onSubmit={(values: UserInfoValues, actions: FormikActions<UserInfoValues>) => {
+            this.props.onSubmit({
+              ...INITIAL_USER_INFO,
+              ...values
+            });
+            actions.setSubmitting(false);
+          }}
+          render={(formikBag: FormikProps<UserInfoValues>) => (
+            <Form>
+              {this.renderField(formikBag, "email", "email", "Почта")}
+              {this.renderField(formikBag, "password", "password", "Пароль")}
 
-            <Form.Group controlId={this.getControlID("formBikeNumber")}>
-              <Form.Label>Номер байка</Form.Label>
-              <InputGroup>
-                <Form.Control
-                  type="number"
-                  placeholder="Введите номер байка"
-                  onChange={(event: any) =>
-                    this.setState({
-                      bikeNumber: event.currentTarget.value
-                    })
-                  }
-                  required
-                />
-                <Form.Control.Feedback type="invalid">
-                  Номер байка не может быть пустым
-                </Form.Control.Feedback>
-              </InputGroup>
-            </Form.Group>
-
-            <Form.Group controlId={this.getControlID("formClassCompetition")}>
-              <Form.Label>Класс соревнований</Form.Label>
-              <InputGroup>
-                <Form.Control
-                  as="select"
-                  required
-                  onChange={(event: any) =>
-                    this.setState({
-                      classCompetition: event.currentTarget.value
-                    })
-                  }
-                >
-                  <option value="125cm3">
-                    {getClassCompetitionName("125cm3")}
-                  </option>
-                  <option value="250cm3">
-                    {getClassCompetitionName("250cm3")}
-                  </option>
-                  <option value="500cm3">
-                    {getClassCompetitionName("500cm3")}
-                  </option>
-                </Form.Control>
-                <Form.Control.Feedback type="invalid">
-                  Класс соревнований не может быть пустым
-                </Form.Control.Feedback>
-              </InputGroup>
-            </Form.Group>
-          </>
-        )}
-        <Button variant="primary" type="submit">
-          Дави на газ!
-        </Button>
-      </Form>
+              {!this.isLoginMode() && (
+                <React.Fragment>
+                  {this.renderField(formikBag, "name", "text", "Имя")}
+                  {this.renderField(formikBag, "bikeNumber", "number", "Номер байка")}
+                  {this.renderFieldSelect(
+                    "classCompetition",
+                    "Класс соревнований",
+                    new Map<string, string>()
+                      .set("125cm3", getClassCompetitionName("125cm3"))
+                      .set("250cm3", getClassCompetitionName("250cm3"))
+                      .set("500cm3", getClassCompetitionName("500cm3"))
+                  )}
+                </React.Fragment>
+              )}
+              <button
+                type="submit"
+                className="btn btn-primary btn-block"
+                disabled={formikBag.isSubmitting}
+              >
+                {formikBag.isSubmitting ? "Идет прогрев мотора..." : "Дави на газ!!!"}
+              </button>
+            </Form>
+          )}
+        />
+      </div>
     );
   }
+
+  renderField = (
+    formikBag: FormikProps<UserInfoValues>,
+    fieldName: string,
+    fieldType: string,
+    label: string
+  ): JSX.Element => {
+    return (
+      <div className="form-group">
+        <label htmlFor={fieldName}>{label}</label>
+        <Field
+          id={this.getControlID(fieldName)}
+          type={fieldType}
+          name={fieldName}
+          placeholder={label}
+          className={`form-control ${
+            formikBag.touched.hasOwnProperty(fieldName) &&
+            formikBag.errors.hasOwnProperty(fieldName)
+              ? "is-invalid"
+              : ""
+          }`}
+        />
+        <ErrorMessage component="div" name={fieldName} className="invalid-feedback" />
+      </div>
+    );
+  };
+
+  renderFieldSelect = (
+    fieldName: string,
+    label: string,
+    data: Map<string, string>
+  ): JSX.Element => {
+    return (
+      <div className="form-group">
+        <label htmlFor={fieldName}>{label}</label>
+        <Field
+          id={this.getControlID(fieldName)}
+          component="select"
+          name={fieldName}
+          className="form-control"
+        >
+          {Array.from(data.keys()).map(key => (
+            <option key={key} value={key}>
+              {data.get(key)}
+            </option>
+          ))}
+        </Field>
+      </div>
+    );
+  };
 }
