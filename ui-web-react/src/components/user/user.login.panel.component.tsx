@@ -5,14 +5,7 @@ import {
   ClassCompetition,
   getClassCompetitionName
 } from "../../model/types/class-competition.model";
-import {
-  Formik,
-  Form,
-  Field,
-  ErrorMessage,
-  FormikActions,
-  FormikProps
-} from "formik";
+import { Formik, Form, Field, ErrorMessage, FormikActions, FormikProps } from "formik";
 import * as Yup from "yup";
 
 const loginSchema = Yup.object().shape({
@@ -53,9 +46,7 @@ export type UserLoginPanelComponentProps = {
   onSubmit: (userInfo: UserInfo) => void;
 };
 
-export class UserLoginPanelComponent extends React.Component<
-  UserLoginPanelComponentProps
-> {
+export class UserLoginPanelComponent extends React.Component<UserLoginPanelComponentProps> {
   isLoginMode = (): boolean => this.props.mode === "login";
 
   getControlID = (name: string): string => this.props.mode + "_" + name;
@@ -68,10 +59,7 @@ export class UserLoginPanelComponent extends React.Component<
             ...INITIAL_USER_INFO
           }}
           validationSchema={this.isLoginMode() ? loginSchema : registerSchema}
-          onSubmit={(
-            values: UserInfoValues,
-            actions: FormikActions<UserInfoValues>
-          ) => {
+          onSubmit={(values: UserInfoValues, actions: FormikActions<UserInfoValues>) => {
             this.props.onSubmit({
               ...INITIAL_USER_INFO,
               ...values
@@ -80,92 +68,21 @@ export class UserLoginPanelComponent extends React.Component<
           }}
           render={(formikBag: FormikProps<UserInfoValues>) => (
             <Form>
-              <div className="form-group">
-                <label htmlFor="email">Почта</label>
-                <Field
-                  id={this.getControlID("email")}
-                  type="email"
-                  name="email"
-                  placeholder="Введите почту"
-                  className={`form-control ${
-                    formikBag.touched.email && formikBag.errors.email
-                      ? "is-invalid"
-                      : ""
-                  }`}
-                />
-                {this.renderError("email")}
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="password">Пароль</label>
-                <Field
-                  id={this.getControlID("password")}
-                  type="password"
-                  name="password"
-                  placeholder="Введите пароль"
-                  className={`form-control ${
-                    formikBag.touched.password && formikBag.errors.password
-                      ? "is-invalid"
-                      : ""
-                  }`}
-                />
-                {this.renderError("password")}
-              </div>
+              {this.renderField(formikBag, "email", "email", "Почта")}
+              {this.renderField(formikBag, "password", "password", "Пароль")}
 
               {!this.isLoginMode() && (
                 <React.Fragment>
-                  <div className="form-group">
-                    <label htmlFor="name">Имя</label>
-                    <Field
-                      id={this.getControlID("name")}
-                      type="text"
-                      name="name"
-                      placeholder="Введите имя"
-                      className={`form-control ${
-                        formikBag.touched.name && formikBag.errors.name
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                    />
-                    {this.renderError("name")}
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="bikeNumber">Номер байка</label>
-                    <Field
-                      id={this.getControlID("bikeNumber")}
-                      type="number"
-                      name="bikeNumber"
-                      placeholder="Введите номер байка"
-                      className={`form-control ${
-                        formikBag.touched.bikeNumber &&
-                        formikBag.errors.bikeNumber
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                    />
-                    {this.renderError("bikeNumber")}
-                  </div>
-
-                  <div className="form-group">
-                    <label htmlFor="classCompetition">Класс соревнований</label>
-                    <Field
-                      id={this.getControlID("classCompetition")}
-                      component="select"
-                      name="classCompetition"
-                      className="form-control"
-                    >
-                      <option value="125cm3">
-                        {getClassCompetitionName("125cm3")}
-                      </option>
-                      <option value="250cm3">
-                        {getClassCompetitionName("250cm3")}
-                      </option>
-                      <option value="500cm3">
-                        {getClassCompetitionName("500cm3")}
-                      </option>
-                    </Field>
-                  </div>
+                  {this.renderField(formikBag, "name", "text", "Имя")}
+                  {this.renderField(formikBag, "bikeNumber", "number", "Номер байка")}
+                  {this.renderFieldSelect(
+                    "classCompetition",
+                    "Класс соревнований",
+                    new Map<string, string>()
+                      .set("125cm3", getClassCompetitionName("125cm3"))
+                      .set("250cm3", getClassCompetitionName("250cm3"))
+                      .set("500cm3", getClassCompetitionName("500cm3"))
+                  )}
                 </React.Fragment>
               )}
               <button
@@ -173,9 +90,7 @@ export class UserLoginPanelComponent extends React.Component<
                 className="btn btn-primary btn-block"
                 disabled={formikBag.isSubmitting}
               >
-                {formikBag.isSubmitting
-                  ? "Идет прогрев мотора..."
-                  : "Дави на газ!!!"}
+                {formikBag.isSubmitting ? "Идет прогрев мотора..." : "Дави на газ!!!"}
               </button>
             </Form>
           )}
@@ -184,13 +99,53 @@ export class UserLoginPanelComponent extends React.Component<
     );
   }
 
-  renderError = (fieldName: string): JSX.Element => {
+  renderField = (
+    formikBag: FormikProps<UserInfoValues>,
+    fieldName: string,
+    fieldType: string,
+    label: string
+  ): JSX.Element => {
     return (
-      <ErrorMessage
-        component="div"
-        name={fieldName}
-        className="invalid-feedback"
-      />
+      <div className="form-group">
+        <label htmlFor={fieldName}>{label}</label>
+        <Field
+          id={this.getControlID(fieldName)}
+          type={fieldType}
+          name={fieldName}
+          placeholder={label}
+          className={`form-control ${
+            formikBag.touched.hasOwnProperty(fieldName) &&
+            formikBag.errors.hasOwnProperty(fieldName)
+              ? "is-invalid"
+              : ""
+          }`}
+        />
+        <ErrorMessage component="div" name={fieldName} className="invalid-feedback" />
+      </div>
+    );
+  };
+
+  renderFieldSelect = (
+    fieldName: string,
+    label: string,
+    data: Map<string, string>
+  ): JSX.Element => {
+    return (
+      <div className="form-group">
+        <label htmlFor={fieldName}>{label}</label>
+        <Field
+          id={this.getControlID(fieldName)}
+          component="select"
+          name={fieldName}
+          className="form-control"
+        >
+          {Array.from(data.keys()).map(key => (
+            <option key={key} value={key}>
+              {data.get(key)}
+            </option>
+          ))}
+        </Field>
+      </div>
     );
   };
 }
