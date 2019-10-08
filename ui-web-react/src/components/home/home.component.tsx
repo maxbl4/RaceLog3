@@ -1,24 +1,25 @@
 import React from "react";
 import NewsListContainer from "../news/news-list.container";
 import RaceListContainer from "../races/race-list.container";
-import { Row, Col } from "react-bootstrap";
 
 export class HomeComponent extends React.Component {
   render() {
     return (
-      <>
-        <Row>
-          <h1>Здесь должна быть картинка с байкером или еще что то :-)</h1>
-        </Row>
-        <Row>
-          <Col>
+      <React.Fragment>
+        <div className="row">
+          <div className="col-lg-12">
+            <h1>Здесь должна быть картинка с байкером или еще что то :-)</h1>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-lg-6">
             <NewsListContainer />
-          </Col>
-          <Col>
+          </div>
+          <div className="col-lg-6">
             <RaceListContainer />
-          </Col>
-        </Row>
-      </>
+          </div>
+        </div>
+      </React.Fragment>
     );
   }
 }

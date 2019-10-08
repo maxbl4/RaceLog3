@@ -22,11 +22,11 @@ export class RaceListComponent extends React.Component<RaceListComponentProps> {
         return <div>В данный момент у нет гонок.</div>;
       } else {
         return (
-          <>
+          <React.Fragment>
             {this.props.races.items.orElse([]).map(item => (
               <RaceItemComponent key={item.id.orElse(DEFAULT_ID)} item={item} />
             ))}
-          </>
+          </React.Fragment>
         );
       }
     }

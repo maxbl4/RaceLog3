@@ -22,11 +22,11 @@ export class NewsListComponent extends React.Component<NewsListComponentProps> {
         return <div>В данный момент у нас нет для вас новостей.</div>;
       } else {
         return (
-          <>
+          <React.Fragment>
             {this.props.news.items.orElse([]).map(item => (
               <NewsItemComponent key={item.id.orElse(DEFAULT_ID)} item={item} />
             ))}
-          </>
+          </React.Fragment>
         );
       }
     }
