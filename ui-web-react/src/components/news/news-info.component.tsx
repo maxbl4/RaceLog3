@@ -3,7 +3,6 @@ import { RouteComponentProps } from "react-router-dom";
 import { NewsItemExt } from "../../model/types/datatypes";
 import { DEFAULT_ID, DEFAULT_DATE } from "../../model/utils/constants";
 import { FetchingComponent } from "../fetching/fetching.component";
-import { Row, Col } from "react-bootstrap";
 
 interface NewsInfoParams {
   id: string;
@@ -28,19 +27,17 @@ export class NewsInfoComponent extends React.Component<NewsInfoComponentProps> {
     } else {
       return (
         <div>
-          <Row>
-            <Col>{this.props.newsItemExt.header.orElse("")}</Col>
-          </Row>
-          <Row>
-            <Col>{this.props.newsItemExt.text.orElse("")}</Col>
-          </Row>
-          <Row>
-            <Col>
-              {new Date(
-                this.props.newsItemExt.date.orElse(DEFAULT_DATE)
-              ).toDateString()}
-            </Col>
-          </Row>
+          <div className="row">
+            <div className="col-lg-12">{this.props.newsItemExt.header.orElse("")}</div>
+          </div>
+          <div className="row">
+            <div className="col-lg-12">{this.props.newsItemExt.text.orElse("")}</div>
+          </div>
+          <div className="row">
+            <div className="col-lg-12">
+              {new Date(this.props.newsItemExt.date.orElse(DEFAULT_DATE)).toDateString()}
+            </div>
+          </div>
         </div>
       );
     }

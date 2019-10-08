@@ -8,9 +8,7 @@ export type UserLoginComponentProps = {
   onRegister: (userInfo: UserInfo) => void;
 };
 
-export class UserLoginComponent extends React.Component<
-  UserLoginComponentProps
-> {
+export class UserLoginComponent extends React.Component<UserLoginComponentProps> {
   render() {
     return (
       <Tabs defaultActiveKey="signIn" id="userLoginTabs">
@@ -18,10 +16,7 @@ export class UserLoginComponent extends React.Component<
           <UserLoginPanelComponent mode="login" onSubmit={this.props.onLogin} />
         </Tab>
         <Tab eventKey="register" title="Зарегистрироваться">
-          <UserLoginPanelComponent
-            mode="register"
-            onSubmit={this.props.onRegister}
-          />
+          <UserLoginPanelComponent mode="register" onSubmit={this.props.onRegister} />
         </Tab>
       </Tabs>
     );
