@@ -1,4 +1,12 @@
-import { NewsItem, NewsItemExt, RaceItem, RaceItemExt, RaceParticipant } from "../types/datatypes";
+import {
+  NewsItem,
+  NewsItemExt,
+  RaceItem,
+  RaceItemExt,
+  RaceParticipant,
+  UserInfo,
+  RaceStatistics
+} from "../types/datatypes";
 import Optional from "optional-js";
 
 export const UNKNOWN_ACTION_TYPE = "UNKNOWN_ACTION_TYPE";
@@ -47,4 +55,14 @@ export const DEFAULT_RACE_ITEM_EXT: RaceItemExt = {
   date: Optional.of(1570728837485),
   location: Optional.of("Some race location 1"),
   participants: Optional.of([DEFAULT_RACE_PARTICIPANT_1, DEFAULT_RACE_PARTICIPANT_2])
+};
+export const DEFAULT_USER_INFO: UserInfo = {
+  id: 1,
+  name: "Valentino Rossi",
+  email: "valentino.rossi@yamaha.jp",
+  password: "rossiGp46",
+  bikeNumber: 46,
+  role: "user",
+  classCompetition: "500cm3",
+  raceStatistics: Optional.empty<RaceStatistics[]>()
 };
