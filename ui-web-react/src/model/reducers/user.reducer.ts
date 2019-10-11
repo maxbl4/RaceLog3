@@ -38,10 +38,6 @@ export function userReducer(state: User = INITIAL_USER, action: AnyAction) {
         info: Optional.empty<UserInfo>()
       };
     case USER_LOGOUT:
-      return {
-        isFetching: false,
-        info: Optional.empty<UserInfo>()
-      };
     case USER_AUTHORIZED_FAIL:
       return {
         isFetching: false,
