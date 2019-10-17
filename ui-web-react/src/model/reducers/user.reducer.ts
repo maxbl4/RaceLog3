@@ -10,7 +10,7 @@ import {
   UserInfoAuthorizedAction
 } from "../actions/actions";
 import { DEFAULT_ID } from "../utils/constants";
-import { logReduce } from "../utils/logger";
+import { LoggingService } from "../utils/logging-service";
 
 export const INITIAL_USER: User = {
   isFetching: false,
@@ -29,7 +29,7 @@ export const INITIAL_USER_INFO: UserInfo = {
 };
 
 export function userReducer(state: User = INITIAL_USER, action: AnyAction) {
-  logReduce("userReducer", state, action);
+  LoggingService.getInstance().logReducer(action, state);
   switch (action.type) {
     case USER_LOGIN:
     case USER_REGISTRATION:

@@ -1,13 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.scss";
-import App from "./App";
 import { createStore, applyMiddleware } from "redux";
 import raceLogAppState from "./model/reducers/reducers";
 import { Provider } from "react-redux";
 import createSagaMiddleware from "redux-saga";
 import { StoredState } from "./model/types/datatypes";
 import raceLogSaga from "./model/sagas/sagas";
+import { LoggingService } from "./model/utils/logging-service";
+import MainContainer from "./main.container";
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore<StoredState, any, {}, {}>(
@@ -16,9 +17,15 @@ const store = createStore<StoredState, any, {}, {}>(
 );
 sagaMiddleware.run(raceLogSaga);
 
+const prodBuild = true;
+LoggingService.getInstance().init({
+  sendLogsToServer: prodBuild,
+  url: "http://localhost:3001/logger"
+});
+
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <MainContainer />
   </Provider>,
   document.getElementById("root")
 );

@@ -8,8 +8,8 @@ import {
   SELECTED_NEWS_LOADED,
   SelectedNewsLoadedAction
 } from "../actions/actions";
-import { logReduce } from "../utils/logger";
 import Optional from "optional-js";
+import { LoggingService } from "../utils/logging-service";
 
 export const INITIAL_NEWS: News = {
   isFetching: false,
@@ -25,7 +25,7 @@ export const INITIAL_SELECTED_NEWS = {
 };
 
 export function newsReducer(state: News = INITIAL_NEWS, action: AnyAction) {
-  logReduce("newsReducer", state, action);
+  LoggingService.getInstance().logReducer(action, state);
   switch (action.type) {
     case NEWS_REQUESTED:
       return {
@@ -46,7 +46,7 @@ export function selectedNewsReducer(
   state: NewsItemExt = INITIAL_SELECTED_NEWS,
   action: AnyAction
 ) {
-  logReduce("selectedNewsReducer", state, action);
+  LoggingService.getInstance().logReducer(action, state);
   switch (action.type) {
     case SELECTED_NEWS_REQUESTED:
       return {
