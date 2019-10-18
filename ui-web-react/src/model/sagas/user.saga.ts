@@ -1,4 +1,4 @@
-import { put, takeLatest } from "redux-saga/effects";
+import { put, takeLatest, call } from "redux-saga/effects";
 import {
   USER_REGISTRATION,
   USER_LOGIN,
@@ -9,8 +9,10 @@ import {
 } from "../actions/actions";
 import { delay } from "./sagas";
 import Optional from "optional-js";
-import { RaceStatistics } from "../types/datatypes";
+import { RaceStatistics, UserInfo } from "../types/datatypes";
 import { LoggingService } from "../utils/logging-service";
+import { login, aboutMe, logout } from "../api/cms.api";
+import { DEFAULT_USER_INFO } from "../utils/test.utils";
 
 function* tryRegister(action: UserInfoRequestAction) {
   try {
@@ -35,19 +37,17 @@ function* tryRegister(action: UserInfoRequestAction) {
 
 function* tryLogin(action: UserInfoRequestAction) {
   try {
-    yield delay(1000);
-    yield put(
-      userAuthorizedOk({
-        id: 1,
-        name: "Дима",
-        password: action.userInfo.password,
-        email: action.userInfo.email,
-        bikeNumber: 87,
-        role: "admin",
-        classCompetition: "500cm3",
-        raceStatistics: Optional.empty<RaceStatistics[]>()
-      })
-    );
+    yield call(login, action.userInfo.email, action.userInfo.password);
+    const userInfo: Optional<UserInfo> = yield call(aboutMe);
+    if (userInfo.isPresent()) {
+      yield put(userAuthorizedOk(userInfo.orElse(DEFAULT_USER_INFO)));
+    } else {
+      LoggingService.getInstance().logSagaError(
+        new Error("Empty response from server for login action"),
+        action
+      );
+      yield put(userAuthorizedFail());
+    }
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(userAuthorizedFail());
@@ -56,11 +56,9 @@ function* tryLogin(action: UserInfoRequestAction) {
 
 function* tryLogout(action: UserInfoRequestAction) {
   try {
-    yield delay(1000);
-    // send here logout message to server
+    yield call(logout);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
-    // yield put(userAuthorizedFail());
   }
 }
 
