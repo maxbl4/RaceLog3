@@ -3,7 +3,7 @@ import {
   MESH_API_LOGIN,
   MESH_API_LOGOUT,
   MESH_API_ABOUT_ME,
-  getMeshServerURL
+  getServerURL
 } from "../utils/constants";
 
 export async function meshLogin(userName: string, userPassword: string): Promise<CMSResponse> {
@@ -28,12 +28,9 @@ export async function meshSimpleGET(
   headerValue: string
 ): Promise<CMSResponse> {
   const headers = new Headers();
-  headers.append('Access-Control-Allow-Origin', '*');
-  headers.append('Content-Type', 'application/json');
-  headers.append('Accept', 'application/json');
   headers.append(headerName, headerValue);
 
-  const request = new Request(getMeshServerURL() + apiPath, {
+  const request = new Request(getServerURL() + apiPath, {
     method: "GET",
     headers: headers
   });

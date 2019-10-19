@@ -10,16 +10,16 @@ export const MESH_API_LOGIN = MESH_API_PREFIX + "/auth/login";
 export const MESH_API_LOGOUT = MESH_API_PREFIX + "/auth/logout";
 export const MESH_API_ABOUT_ME = MESH_API_PREFIX + "/auth/me";
 
+export const LOGGER_PATH = "/logger";
+
 export const isProdEnvironment = (): boolean => {
   return process.env.REACT_APP_ENVIRONMENT === "prod";
 };
 
 export const getLogServerURL = (): string => {
-  return Optional.ofNullable(process.env.REACT_APP_LOG_SERVER_URL).orElse(
-    "http://localhost:3001/logger"
-  );
+  return getServerURL() + LOGGER_PATH;
 };
 
-export const getMeshServerURL = (): string => {
-  return Optional.ofNullable(process.env.REACT_APP_MESH_SERVER_URL).orElse("http://localhost:8080");
+export const getServerURL = (): string => {
+  return Optional.ofNullable(process.env.REACT_APP_SERVER_URL).orElse("http://localhost:3001");
 };

@@ -1,16 +1,17 @@
 {
-  "name": "logging-server",
+  "name": "race-log-server",
   "version": "1.0.0",
-  "description": "",
-  "main": "logging-server.js",
+  "description": "It's server for RaceLog3",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Dmitry Komarov",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "logzio-nodejs": "^1.0.7"
+    "logzio-nodejs": "^1.0.7",
+    "request": "^2.88.0"
   }
 }
