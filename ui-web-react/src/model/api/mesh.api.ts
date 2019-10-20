@@ -5,6 +5,7 @@ import {
   MESH_API_ABOUT_ME,
   getServerURL
 } from "../utils/constants";
+import { LoggingService } from "../utils/logging-service";
 
 export async function meshLogin(userName: string, userPassword: string): Promise<CMSResponse> {
   return meshSimpleGET(
@@ -34,16 +35,19 @@ export async function meshSimpleGET(
     method: "GET",
     headers: headers
   });
-  const res: Response = await get(request);
+
+  const jsonRequest = await request.json();
+  LoggingService.getInstance().debug(`Sending request: ${JSON.stringify(jsonRequest)}`);
+
+  const response: Response = await fetch(request);
+  const jsonResponse = await response.json();
+
+  LoggingService.getInstance().debug(`Response received: ${jsonResponse}`);
+
   return new Promise<CMSResponse>(resolve =>
     resolve({
-      success: res.ok,
-      body: JSON.stringify(res)
+      success: response.ok,
+      body: jsonResponse
     })
   );
 }
-
-const get = async (path: any): Promise<Response> => {
-  const response = await fetch(path);
-  return response;
-};
