@@ -36,13 +36,16 @@ export async function meshSimpleGET(
     headers: headers
   });
 
-  const jsonRequest = await request.json();
-  LoggingService.getInstance().debug(`Sending request: ${JSON.stringify(jsonRequest)}`);
+  LoggingService.getInstance().debug(`Sending request: ${JSON.stringify({
+    url: getServerURL() + apiPath,
+    method: "GET",
+    headers: headerName + ": " + headerValue
+  })}`);
 
   const response: Response = await fetch(request);
   const jsonResponse = await response.json();
 
-  LoggingService.getInstance().debug(`Response received: ${jsonResponse}`);
+  LoggingService.getInstance().debug(`Response received: ${JSON.stringify(jsonResponse)}`);
 
   return new Promise<CMSResponse>(resolve =>
     resolve({
