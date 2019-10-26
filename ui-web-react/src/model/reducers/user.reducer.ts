@@ -1,4 +1,4 @@
-import { User, UserInfo, RaceStatistics } from "../types/datatypes";
+import { User, UserInfo } from "../types/datatypes";
 import Optional from "optional-js";
 import { AnyAction } from "redux";
 import {
@@ -9,7 +9,6 @@ import {
   USER_AUTHORIZED_OK,
   UserInfoAuthorizedAction
 } from "../actions/actions";
-import { DEFAULT_ID } from "../utils/constants";
 import { LoggingService } from "../utils/logging-service";
 
 export const INITIAL_USER: User = {
@@ -18,14 +17,11 @@ export const INITIAL_USER: User = {
 };
 
 export const INITIAL_USER_INFO: UserInfo = {
-  id: DEFAULT_ID,
+  uuid: "",
   name: "",
   email: "",
   password: "",
-  bikeNumber: DEFAULT_ID,
-  role: "user",
-  classCompetition: "125cm3",
-  raceStatistics: Optional.empty<RaceStatistics[]>()
+  role: "user"
 };
 
 export function userReducer(state: User = INITIAL_USER, action: AnyAction) {

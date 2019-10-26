@@ -9,24 +9,21 @@ import {
 } from "../actions/actions";
 import { delay } from "./sagas";
 import Optional from "optional-js";
-import { RaceStatistics, UserInfo } from "../types/datatypes";
+import { UserInfo } from "../types/datatypes";
 import { LoggingService } from "../utils/logging-service";
 import { login, aboutMe, logout } from "../api/cms.api";
-import { DEFAULT_USER_INFO } from "../utils/test.utils";
+import { INITIAL_USER_INFO } from "../reducers/user.reducer";
 
 function* tryRegister(action: UserInfoRequestAction) {
   try {
     yield delay(1000);
     yield put(
       userAuthorizedOk({
-        id: 1,
+        uuid: INITIAL_USER_INFO.uuid,
         name: action.userInfo.name,
         password: action.userInfo.password,
         email: action.userInfo.email,
-        bikeNumber: action.userInfo.bikeNumber,
-        role: action.userInfo.role,
-        classCompetition: action.userInfo.classCompetition,
-        raceStatistics: Optional.empty<RaceStatistics[]>()
+        role: action.userInfo.role
       })
     );
   } catch (e) {
@@ -39,15 +36,11 @@ function* tryLogin(action: UserInfoRequestAction) {
   try {
     yield call(login, action.userInfo.email, action.userInfo.password);
     const userInfo: Optional<UserInfo> = yield call(aboutMe);
-    if (userInfo.isPresent()) {
-      yield put(userAuthorizedOk(userInfo.orElse(DEFAULT_USER_INFO)));
-    } else {
-      LoggingService.getInstance().logSagaError(
-        new Error("Empty response from server for login action"),
-        action
-      );
-      yield put(userAuthorizedFail());
-    }
+    yield put(
+      userAuthorizedOk(
+        userInfo.orElseThrow(() => new Error("Empty response from server for login action"))
+      )
+    );
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(userAuthorizedFail());

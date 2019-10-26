@@ -2,7 +2,6 @@ import Optional from "optional-js";
 import { UserInfo } from "../types/datatypes";
 import log from "loglevel";
 import remote from "loglevel-plugin-remote";
-import { DEFAULT_ID } from "./constants";
 import { AnyAction } from "redux";
 
 export type LoggingServiceProps = {
@@ -54,7 +53,7 @@ export class LoggingService {
   }
 
   private prefix(): string {
-    return `[User ID: ${this.userInfo.map(info => info.id).orElse(DEFAULT_ID)}]`;
+    return `[User UUID: ${this.userInfo.map(info => info.uuid).orElse("")}]`;
   }
 
   public logReducer(action: AnyAction, state: any): void {

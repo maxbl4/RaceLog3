@@ -4,8 +4,7 @@ import {
   RaceItem,
   RaceItemExt,
   RaceParticipant,
-  UserInfo,
-  RaceStatistics
+  UserInfo
 } from "../types/datatypes";
 import Optional from "optional-js";
 
@@ -57,12 +56,9 @@ export const DEFAULT_RACE_ITEM_EXT: RaceItemExt = {
   participants: Optional.of([DEFAULT_RACE_PARTICIPANT_1, DEFAULT_RACE_PARTICIPANT_2])
 };
 export const DEFAULT_USER_INFO: UserInfo = {
-  id: 1,
+  uuid: "f0449b54-f815-11e9-aad5-362b9e155667",
   name: "Valentino Rossi",
   email: "valentino.rossi@yamaha.jp",
   password: "rossiGp46",
-  bikeNumber: 46,
-  role: "user",
-  classCompetition: "500cm3",
-  raceStatistics: Optional.empty<RaceStatistics[]>()
+  role: "user"
 };
