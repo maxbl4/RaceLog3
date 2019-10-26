@@ -2,6 +2,10 @@ import Optional from "optional-js";
 
 export const DEFAULT_ID = -1;
 export const DEFAULT_DATE = 0;
+/**
+ * Default timeout for operations: 10 seconds
+ */
+export const DEFAULT_TIMEOUT = 10 * 1000;
 
 export const COOKIE_MESH_TOKEN = "mesh.user.token";
 
