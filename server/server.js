@@ -69,11 +69,18 @@ app.post("/logger", function(request, response) {
 
 app.options(`${meshURL}`, function(request, response) {
   response.writeHead(200, {
-    "Access-Control-Allow-Headers": ["Content-Type", "Accept", "Access-Control-Allow-Origin", "Authorization", "authorization"],
+    "Access-Control-Allow-Headers": [
+      "Content-Type",
+      "Type",
+      "Accept",
+      "Access-Control-Allow-Origin",
+      "Authorization",
+      "authorization"
+    ],
     "Access-Control-Allow-Methods": ["OPTIONS", "HEAD", "DELETE", "POST", "PUT", "GET"],
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Expose-Headers": "",
-    "Allow": ["OPTIONS", "HEAD", "DELETE", "POST", "PUT", "GET"]
+    Allow: ["OPTIONS", "HEAD", "DELETE", "POST", "PUT", "GET"]
   });
   response.end("Accepted options");
 });

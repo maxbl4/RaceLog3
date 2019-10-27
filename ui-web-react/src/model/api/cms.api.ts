@@ -1,4 +1,4 @@
-import { meshLogin, meshLogout, meshAboutMe } from "./mesh.api";
+import { meshLogin, meshLogout, meshAboutMe, meshRegister } from "./mesh.api";
 import * as Cookies from "js-cookie";
 import { COOKIE_MESH_TOKEN, DEFAULT_TIMEOUT } from "../utils/constants";
 import Optional from "optional-js";
@@ -73,4 +73,26 @@ async function aboutMeImpl(): Promise<Optional<UserInfo>> {
     });
   }
   return new Promise<Optional<UserInfo>>(resolve => resolve(Optional.empty<UserInfo>()));
+}
+
+export async function register(userInfo: UserInfo): Promise<Optional<UserInfo>> {
+  return timeout(registerImpl(userInfo), DEFAULT_TIMEOUT);
+}
+
+async function registerImpl(userInfo: UserInfo): Promise<Optional<UserInfo>> {
+  Cookies.remove(COOKIE_MESH_TOKEN);
+  const res = await meshRegister(userInfo);
+  return new Promise<Optional<UserInfo>>((resolve, reject) => {
+    if (res.success) {
+      console.log(JSON.stringify(res.body));
+      resolve(
+        Optional.of<UserInfo>({
+          ...DEFAULT_USER_INFO,
+          ...res.body
+        })
+      );
+    } else {
+      reject(res.rejectReason);
+    }
+  });
 }

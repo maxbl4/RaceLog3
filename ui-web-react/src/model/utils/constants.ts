@@ -13,6 +13,7 @@ export const MESH_API_PREFIX = "/api/v2";
 export const MESH_API_LOGIN = MESH_API_PREFIX + "/auth/login";
 export const MESH_API_LOGOUT = MESH_API_PREFIX + "/auth/logout";
 export const MESH_API_ABOUT_ME = MESH_API_PREFIX + "/auth/me";
+export const MESH_API_USERS = MESH_API_PREFIX + "/users";
 
 export const LOGGER_PATH = "/logger";
 

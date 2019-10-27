@@ -8,25 +8,18 @@ import {
   USER_LOGOUT,
   USER_LOGIN_ON_START
 } from "../actions/actions";
-import { delay } from "./sagas";
 import Optional from "optional-js";
 import { UserInfo } from "../types/datatypes";
 import { LoggingService } from "../utils/logging-service";
-import { login, aboutMe, logout } from "../api/cms.api";
-import { INITIAL_USER_INFO } from "../reducers/user.reducer";
+import { login, aboutMe, logout, register } from "../api/cms.api";
 
 function* tryRegister(action: UserInfoRequestAction) {
   try {
-    yield delay(1000);
-    yield put(
-      userAuthorizedOk({
-        uuid: INITIAL_USER_INFO.uuid,
-        name: action.userInfo.name,
-        password: action.userInfo.password,
-        email: action.userInfo.email,
-        role: action.userInfo.role
-      })
+    const userInfoOpt: Optional<UserInfo> = yield call(register, action.userInfo);
+    userInfoOpt.orElseThrow(
+      () => new Error(`Cannot create user with name "${action.userInfo.name}"`)
     );
+    tryLoginAndGetUserInfo(action.type);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(userAuthorizedFail());
@@ -35,31 +28,34 @@ function* tryRegister(action: UserInfoRequestAction) {
 
 function* tryLogin(action: UserInfoRequestAction) {
   try {
-    yield call(login, action.userInfo.email, action.userInfo.password);
-    const userInfo: Optional<UserInfo> = yield call(aboutMe);
-    yield put(
-      userAuthorizedOk(
-        userInfo.orElseThrow(() => new Error("Empty response from server for login action"))
-      )
-    );
+    tryLoginAndGetUserInfo(action.userInfo);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(userAuthorizedFail());
   }
 }
 
+function* tryLoginAndGetUserInfo(userInfo: UserInfo) {
+  yield call(login, userInfo.email, userInfo.password);
+  tryGetUserInfo();
+}
+
 function* tryLoginOnStart() {
   try {
-    const userInfo: Optional<UserInfo> = yield call(aboutMe);
-    yield put(
-      userAuthorizedOk(
-        userInfo.orElseThrow(() => new Error("Empty response from server for login action"))
-      )
-    );
+    tryGetUserInfo();
   } catch (e) {
     LoggingService.getInstance().logSagaError(e);
     yield put(userAuthorizedFail());
   }
+}
+
+function* tryGetUserInfo() {
+  const userInfo: Optional<UserInfo> = yield call(aboutMe);
+  yield put(
+    userAuthorizedOk(
+      userInfo.orElseThrow(() => new Error("Empty response from server for login action"))
+    )
+  );
 }
 
 function* tryLogout(action: UserInfoRequestAction) {
