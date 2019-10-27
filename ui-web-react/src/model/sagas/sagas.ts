@@ -4,7 +4,8 @@ import { racesSaga, selectedRaceSaga } from "./race.saga";
 import {
   userLoginSaga,
   userRegistrationSaga,
-  userLogoutSaga
+  userLogoutSaga,
+  userLoginOnStartSaga
 } from "./user.saga";
 
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -16,6 +17,7 @@ function* raceLogSaga() {
     call(selectedNewsSaga),
     call(selectedRaceSaga),
     call(userLoginSaga),
+    call(userLoginOnStartSaga),
     call(userLogoutSaga),
     call(userRegistrationSaga)
   ]);

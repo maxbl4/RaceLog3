@@ -1,6 +1,8 @@
 import { connect } from "react-redux";
+import { Dispatch } from "redux";
 import { StoredState } from "./model/types/datatypes";
 import { MainComponent } from "./main.component";
+import { userLoginOnStart } from "./model/actions/actions";
 
 const mapStateToProps = (state: StoredState) => {
   return {
@@ -8,6 +10,13 @@ const mapStateToProps = (state: StoredState) => {
   };
 };
 
-const MainContainer = connect(mapStateToProps)(MainComponent);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  onMainCompMountFn: () => dispatch(userLoginOnStart())
+});
+
+const MainContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainComponent);
 
 export default MainContainer;

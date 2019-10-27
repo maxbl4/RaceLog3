@@ -5,7 +5,8 @@ import {
   UserInfoRequestAction,
   userAuthorizedOk,
   userAuthorizedFail,
-  USER_LOGOUT
+  USER_LOGOUT,
+  USER_LOGIN_ON_START
 } from "../actions/actions";
 import { delay } from "./sagas";
 import Optional from "optional-js";
@@ -47,6 +48,20 @@ function* tryLogin(action: UserInfoRequestAction) {
   }
 }
 
+function* tryLoginOnStart() {
+  try {
+    const userInfo: Optional<UserInfo> = yield call(aboutMe);
+    yield put(
+      userAuthorizedOk(
+        userInfo.orElseThrow(() => new Error("Empty response from server for login action"))
+      )
+    );
+  } catch (e) {
+    LoggingService.getInstance().logSagaError(e);
+    yield put(userAuthorizedFail());
+  }
+}
+
 function* tryLogout(action: UserInfoRequestAction) {
   try {
     yield call(logout);
@@ -61,6 +76,10 @@ export function* userRegistrationSaga() {
 
 export function* userLoginSaga() {
   yield takeLatest(USER_LOGIN, tryLogin);
+}
+
+export function* userLoginOnStartSaga() {
+  yield takeLatest(USER_LOGIN_ON_START, tryLoginOnStart);
 }
 
 export function* userLogoutSaga() {
