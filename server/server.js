@@ -58,6 +58,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text());
 app.use(`${meshURL}`, meshProxy);
 
+// Login under 'art_creator' user, store it's credentials and add them for all create user requests
+
 // -----------------------------------------------------------------------------------------------
 
 app.post("/logger", function(request, response) {
@@ -70,12 +72,10 @@ app.post("/logger", function(request, response) {
 app.options(`${meshURL}`, function(request, response) {
   response.writeHead(200, {
     "Access-Control-Allow-Headers": [
-      "Content-Type",
-      "Type",
+      "Content-Type"
       "Accept",
       "Access-Control-Allow-Origin",
-      "Authorization",
-      "authorization"
+      "Authorization"
     ],
     "Access-Control-Allow-Methods": ["OPTIONS", "HEAD", "DELETE", "POST", "PUT", "GET"],
     "Access-Control-Allow-Origin": "*",

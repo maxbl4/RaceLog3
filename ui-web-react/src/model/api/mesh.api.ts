@@ -16,7 +16,7 @@ type HeaderField = {
 
 export async function meshLogin(userName: string, userPassword: string): Promise<CMSResponse> {
   return executeQuery(MESH_API_LOGIN, "GET", [
-    { name: "authorization", value: "Basic " + btoa(`${userName}:${userPassword}`) }
+    { name: "Authorization", value: "Basic " + btoa(`${userName}:${userPassword}`) }
   ]);
 }
 
@@ -33,11 +33,11 @@ export async function meshAboutMe(token: string): Promise<CMSResponse> {
 }
 
 export async function meshRegister(userInfo: UserInfo): Promise<CMSResponse> {
-  return executeQuery(MESH_API_USERS, "POST", [{ name: "Type", value: "application/json" }], {
+  return executeQuery(MESH_API_USERS, "POST", [{ name: "Content-Type", value: "application/json" }], {
     username: userInfo.email,
     password: userInfo.password,
     firstname: userInfo.name,
-    emailAddress: userInfo.name
+    emailAddress: userInfo.email
   });
 }
 
