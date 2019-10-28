@@ -1,6 +1,7 @@
 const express = require("express");
 const proxy = require("http-proxy-middleware");
 const bodyParser = require("body-parser");
+const fetch = require("node-fetch");
 
 // common variables
 const host = "localhost";
@@ -15,36 +16,35 @@ const meshURLUsers = meshPrefix + "/users";
 // -----------------------------------------------------------------------------------------------
 
 // Login under 'art_creator' user, store it's credentials and add them for all create user requests
-async function getAuthHeaderForArtCreatorUser() {
-  const headers = new Headers();
-  headers.append("Authorization", "Basic " + btoa("art_creator:art_creator123#"));
-  const response = await fetch(
-    new Request(`http://${meshHost}:${meshPort}${meshURLLogin}`, {
-      method: "GET",
-      headers: headers
-    })
-  );
-
-  if (!response.ok) {
-    throw new Error("Network response was not OK");
-  }
-  const jsonResponse = await response.json();
-  return {
-    name: "Authorization",
-    value: `Bearer ${jsonResponse.body.token}`
-  };
-}
-
 let createUserHeader = undefined;
-try {
-  createUserHeader = getAuthHeaderForArtCreatorUser();
-  console.log("'art_creator' user has been logged in successfully");
-} catch (e) {
-  console.error(
-    "Cannot get token for 'art_creator' user. Unauthorized clients will not able to create user",
-    e
-  );
-}
+const createUserError =
+  "Cannot get token for 'art_creator' user. Unauthorized clients will not able to create user";
+const initAuthHeaderForArtCreatorUser = () => {
+  fetch(`http://${meshHost}:${meshPort}${meshURLLogin}`, {
+    method: "GET",
+    headers: {
+      Authorization: "Basic " + Buffer.from("art_creator:art_creator123#").toString("base64")
+    }
+  })
+    .then(response => {
+      if (response.ok) {
+        response.json().then(jsonResponse => {
+          createUserHeader = {
+            name: "Authorization",
+            value: `Bearer ${jsonResponse.token}`
+          };
+          console.log("'art_creator' user has been logged in successfully");
+        });
+      } else {
+        console.error(createUserError);
+      }
+    })
+    .catch(reject => {
+      console.error(createUserError, reject);
+    });
+};
+initAuthHeaderForArtCreatorUser();
+
 // -----------------------------------------------------------------------------------------------
 
 // Configure logs resinding
@@ -77,12 +77,8 @@ var options = {
     }
   },
   onProxyReq: (proxyReq, req, res) => {
-    if (
-      createUserHeader &&
-      req.method === "POST" &&
-      req.url === `http://${host}:${port}${meshURLUsers}`
-    ) {
-      proxyReq.setHeader(createUserHeader.name, createUserHeader.value);
+    if (createUserHeader && req.method === "POST" && req.url === meshURLUsers) {
+      proxyReq.headers[createUserHeader.name] = createUserHeader.value;
     }
   }
 };
