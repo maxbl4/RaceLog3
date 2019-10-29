@@ -28,3 +28,7 @@ export const getLogServerURL = (): string => {
 export const getServerURL = (): string => {
   return Optional.ofNullable(process.env.REACT_APP_SERVER_URL).orElse("http://localhost:3001");
 };
+
+export const getLogLevel = (): string => {
+  return Optional.ofNullable(process.env.REACT_APP_LOG_LEVEL).orElse("info");
+};

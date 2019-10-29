@@ -22,7 +22,7 @@ export class MainComponent extends React.Component<MainComponentProps> {
     this.updateLoggerService();
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.onMainCompMountFn();
   }
 

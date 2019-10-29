@@ -9,7 +9,7 @@ import { StoredState } from "./model/types/datatypes";
 import raceLogSaga from "./model/sagas/sagas";
 import { LoggingService } from "./model/utils/logging-service";
 import MainContainer from "./main.container";
-import { isProdEnvironment, getLogServerURL } from "./model/utils/constants";
+import { isProdEnvironment, getLogServerURL, getLogLevel } from "./model/utils/constants";
 
 const sagaMiddleware = createSagaMiddleware();
 const store = createStore<StoredState, any, {}, {}>(
@@ -20,7 +20,8 @@ sagaMiddleware.run(raceLogSaga);
 
 LoggingService.getInstance().init({
   sendLogsToServer: isProdEnvironment(),
-  url: getLogServerURL()
+  url: getLogServerURL(),
+  level: getLogLevel(),
 });
 
 ReactDOM.render(

@@ -1,12 +1,13 @@
 import Optional from "optional-js";
 import { UserInfo } from "../types/datatypes";
-import log from "loglevel";
+import log, { LogLevelDesc } from "loglevel";
 import remote from "loglevel-plugin-remote";
 import { AnyAction } from "redux";
 
 export type LoggingServiceProps = {
   sendLogsToServer: boolean;
   url?: string;
+  level: string;
 };
 
 export class LoggingService {
@@ -27,17 +28,21 @@ export class LoggingService {
   }
 
   public init(props: LoggingServiceProps): void {
-    log.enableAll();
+    log.setLevel(props.level as LogLevelDesc);
     if (props.sendLogsToServer) {
       remote.apply(log, {
         url: props.url,
-        level: "info"
+        level: props.level
       });
     }
   }
 
   public setUserInfo(info: Optional<UserInfo>): void {
     this.userInfo = info;
+  }
+
+  public info(...msg: any[]): void {
+    log.info(this.prefix(), ...msg);
   }
 
   public debug(...msg: any[]): void {
@@ -58,13 +63,13 @@ export class LoggingService {
 
   public logReducer(action: AnyAction, state: any): void {
     this.debug(
-      `action='${JSON.stringify(action)}', state='${JSON.stringify(state)}'`
+      `action type='${JSON.stringify(action.type)}', state='${JSON.stringify(state)}'`
     );
   }
 
   public logSagaError(error: Error, action?: AnyAction): void {
     this.error(
-      `action='${JSON.stringify(action)}', error='${JSON.stringify(error)}'`
+      `action type='${JSON.stringify(action ? action.type : "unknown action")}', error='${JSON.stringify(error)}'`
     );
   }
 }

@@ -44,7 +44,6 @@ function* tryLoginOnStart() {
   try {
     yield tryGetUserInfo();
   } catch (e) {
-    LoggingService.getInstance().logSagaError(e);
     yield put(userAuthorizedFail());
   }
 }

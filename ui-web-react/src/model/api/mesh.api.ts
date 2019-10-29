@@ -56,7 +56,7 @@ export async function executeQuery(
     body: body ? JSON.stringify(body) : undefined
   });
 
-  LoggingService.getInstance().debug(
+  LoggingService.getInstance().info(
     `Sending request: ${JSON.stringify({
       url: request.url,
       method: request.method,
@@ -68,7 +68,7 @@ export async function executeQuery(
   const response: Response = await fetch(request);
   const jsonResponse = await response.json();
 
-  LoggingService.getInstance().debug(`Response received: ${JSON.stringify(jsonResponse)}`);
+  LoggingService.getInstance().info(`Response received: ${JSON.stringify(jsonResponse)}`);
 
   return new Promise<CMSResponse>(resolve =>
     resolve({

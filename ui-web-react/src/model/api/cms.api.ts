@@ -3,8 +3,8 @@ import * as Cookies from "js-cookie";
 import { COOKIE_MESH_TOKEN, DEFAULT_TIMEOUT } from "../utils/constants";
 import Optional from "optional-js";
 import { UserInfo } from "../types/datatypes";
-import { DEFAULT_USER_INFO } from "../utils/test.utils";
 import { timeout } from "promise-timeout";
+import { INITIAL_USER_INFO } from "../reducers/user.reducer";
 
 export type CMSResponse = {
   success: boolean;
@@ -63,7 +63,7 @@ async function aboutMeImpl(): Promise<Optional<UserInfo>> {
         console.log(JSON.stringify(res.body));
         resolve(
           Optional.of<UserInfo>({
-            ...DEFAULT_USER_INFO,
+            ...INITIAL_USER_INFO,
             ...res.body
           })
         );
@@ -87,7 +87,7 @@ async function registerImpl(userInfo: UserInfo): Promise<Optional<UserInfo>> {
       console.log(JSON.stringify(res.body));
       resolve(
         Optional.of<UserInfo>({
-          ...DEFAULT_USER_INFO,
+          ...INITIAL_USER_INFO,
           ...res.body
         })
       );
