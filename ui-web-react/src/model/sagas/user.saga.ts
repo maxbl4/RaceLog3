@@ -19,7 +19,7 @@ function* tryRegister(action: UserInfoRequestAction) {
     userInfoOpt.orElseThrow(
       () => new Error(`Cannot create user with name "${action.userInfo.name}"`)
     );
-    tryLoginAndGetUserInfo(action.type);
+    yield tryLoginAndGetUserInfo(action.type);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(userAuthorizedFail());
@@ -28,7 +28,7 @@ function* tryRegister(action: UserInfoRequestAction) {
 
 function* tryLogin(action: UserInfoRequestAction) {
   try {
-    tryLoginAndGetUserInfo(action.userInfo);
+    yield tryLoginAndGetUserInfo(action.userInfo);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(userAuthorizedFail());
@@ -37,12 +37,12 @@ function* tryLogin(action: UserInfoRequestAction) {
 
 function* tryLoginAndGetUserInfo(userInfo: UserInfo) {
   yield call(login, userInfo.email, userInfo.password);
-  tryGetUserInfo();
+  yield tryGetUserInfo();
 }
 
 function* tryLoginOnStart() {
   try {
-    tryGetUserInfo();
+    yield tryGetUserInfo();
   } catch (e) {
     LoggingService.getInstance().logSagaError(e);
     yield put(userAuthorizedFail());

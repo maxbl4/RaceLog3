@@ -26,22 +26,15 @@ const initAuthHeaderForArtCreatorUser = () => {
       Authorization: "Basic " + Buffer.from("art_creator:art_creator123#").toString("base64")
     }
   })
-    .then(response => {
-      if (response.ok) {
-        response.json().then(jsonResponse => {
-          createUserHeader = {
-            name: "Authorization",
-            value: `Bearer ${jsonResponse.token}`
-          };
-          console.log("'art_creator' user has been logged in successfully");
-        });
-      } else {
-        console.error(createUserError);
-      }
+    .then(response => response.json())
+    .then(jsonResponse => {
+      createUserHeader = {
+        name: "Authorization",
+        value: `Bearer ${jsonResponse.token}`
+      };
+      console.log("'art_creator' user has been logged in successfully");
     })
-    .catch(reject => {
-      console.error(createUserError, reject);
-    });
+    .catch(reject => console.error(createUserError, reject));
 };
 initAuthHeaderForArtCreatorUser();
 
@@ -78,7 +71,7 @@ var options = {
   },
   onProxyReq: (proxyReq, req, res) => {
     if (createUserHeader && req.method === "POST" && req.url === meshURLUsers) {
-      proxyReq.headers[createUserHeader.name] = createUserHeader.value;
+      proxyReq.setHeader(createUserHeader.name, createUserHeader.value);
     }
   }
 };
