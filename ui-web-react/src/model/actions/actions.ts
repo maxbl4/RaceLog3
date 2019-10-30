@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { NewsItem, RaceItem, NewsItemExt, RaceItemExt, UserInfo } from "../types/datatypes";
+import { NewsItem, RaceItem, NewsItemExt, RaceItemExt, UserInfo, Alert } from "../types/datatypes";
 import Optional from "optional-js";
 
 // ----------------------------------------------------------------------
@@ -23,6 +23,9 @@ export const USER_LOGIN_ON_START = "USER_LOGIN_ON_START";
 export const USER_LOGOUT = "USER_LOGOUT";
 export const USER_AUTHORIZED_OK = "USER_AUTHORIZED_OK";
 export const USER_AUTHORIZED_FAIL = "USER_AUTHORIZED_FAIL";
+
+export const ALERTS_SHOW = "ALERTS_SHOW";
+export const ALERTS_HIDE = "ALERTS_HIDE";
 
 // ----------------------------------------------------------------------
 // Actions classes
@@ -57,6 +60,10 @@ export type UserInfoRequestAction = AnyAction & {
 export type UserInfoAuthorizedAction = AnyAction & {
   userInfo: Optional<UserInfo>;
 };
+
+export type AlertsAction = AnyAction & {
+  alert: Alert;
+}
 
 // ----------------------------------------------------------------------
 // Actions
@@ -116,4 +123,13 @@ export const userAuthorizedOk = (userInfo: UserInfo): UserInfoAuthorizedAction =
 });
 export const userAuthorizedFail = (): AnyAction => ({
   type: USER_AUTHORIZED_FAIL
+});
+
+export const alertsShow = (alert: Alert): AlertsAction => ({
+  type: ALERTS_SHOW,
+  alert: alert
+});
+export const alertsHide = (alert: Alert): AlertsAction => ({
+  type: ALERTS_HIDE,
+  alert: alert
 });
