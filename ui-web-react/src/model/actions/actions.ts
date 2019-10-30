@@ -19,6 +19,7 @@ export const SELECTED_RACE_LOADED = "SELECTED_RACE_LOADED";
 
 export const USER_REGISTRATION = "USER_REGISTRATION";
 export const USER_LOGIN = "USER_LOGIN";
+export const USER_LOGIN_ON_START = "USER_LOGIN_ON_START";
 export const USER_LOGOUT = "USER_LOGOUT";
 export const USER_AUTHORIZED_OK = "USER_AUTHORIZED_OK";
 export const USER_AUTHORIZED_FAIL = "USER_AUTHORIZED_FAIL";
@@ -101,6 +102,9 @@ export const userReqistration = (userInfo: UserInfo): UserInfoRequestAction => (
 export const userLogin = (userInfo: UserInfo): UserInfoRequestAction => ({
   type: USER_LOGIN,
   userInfo: userInfo
+});
+export const userLoginOnStart = (): AnyAction => ({
+  type: USER_LOGIN_ON_START
 });
 export const userLogout = (userInfo: UserInfo): UserInfoRequestAction => ({
   type: USER_LOGOUT,

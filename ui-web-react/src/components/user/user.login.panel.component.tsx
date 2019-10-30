@@ -1,10 +1,6 @@
 import React from "react";
 import { UserInfo } from "../../model/types/datatypes";
 import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
-import {
-  ClassCompetition,
-  getClassCompetitionName
-} from "../../model/types/class-competition.model";
 import { Formik, Form, Field, ErrorMessage, FormikActions, FormikProps } from "formik";
 import * as Yup from "yup";
 
@@ -26,19 +22,13 @@ const registerSchema = Yup.object().shape({
     .required("Введите пожалуйста пароль"),
   name: Yup.string()
     .min(2, "Имя должно быть не менее 2-х символов")
-    .required("Введите пожалуйста имя"),
-  bikeNumber: Yup.number()
-    .positive("Номер байка должен быть положительным")
-    .integer("Номер байка должен быть целым числом")
-    .required("Введите пожалуйста номер байка")
+    .required("Введите пожалуйста имя")
 });
 
 interface UserInfoValues {
   name: string;
   password: string;
   email: string;
-  bikeNumber: number;
-  classCompetition: ClassCompetition;
 }
 
 export type UserLoginPanelComponentProps = {
@@ -74,15 +64,6 @@ export class UserLoginPanelComponent extends React.Component<UserLoginPanelCompo
               {!this.isLoginMode() && (
                 <React.Fragment>
                   {this.renderField(formikBag, "name", "text", "Имя")}
-                  {this.renderField(formikBag, "bikeNumber", "number", "Номер байка")}
-                  {this.renderFieldSelect(
-                    "classCompetition",
-                    "Класс соревнований",
-                    new Map<string, string>()
-                      .set("125cm3", getClassCompetitionName("125cm3"))
-                      .set("250cm3", getClassCompetitionName("250cm3"))
-                      .set("500cm3", getClassCompetitionName("500cm3"))
-                  )}
                 </React.Fragment>
               )}
               <button
@@ -121,30 +102,6 @@ export class UserLoginPanelComponent extends React.Component<UserLoginPanelCompo
           }`}
         />
         <ErrorMessage component="div" name={fieldName} className="invalid-feedback" />
-      </div>
-    );
-  };
-
-  renderFieldSelect = (
-    fieldName: string,
-    label: string,
-    data: Map<string, string>
-  ): JSX.Element => {
-    return (
-      <div className="form-group">
-        <label htmlFor={fieldName}>{label}</label>
-        <Field
-          id={this.getControlID(fieldName)}
-          component="select"
-          name={fieldName}
-          className="form-control"
-        >
-          {Array.from(data.keys()).map(key => (
-            <option key={key} value={key}>
-              {data.get(key)}
-            </option>
-          ))}
-        </Field>
       </div>
     );
   };

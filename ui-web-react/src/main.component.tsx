@@ -12,6 +12,7 @@ import { LoggingService } from "./model/utils/logging-service";
 
 export type MainComponentProps = {
   userInfo: Optional<UserInfo>;
+  onMainCompMountFn: () => void;
 };
 
 export class MainComponent extends React.Component<MainComponentProps> {
@@ -19,6 +20,10 @@ export class MainComponent extends React.Component<MainComponentProps> {
     super(props);
 
     this.updateLoggerService();
+  }
+
+  componentDidMount() {
+    this.props.onMainCompMountFn();
   }
 
   componentDidUpdate() {

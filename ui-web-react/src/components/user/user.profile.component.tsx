@@ -1,7 +1,6 @@
 import React from "react";
 import { UserInfo } from "../../model/types/datatypes";
 import { getRoleName } from "../../model/types/roles.model";
-import { getClassCompetitionName } from "../../model/types/class-competition.model";
 
 export type UserProfileComponentProps = {
   info: UserInfo;
@@ -12,17 +11,11 @@ export class UserProfileComponent extends React.Component<UserProfileComponentPr
   render() {
     return (
       <div>
-        {this.renderRow("ID", this.props.info.id)}
+        {this.renderRow("UUID", this.props.info.uuid)}
         {this.renderRow("Роль", getRoleName(this.props.info.role))}
         {this.renderRow("Имя", this.props.info.name)}
         {this.renderRow("Почта", this.props.info.email)}
         {this.renderRow("Пароль", this.props.info.password)}
-        {this.renderRow("Номер байка", this.props.info.bikeNumber)}
-        {this.renderRow(
-          "Класс соревнований",
-          getClassCompetitionName(this.props.info.classCompetition)
-        )}
-        {this.renderRow("Статистика гонок", "Здесь должна быть статистика")}
 
         <div className="row">
           <button
