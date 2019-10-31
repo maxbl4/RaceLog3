@@ -7,6 +7,7 @@ export type StoredState = {
   selectedNews: NewsItemExt;
   races: Races;
   selectedRace: RaceItemExt;
+  alertsQueue: AlertsQueue;
 };
 
 /**
@@ -82,3 +83,24 @@ export type RaceParticipant = {
   racerID: number;
   racerName: string;
 };
+
+// ----------------------------------------------------------------------
+// Alerts
+// ----------------------------------------------------------------------
+
+export type AlertsQueue = {
+  alerts: Alert[];
+}
+
+export type Alert = {
+  id: number;
+  type: AlertType;
+  header: string;
+  content: string;
+}
+
+export enum AlertType {
+  ERROR = "ERROR",
+  SUCCESS = "SUCCESS",
+  INFO = "INFO"
+}

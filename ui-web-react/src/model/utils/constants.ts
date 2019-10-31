@@ -17,6 +17,12 @@ export const MESH_API_USERS = MESH_API_PREFIX + "/users";
 
 export const LOGGER_PATH = "/logger";
 
+let currentAlertID = 1;
+
+export const getNextAlertID = (): number => {
+  return currentAlertID++;
+}
+
 export const isProdEnvironment = (): boolean => {
   return process.env.REACT_APP_ENVIRONMENT === "prod";
 };

@@ -9,6 +9,7 @@ import UserContainer from "./components/user/user.container";
 import Optional from "optional-js";
 import { UserInfo } from "./model/types/datatypes";
 import { LoggingService } from "./model/utils/logging-service";
+import AlertContainer from "./components/alert/alert.container";
 
 export type MainComponentProps = {
   userInfo: Optional<UserInfo>;
@@ -38,6 +39,7 @@ export class MainComponent extends React.Component<MainComponentProps> {
     return (
       <Router>
         <HeaderContainer />
+        <AlertContainer />
         <div>
           <Route exact path={DEFAULT} component={HomeComponent} />
           <Route path={USER} component={UserContainer} />
