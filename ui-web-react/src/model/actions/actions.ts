@@ -60,6 +60,9 @@ export type UserInfoRequestAction = AnyAction & {
 export type UserInfoAuthorizedAction = AnyAction & {
   userInfo: Optional<UserInfo>;
 };
+export type AuthorizationFaildAction = AnyAction & {
+  rejectReason: string;
+}
 
 export type AlertsAction = AnyAction & {
   alert: Alert;
@@ -121,8 +124,9 @@ export const userAuthorizedOk = (userInfo: UserInfo): UserInfoAuthorizedAction =
   type: USER_AUTHORIZED_OK,
   userInfo: Optional.of(userInfo)
 });
-export const userAuthorizedFail = (): AnyAction => ({
-  type: USER_AUTHORIZED_FAIL
+export const userAuthorizedFail = (rejectReason: string): AuthorizationFaildAction => ({
+  type: USER_AUTHORIZED_FAIL,
+  rejectReason: rejectReason
 });
 
 export const alertsShow = (alert: Alert): AlertsAction => ({

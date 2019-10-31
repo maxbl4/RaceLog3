@@ -22,7 +22,7 @@ function* tryRegister(action: UserInfoRequestAction) {
     yield tryLoginAndGetUserInfo(action.type);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
-    yield put(userAuthorizedFail());
+    yield put(userAuthorizedFail("Не удалось зарегистрироваться"));
   }
 }
 
@@ -31,7 +31,7 @@ function* tryLogin(action: UserInfoRequestAction) {
     yield tryLoginAndGetUserInfo(action.userInfo);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
-    yield put(userAuthorizedFail());
+    yield put(userAuthorizedFail("Не удалось залогиниться"));
   }
 }
 
@@ -44,7 +44,7 @@ function* tryLoginOnStart() {
   try {
     yield tryGetUserInfo();
   } catch (e) {
-    yield put(userAuthorizedFail());
+    // No need to do something here
   }
 }
 

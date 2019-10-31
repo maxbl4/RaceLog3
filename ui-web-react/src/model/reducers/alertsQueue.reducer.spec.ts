@@ -84,6 +84,7 @@ describe("alertsQueue.reducer - alertsQueueReducer", () => {
   function compareAlerts(srcAlert: Alert, targetAlert: Alert) {
     expect(srcAlert.id).toEqual(targetAlert.id);
     expect(srcAlert.type).toEqual(targetAlert.type);
+    expect(srcAlert.header).toEqual(targetAlert.header);
     expect(srcAlert.content).toEqual(targetAlert.content);
   }
 });

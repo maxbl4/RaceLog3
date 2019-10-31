@@ -95,6 +95,7 @@ export type AlertsQueue = {
 export type Alert = {
   id: number;
   type: AlertType;
+  header: string;
   content: string;
 }
 

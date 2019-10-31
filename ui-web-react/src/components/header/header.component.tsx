@@ -11,7 +11,7 @@ export type HeaderComponentProps = {
 export class HeaderComponent extends React.Component<HeaderComponentProps> {
   render() {
     return (
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="collapse navbar-collapse">
           <ul className="navbar-nav mr-auto">
             <li className="nav-item">

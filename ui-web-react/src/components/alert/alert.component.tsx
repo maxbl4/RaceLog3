@@ -42,7 +42,8 @@ export class AlertComponent extends React.Component<AlertComponentProps> {
           : "danger";
       return (
         <div className={`alert alert-${alertClassType}`} role="alert">
-          {currentAlert.content}
+          <h4 className="alert-heading">{currentAlert.header}</h4>
+          <p>{currentAlert.content}</p>
         </div>
       );
     } else {

@@ -67,10 +67,12 @@ export const DEFAULT_USER_INFO: UserInfo = {
 export const DEFAULT_ALERT_1: Alert = {
   id: 1,
   type: AlertType.SUCCESS,
+  header: "Some header 1",
   content: "Success alert"
 };
 export const DEFAULT_ALERT_2: Alert = {
   id: 2,
   type: AlertType.INFO,
+  header: "Some header 2",
   content: "Info alert"
 };
