@@ -1,7 +1,5 @@
 import { StoredState, Alert } from "../../model/types/datatypes";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
-import { alertsHide } from "../../model/actions/actions";
 import Optional from "optional-js";
 import { AlertComponent } from "./alert.component";
 
@@ -12,13 +10,8 @@ const mapStateToProps = (state: StoredState) => {
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onAlertTimeoutFn: (alert: Alert) => dispatch(alertsHide(alert))
-});
-
 const AlertContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
+  mapStateToProps
 )(AlertComponent);
 
 export default AlertContainer;
