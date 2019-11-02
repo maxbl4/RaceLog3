@@ -6,12 +6,23 @@ import {
   userAuthorizedOk,
   userAuthorizedFail,
   USER_LOGOUT,
-  USER_LOGIN_ON_START
+  USER_LOGIN_ON_START,
+  alertsShow
 } from "../actions/actions";
 import Optional from "optional-js";
-import { UserInfo } from "../types/datatypes";
+import { UserInfo, Alert, AlertType } from "../types/datatypes";
 import { LoggingService } from "../utils/logging-service";
 import { login, aboutMe, logout, register } from "../api/cms.api";
+import { getNextAlertID } from "../utils/constants";
+
+function createAuthorizationFailAlert(rejectReason: string): Alert {
+  return {
+    id: getNextAlertID(),
+    type: AlertType.ERROR,
+    header: "Ошибка авторизации",
+    content: rejectReason
+  }
+}
 
 function* tryRegister(action: UserInfoRequestAction) {
   try {
@@ -22,7 +33,8 @@ function* tryRegister(action: UserInfoRequestAction) {
     yield tryLoginAndGetUserInfo(action.type);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
-    yield put(userAuthorizedFail("Не удалось зарегистрироваться"));
+    yield put(userAuthorizedFail());
+    yield put(alertsShow(createAuthorizationFailAlert("Не удалось зарегистрироваться")));
   }
 }
 
@@ -31,7 +43,8 @@ function* tryLogin(action: UserInfoRequestAction) {
     yield tryLoginAndGetUserInfo(action.userInfo);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
-    yield put(userAuthorizedFail("Не удалось залогиниться"));
+    yield put(userAuthorizedFail());
+    yield put(alertsShow(createAuthorizationFailAlert("Не удалось залогиниться")));
   }
 }
 

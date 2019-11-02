@@ -5,7 +5,11 @@ export const DEFAULT_DATE = 0;
 /**
  * Default timeout for operations: 10 seconds
  */
-export const DEFAULT_TIMEOUT = 10 * 1000;
+export const DEFAULT_TIMEOUT = 1000 * 10;
+/**
+ * Default timeout for alerts displaying: 5 seconds
+ */
+export const DEFAULT_ALERTS_TIMEOUT = 1000 * 5;
 
 export const COOKIE_MESH_TOKEN = "mesh.user.token";
 
