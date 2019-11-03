@@ -1,7 +1,6 @@
 const express = require("express");
 const proxy = require("http-proxy-middleware");
 const bodyParser = require("body-parser");
-const fetch = require("node-fetch");
 
 // common variables
 const host = "localhost";
@@ -11,33 +10,6 @@ const meshHost = "localhost";
 const meshPort = 8080;
 const meshPrefix = "/api/v2";
 const meshURLAll = meshPrefix + "/*";
-const meshURLLogin = meshPrefix + "/auth/login";
-const meshURLUsers = meshPrefix + "/users";
-// -----------------------------------------------------------------------------------------------
-
-// Login under 'art_creator' user, store it's credentials and add them for all create user requests
-let createUserHeader = undefined;
-const createUserError =
-  "Cannot get token for 'art_creator' user. Unauthorized clients will not able to create user";
-const initAuthHeaderForArtCreatorUser = () => {
-  fetch(`http://${meshHost}:${meshPort}${meshURLLogin}`, {
-    method: "GET",
-    headers: {
-      Authorization: "Basic " + Buffer.from("art_creator:art_creator123#").toString("base64")
-    }
-  })
-    .then(response => response.json())
-    .then(jsonResponse => {
-      createUserHeader = {
-        name: "Authorization",
-        value: `Bearer ${jsonResponse.token}`
-      };
-      console.log("'art_creator' user has been logged in successfully");
-    })
-    .catch(reject => console.error(createUserError, reject));
-};
-initAuthHeaderForArtCreatorUser();
-
 // -----------------------------------------------------------------------------------------------
 
 // Configure logs resinding
@@ -70,9 +42,7 @@ var options = {
     }
   },
   onProxyReq: (proxyReq, req, res) => {
-    if (createUserHeader && req.method === "POST" && req.url === meshURLUsers) {
-      proxyReq.setHeader(createUserHeader.name, createUserHeader.value);
-    }
+    // Nothing to do here
   }
 };
 
