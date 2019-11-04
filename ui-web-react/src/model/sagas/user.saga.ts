@@ -30,7 +30,7 @@ function* tryRegister(action: UserInfoRequestAction) {
     userInfoOpt.orElseThrow(
       () => new Error(`Cannot create user with name "${action.userInfo.name}"`)
     );
-    yield tryLoginAndGetUserInfo(action.type);
+    yield tryLoginAndGetUserInfo(action.userInfo);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(userAuthorizedFail());

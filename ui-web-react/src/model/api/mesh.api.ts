@@ -60,8 +60,8 @@ export async function executeQuery(
     `Sending request: ${JSON.stringify({
       url: request.url,
       method: request.method,
-      headers: JSON.stringify(request.headers),
-      body: JSON.stringify(request.body)
+      headers: JSON.stringify(headerFields),
+      body: JSON.stringify(body)
     })}`
   );
 

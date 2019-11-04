@@ -1,7 +1,6 @@
 const express = require("express");
 const proxy = require("http-proxy-middleware");
 const bodyParser = require("body-parser");
-const fetch = require("node-fetch");
 
 // common variables
 const host = "localhost";
@@ -11,33 +10,6 @@ const meshHost = "localhost";
 const meshPort = 8080;
 const meshPrefix = "/api/v2";
 const meshURLAll = meshPrefix + "/*";
-const meshURLLogin = meshPrefix + "/auth/login";
-const meshURLUsers = meshPrefix + "/users";
-// -----------------------------------------------------------------------------------------------
-
-// Login under 'art_creator' user, store it's credentials and add them for all create user requests
-let createUserHeader = undefined;
-const createUserError =
-  "Cannot get token for 'art_creator' user. Unauthorized clients will not able to create user";
-const initAuthHeaderForArtCreatorUser = () => {
-  fetch(`http://${meshHost}:${meshPort}${meshURLLogin}`, {
-    method: "GET",
-    headers: {
-      Authorization: "Basic " + Buffer.from("art_creator:art_creator123#").toString("base64")
-    }
-  })
-    .then(response => response.json())
-    .then(jsonResponse => {
-      createUserHeader = {
-        name: "Authorization",
-        value: `Bearer ${jsonResponse.token}`
-      };
-      console.log("'art_creator' user has been logged in successfully");
-    })
-    .catch(reject => console.error(createUserError, reject));
-};
-initAuthHeaderForArtCreatorUser();
-
 // -----------------------------------------------------------------------------------------------
 
 // Configure logs resinding
@@ -59,6 +31,7 @@ function sendLogToLogzIO(data) {
 var options = {
   target: `http://${host}:${port}`, // target host
   ws: true, // proxy websockets
+  proxyTimeout: 30 * 1000, // 30 seconds timeout for response from Proxy
   router: {
     "localhost:3001": `http://${meshHost}:${meshPort}`
   },
@@ -68,13 +41,28 @@ var options = {
       // if proxy response doesn't have status code, set it up to OK (200)
       proxyRes.statusCode = 200;
     }
+    logNetMessage(proxyRes, "Proxy Response");
   },
   onProxyReq: (proxyReq, req, res) => {
-    if (createUserHeader && req.method === "POST" && req.url === meshURLUsers) {
-      proxyReq.setHeader(createUserHeader.name, createUserHeader.value);
-    }
+    logNetMessage(req, "Request");
+  },
+  onError: (err, req, res) => {
+    console.log("-----------------------------------------------");
+    console.log("Error:");
+    console.log("    Reason: " + JSON.stringify(err));
+    logNetMessage(req, "Error Request");
+    logNetMessage(res, "Error Response");
   }
 };
+
+function logNetMessage(message, name) {
+  console.log("-----------------------------------------------");
+  console.log(`${name}:`);
+  console.log(`    URL: ${message.url}`);
+  console.log(`    Headers: ${JSON.stringify(message.headers)}`);
+  console.log(`    Method: ${message.method}`);
+  console.log(`    Body: ${JSON.stringify(message.body)}`);
+}
 
 var filter = function(pathname, req) {
   return req.method === "GET" || req.method === "PUT" || req.method === "POST";
@@ -88,10 +76,11 @@ var meshProxy = proxy(filter, options);
 
 var app = express();
 
+app.use(`${meshURLAll}`, meshProxy); // This one MUST be first one in the 'use' list.
+// Otherwise, request's body will not be translated to real server.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text());
-app.use(`${meshURLAll}`, meshProxy);
 
 // -----------------------------------------------------------------------------------------------
 

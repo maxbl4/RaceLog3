@@ -60,7 +60,6 @@ async function aboutMeImpl(): Promise<Optional<UserInfo>> {
     const res = await meshAboutMe(token);
     return new Promise<Optional<UserInfo>>((resolve, reject) => {
       if (res.success) {
-        console.log(JSON.stringify(res.body));
         resolve(
           Optional.of<UserInfo>({
             ...INITIAL_USER_INFO,
@@ -84,7 +83,6 @@ async function registerImpl(userInfo: UserInfo): Promise<Optional<UserInfo>> {
   const res = await meshRegister(userInfo);
   return new Promise<Optional<UserInfo>>((resolve, reject) => {
     if (res.success) {
-      console.log(JSON.stringify(res.body));
       resolve(
         Optional.of<UserInfo>({
           ...INITIAL_USER_INFO,
