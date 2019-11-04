@@ -31,6 +31,7 @@ function sendLogToLogzIO(data) {
 var options = {
   target: `http://${host}:${port}`, // target host
   ws: true, // proxy websockets
+  proxyTimeout: 30 * 1000, // 30 seconds timeout for response from Proxy
   router: {
     "localhost:3001": `http://${meshHost}:${meshPort}`
   },
@@ -40,11 +41,28 @@ var options = {
       // if proxy response doesn't have status code, set it up to OK (200)
       proxyRes.statusCode = 200;
     }
+    logNetMessage(proxyRes, "Proxy Response");
   },
   onProxyReq: (proxyReq, req, res) => {
-    // Nothing to do here
+    logNetMessage(req, "Request");
+  },
+  onError: (err, req, res) => {
+    console.log("-----------------------------------------------");
+    console.log("Error:");
+    console.log("    Reason: " + JSON.stringify(err));
+    logNetMessage(req, "Error Request");
+    logNetMessage(res, "Error Response");
   }
 };
+
+function logNetMessage(message, name) {
+  console.log("-----------------------------------------------");
+  console.log(`${name}:`);
+  console.log(`    URL: ${message.url}`);
+  console.log(`    Headers: ${JSON.stringify(message.headers)}`);
+  console.log(`    Method: ${message.method}`);
+  console.log(`    Body: ${JSON.stringify(message.body)}`);
+}
 
 var filter = function(pathname, req) {
   return req.method === "GET" || req.method === "PUT" || req.method === "POST";
@@ -58,10 +76,11 @@ var meshProxy = proxy(filter, options);
 
 var app = express();
 
+app.use(`${meshURLAll}`, meshProxy); // This one MUST be first one in the 'use' list.
+// Otherwise, request's body will not be translated to real server.
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.text());
-app.use(`${meshURLAll}`, meshProxy);
 
 // -----------------------------------------------------------------------------------------------
 
