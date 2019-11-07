@@ -1,33 +1,42 @@
 import React from "react";
-import { UserInfo } from "../../model/types/datatypes";
+import { UserInfo, User } from "../../model/types/datatypes";
 import { getRoleName } from "../../model/types/roles.model";
+import { FetchingComponent } from "../fetching/fetching.component";
+import { Redirect } from "react-router";
+import { USER_SIGN_IN } from "../../model/routing/paths";
 
 export type UserProfileComponentProps = {
-  info: UserInfo;
+  user: User;
   onLogout: (userInfo: UserInfo) => void;
 };
 
 export class UserProfileComponent extends React.Component<UserProfileComponentProps> {
   render() {
-    return (
-      <div>
-        {this.renderRow("UUID", this.props.info.uuid)}
-        {this.renderRow("Роль", getRoleName(this.props.info.role))}
-        {this.renderRow("Имя", this.props.info.name)}
-        {this.renderRow("Почта", this.props.info.email)}
-        {this.renderRow("Пароль", this.props.info.password)}
+    if (this.props.user.isFetching) {
+      return <FetchingComponent />;
+    } else {
+      return this.props.user.info
+        .map(info => (
+          <div>
+            {this.renderRow("UUID", info.uuid)}
+            {this.renderRow("Роль", getRoleName(info.role))}
+            {this.renderRow("Имя", info.name)}
+            {this.renderRow("Почта", info.email)}
+            {this.renderRow("Пароль", info.password)}
 
-        <div className="row">
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={() => this.props.onLogout(this.props.info)}
-          >
-            Выйти
-          </button>
-        </div>
-      </div>
-    );
+            <div className="row">
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={() => this.props.onLogout(info)}
+              >
+                Выйти
+              </button>
+            </div>
+          </div>
+        ))
+        .orElse(<Redirect to={USER_SIGN_IN} />);
+    }
   }
 
   renderRow = (label: string, value: any): JSX.Element => {
