@@ -1,7 +1,7 @@
 import React from "react";
 import { UserInfo, User } from "../../model/types/datatypes";
 import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
-import { Formik, Form, FormikActions, FormikProps } from "formik";
+import { Formik, Form, FormikProps, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
@@ -150,18 +150,25 @@ const UserAuthComponent: React.FC<UserAuthComponentProps> = (props: UserAuthComp
                 {isSignInMode(props.mode) ? "Войти" : "Зарегистрироваться"}
               </Typography>
               <Formik
-                initialValues={{
-                  ...INITIAL_USER_INFO
-                }}
+                initialValues={
+                  {
+                    ...INITIAL_USER_INFO
+                  } as UserInfoValues
+                }
                 validationSchema={isSignInMode(props.mode) ? signInSchema : signUpSchema}
-                onSubmit={(values: UserInfoValues, actions: FormikActions<UserInfoValues>) => {
-                  props.onSubmit({
-                    ...INITIAL_USER_INFO,
-                    ...values
+                onSubmit={(
+                  values: UserInfoValues,
+                  formikHelpers: FormikHelpers<UserInfoValues>
+                ) => {
+                  setTimeout(() => {
+                    props.onSubmit({
+                      ...INITIAL_USER_INFO,
+                      ...values
+                    });
                   });
-                  actions.setSubmitting(false);
                 }}
-                render={(formikBag: FormikProps<UserInfoValues>) => (
+              >
+                {(formikBag: FormikProps<UserInfoValues>) => (
                   <Form className={classes.form}>
                     <Grid container spacing={2}>
                       {renderField(formikBag, "email", "email", "Почта", props.mode)}
@@ -192,7 +199,7 @@ const UserAuthComponent: React.FC<UserAuthComponentProps> = (props: UserAuthComp
                     </Grid>
                   </Form>
                 )}
-              />
+              </Formik>
             </div>
           </Container>
         </React.Fragment>
