@@ -4,47 +4,65 @@ import { getRoleName } from "../../model/types/roles.model";
 import { FetchingComponent } from "../fetching/fetching.component";
 import { Redirect } from "react-router";
 import { USER_SIGN_IN } from "../../model/routing/paths";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import Container from "@material-ui/core/Container";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import { Theme } from "@material-ui/core";
+import { commonStyles } from "../styles/common";
+
+const useStyles = makeStyles((theme: Theme) => ({
+  "@global": commonStyles(theme).global,
+  paper: commonStyles(theme).paper,
+  logout: {
+    margin: theme.spacing(3, 0, 2)
+  }
+}));
 
 export type UserProfileComponentProps = {
   user: User;
   onLogout: (userInfo: UserInfo) => void;
 };
 
-export class UserProfileComponent extends React.Component<UserProfileComponentProps> {
-  render() {
-    if (this.props.user.isFetching) {
-      return <FetchingComponent />;
-    } else {
-      return this.props.user.info
-        .map(info => (
-          <div>
-            {this.renderRow("UUID", info.uuid)}
-            {this.renderRow("Роль", getRoleName(info.role))}
-            {this.renderRow("Имя", info.name)}
-            {this.renderRow("Почта", info.email)}
-            {this.renderRow("Пароль", info.password)}
+const UserProfileComponent: React.FC<UserProfileComponentProps> = (
+  props: UserProfileComponentProps
+) => {
+  const classes = useStyles();
 
-            <div className="row">
-              <button
+  if (props.user.isFetching) {
+    return <FetchingComponent />;
+  } else {
+    return props.user.info
+      .map(info => (
+        <React.Fragment>
+          <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Paper className={classes.paper}>
+              <Typography component="h2" variant="h4" color="primary" gutterBottom>
+                {info.name}
+              </Typography>
+              <Typography component="p" variant="h6">
+                {info.email}
+              </Typography>
+              <Typography color="textSecondary">{getRoleName(info.role)}</Typography>
+              <Button
                 type="button"
-                className="btn btn-primary"
-                onClick={() => this.props.onLogout(info)}
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.logout}
+                onClick={() => props.onLogout(info)}
               >
-                Выйти
-              </button>
-            </div>
-          </div>
-        ))
-        .orElse(<Redirect to={USER_SIGN_IN} />);
-    }
+                Финишировать
+              </Button>
+            </Paper>
+          </Container>
+        </React.Fragment>
+      ))
+      .orElse(<Redirect to={USER_SIGN_IN} />);
   }
+};
 
-  renderRow = (label: string, value: any): JSX.Element => {
-    return (
-      <div className="row">
-        <div className="col-lg-3">{label}: </div>
-        <div className="col-lg-5">{value}</div>
-      </div>
-    );
-  };
-}
+export default UserProfileComponent;

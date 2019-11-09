@@ -2,7 +2,7 @@ import { UserInfo, StoredState } from "../../model/types/datatypes";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { userLogout } from "../../model/actions/actions";
-import { UserProfileComponent } from "./user.profile.component";
+import UserProfileComponent from "./user.profile.component";
 
 const mapStateToProps = (state: StoredState) => {
   return {

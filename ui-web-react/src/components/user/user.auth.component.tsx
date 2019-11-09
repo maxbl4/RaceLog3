@@ -17,6 +17,7 @@ import { FetchingComponent } from "../fetching/fetching.component";
 import { Redirect } from "react-router";
 import { USER_PROFILE, USER_SIGN_UP, USER_SIGN_IN } from "../../model/routing/paths";
 import { Link } from "react-router-dom";
+import { commonStyles } from "../styles/common";
 
 const emailSchema = Yup.string()
   .email("Неверный формат почты")
@@ -51,19 +52,8 @@ export enum AuthMode {
 }
 
 const useStyles = makeStyles(theme => ({
-  "@global": {
-    body: {
-      backgroundColor: theme.palette.common.white
-    }
-  },
-  paper: {
-    padding: theme.spacing(2),
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-    alignItems: "center",
-  },
+  "@global": commonStyles(theme).global,
+  paper: commonStyles(theme).paper,
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main
