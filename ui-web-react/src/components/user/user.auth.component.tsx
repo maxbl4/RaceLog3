@@ -11,6 +11,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
+import Paper from '@material-ui/core/Paper';
 import { makeStyles } from "@material-ui/core/styles";
 import { FetchingComponent } from "../fetching/fetching.component";
 import { Redirect } from "react-router";
@@ -56,10 +57,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   paper: {
+    padding: theme.spacing(2),
     marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
@@ -142,7 +145,7 @@ const UserAuthComponent: React.FC<UserAuthComponentProps> = (props: UserAuthComp
         <React.Fragment>
           <Container component="main" maxWidth="xs">
             <CssBaseline />
-            <div className={classes.paper}>
+            <Paper className={classes.paper}>
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
               </Avatar>
@@ -200,7 +203,7 @@ const UserAuthComponent: React.FC<UserAuthComponentProps> = (props: UserAuthComp
                   </Form>
                 )}
               </Formik>
-            </div>
+            </Paper>
           </Container>
         </React.Fragment>
       );
