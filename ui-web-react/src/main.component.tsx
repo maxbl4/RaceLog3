@@ -1,15 +1,24 @@
 import React from "react";
 import HeaderContainer from "./components/header/header.container";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { HomeComponent } from "./components/home/home.component";
-import { DEFAULT, RACES_INFO, NEWS_INFO, USER } from "./model/routing/paths";
+import HomeComponent from "./components/home/home.component";
+import {
+  DEFAULT,
+  RACES_INFO,
+  NEWS_INFO,
+  USER_PROFILE,
+  USER_SIGN_IN,
+  USER_SIGN_UP
+} from "./model/routing/paths";
 import RaceInfoContainer from "./components/races/race-info.container";
 import NewsInfoContainer from "./components/news/news-info.container";
-import UserContainer from "./components/user/user.container";
 import Optional from "optional-js";
 import { UserInfo } from "./model/types/datatypes";
 import { LoggingService } from "./model/utils/logging-service";
 import AlertContainer from "./components/alert/alert.container";
+import UserProfileContainer from "./components/user/user.profile.container";
+import UserSignInContainer from "./components/user/user.sign-in.container";
+import UserSignUpContainer from "./components/user/user.sign-up.container";
 
 export type MainComponentProps = {
   userInfo: Optional<UserInfo>;
@@ -42,7 +51,9 @@ export class MainComponent extends React.Component<MainComponentProps> {
         <AlertContainer />
         <div>
           <Route exact path={DEFAULT} component={HomeComponent} />
-          <Route path={USER} component={UserContainer} />
+          <Route path={USER_PROFILE} component={UserProfileContainer} />
+          <Route path={USER_SIGN_IN} component={UserSignInContainer} />
+          <Route path={USER_SIGN_UP} component={UserSignUpContainer} />
           <Route path={RACES_INFO} component={RaceInfoContainer} />
           <Route path={NEWS_INFO} component={NewsInfoContainer} />
         </div>

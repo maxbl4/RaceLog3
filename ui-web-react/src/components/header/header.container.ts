@@ -1,5 +1,5 @@
 import { StoredState } from "../../model/types/datatypes";
-import { HeaderComponent } from "./header.component";
+import HeaderComponent from "./header.component";
 import { connect } from "react-redux";
 
 const mapStateToProps = (state: StoredState) => {

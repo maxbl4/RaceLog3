@@ -1,25 +1,31 @@
 import React from "react";
 import NewsListContainer from "../news/news-list.container";
-import RaceListContainer from "../races/race-list.container";
+import Container from "@material-ui/core/Container";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { makeStyles } from "@material-ui/core/styles";
 
-export class HomeComponent extends React.Component {
-  render() {
-    return (
-      <React.Fragment>
-        <div className="row">
-          <div className="col-lg-12">
-            <h1>Здесь должна быть картинка с байкером или еще что то :-)</h1>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-lg-6">
-            <NewsListContainer />
-          </div>
-          <div className="col-lg-6">
-            <RaceListContainer />
-          </div>
-        </div>
-      </React.Fragment>
-    );
+const useStyles = makeStyles(theme => ({
+  mainImg: {
+    width: "100%"
   }
-}
+}));
+
+const HomeComponent: React.FC = () => {
+  const classes = useStyles();
+  return (
+    <React.Fragment>
+      <Container component="main">
+        <CssBaseline />
+        <img
+          src="main-page-bike.jpg"
+          className={classes.mainImg}
+          title="Photo by Daniel from Pexels"
+          alt="Картинка с байкером"
+        />
+        <NewsListContainer />
+      </Container>
+    </React.Fragment>
+  );
+};
+
+export default HomeComponent;
