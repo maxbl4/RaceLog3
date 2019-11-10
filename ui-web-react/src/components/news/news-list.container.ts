@@ -1,5 +1,5 @@
 import { StoredState } from "../../model/types/datatypes";
-import { NewsListComponent } from "./news-list.component";
+import NewsListComponent from "./news-list.component";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { newsRequested } from "../../model/actions/actions";

@@ -1,7 +1,7 @@
 import React from "react";
 import HeaderContainer from "./components/header/header.container";
 import { BrowserRouter as Router, Route } from "react-router-dom";
-import { HomeComponent } from "./components/home/home.component";
+import HomeComponent from "./components/home/home.component";
 import {
   DEFAULT,
   RACES_INFO,

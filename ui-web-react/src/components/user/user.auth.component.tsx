@@ -51,21 +51,24 @@ export enum AuthMode {
   SIGN_UP = 2
 }
 
-const useStyles = makeStyles(theme => ({
-  "@global": commonStyles(theme).global,
-  paper: commonStyles(theme).paper,
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2)
+const useStyles = makeStyles(theme => {
+  const styles = commonStyles(theme);
+  return {
+    "@global": styles.global,
+    paper: styles.paper,
+    avatar: {
+      margin: theme.spacing(1),
+      backgroundColor: theme.palette.secondary.main
+    },
+    form: {
+      width: "100%", // Fix IE 11 issue.
+      marginTop: theme.spacing(1)
+    },
+    submit: {
+      margin: theme.spacing(3, 0, 2)
+    }
   }
-}));
+});
 
 const isSignInMode = (mode: AuthMode): boolean => mode === AuthMode.SIGN_IN;
 

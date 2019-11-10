@@ -13,13 +13,16 @@ import Button from "@material-ui/core/Button";
 import { Theme } from "@material-ui/core";
 import { commonStyles } from "../styles/common";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  "@global": commonStyles(theme).global,
-  paper: commonStyles(theme).paper,
-  logout: {
-    margin: theme.spacing(3, 0, 2)
+const useStyles = makeStyles((theme: Theme) => {
+  const styles = commonStyles(theme);
+  return {
+    "@global": styles.global,
+    paper: styles.paper,
+    logout: {
+      margin: theme.spacing(3, 0, 2)
+    }
   }
-}));
+});
 
 export type UserProfileComponentProps = {
   user: User;
