@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { NewsItem, RaceItem, NewsItemExt, RaceItemExt, UserInfo, Alert } from "../types/datatypes";
+import { NewsItem, RaceItem, NewsItemExt, RaceItemExt, UserInfo, Alert, RacerProfile } from "../types/datatypes";
 import Optional from "optional-js";
 
 // ----------------------------------------------------------------------
@@ -26,6 +26,10 @@ export const USER_AUTHORIZED_FAIL = "USER_AUTHORIZED_FAIL";
 
 export const ALERTS_SHOW = "ALERTS_SHOW";
 export const ALERTS_HIDE = "ALERTS_HIDE";
+
+export const RACER_PROFILES_REQUESTED = "RACER_PROFILES_REQUESTED";
+export const RACER_PROFILES_LOADED = "RACER_PROFILES_LOADED";
+export const RACER_PROFILES_UPDATED = "RACER_PROFILES_UPDATED";
 
 // ----------------------------------------------------------------------
 // Actions classes
@@ -64,6 +68,11 @@ export type UserInfoAuthorizedAction = AnyAction & {
 export type AlertsAction = AnyAction & {
   alert: Alert;
 }
+
+export type RacerProfilesRequestedAction = AnyAction;
+export type RacerProfilesDataAction = AnyAction & {
+  items: Optional<RacerProfile[]>;
+};
 
 // ----------------------------------------------------------------------
 // Actions
@@ -132,4 +141,16 @@ export const alertsShow = (alert: Alert): AlertsAction => ({
 export const alertsHide = (alert: Alert): AlertsAction => ({
   type: ALERTS_HIDE,
   alert: alert
+});
+
+export const racerProfilesRequested = (): RacerProfilesRequestedAction => ({
+  type: RACER_PROFILES_REQUESTED
+});
+export const racerProfilesLoaded = (items: RacerProfile[]): RacerProfilesDataAction => ({
+  type: RACER_PROFILES_LOADED,
+  items: Optional.of(items)
+});
+export const racerProfilesUpdated = (items: RacerProfile[]): RacerProfilesDataAction => ({
+  type: RACER_PROFILES_UPDATED,
+  items: Optional.of(items)
 });

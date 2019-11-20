@@ -3,6 +3,7 @@ import Optional from "optional-js";
 
 export type StoredState = {
   user: User;
+  racerProfiles: RacerProfiles;
   news: News;
   selectedNews: NewsItemExt;
   races: Races;
@@ -31,6 +32,10 @@ export type News = Fetchable & {
 export type Races = Fetchable & {
   items: Optional<RaceItem[]>;
 };
+
+export type RacerProfiles = Fetchable & {
+  items: Optional<RacerProfile[]>;
+}
 
 // ----------------------------------------------------------------------
 // Minimum info for stored data
@@ -103,4 +108,15 @@ export enum AlertType {
   ERROR = "ERROR",
   SUCCESS = "SUCCESS",
   INFO = "INFO"
+}
+
+// ----------------------------------------------------------------------
+// Racer Profile
+// ----------------------------------------------------------------------
+
+export type RacerProfile = {
+  uuid: string;
+  userUUID: string;
+  name: string;
+  bikeNumber: number;
 }

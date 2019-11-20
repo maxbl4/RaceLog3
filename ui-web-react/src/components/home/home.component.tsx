@@ -7,6 +7,10 @@ import { makeStyles } from "@material-ui/core/styles";
 const useStyles = makeStyles(theme => ({
   mainImg: {
     width: "100%"
+  },
+  mainContainer: {
+    width: "100%",
+    maxWidth: 700,
   }
 }));
 
@@ -14,7 +18,7 @@ const HomeComponent: React.FC = () => {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Container component="main">
+      <Container component="main" className={classes.mainContainer}>
         <CssBaseline />
         <img
           src="main-page-bike.jpg"

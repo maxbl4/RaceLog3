@@ -6,7 +6,8 @@ import UserProfileComponent from "./user.profile.component";
 
 const mapStateToProps = (state: StoredState) => {
   return {
-    user: state.user
+    user: state.user,
+    racerProfiles: state.racerProfiles
   };
 };
 
