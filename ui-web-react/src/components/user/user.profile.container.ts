@@ -1,7 +1,7 @@
-import { UserInfo, StoredState } from "../../model/types/datatypes";
+import { UserInfo, StoredState, RacerProfile } from "../../model/types/datatypes";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { userLogout } from "../../model/actions/actions";
+import { userLogout, racerProfilesUpdateRequested } from "../../model/actions/actions";
 import UserProfileComponent from "./user.profile.component";
 
 const mapStateToProps = (state: StoredState) => {
@@ -12,12 +12,11 @@ const mapStateToProps = (state: StoredState) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onLogout: (userInfo: UserInfo) => dispatch(userLogout(userInfo))
+  onLogout: (userInfo: UserInfo) => dispatch(userLogout(userInfo)),
+  onProfilesUpdate: (added: RacerProfile[], removed: RacerProfile[], updated: RacerProfile[]) =>
+    dispatch(racerProfilesUpdateRequested(added, removed, updated))
 });
 
-const UserProfileContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(UserProfileComponent);
+const UserProfileContainer = connect(mapStateToProps, mapDispatchToProps)(UserProfileComponent);
 
 export default UserProfileContainer;

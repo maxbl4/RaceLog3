@@ -7,7 +7,8 @@ import {
   userAuthorizedFail,
   USER_LOGOUT,
   USER_LOGIN_ON_START,
-  alertsShow
+  alertsShow,
+  racerProfilesRequestedAll
 } from "../actions/actions";
 import Optional from "optional-js";
 import { UserInfo, Alert, AlertType } from "../types/datatypes";
@@ -21,7 +22,7 @@ function createAuthorizationFailAlert(rejectReason: string): Alert {
     type: AlertType.ERROR,
     header: "Ошибка авторизации",
     content: rejectReason
-  }
+  };
 }
 
 function* tryRegister(action: UserInfoRequestAction) {
@@ -62,12 +63,12 @@ function* tryLoginOnStart() {
 }
 
 function* tryGetUserInfo() {
-  const userInfo: Optional<UserInfo> = yield call(aboutMe);
-  yield put(
-    userAuthorizedOk(
-      userInfo.orElseThrow(() => new Error("Empty response from server for login action"))
-    )
+  const userInfoOpt: Optional<UserInfo> = yield call(aboutMe);
+  const userInfo: UserInfo = userInfoOpt.orElseThrow(
+    () => new Error("Empty response from server for login action")
   );
+  yield put(userAuthorizedOk(userInfo));
+  yield put(racerProfilesRequestedAll(userInfo.uuid));
 }
 
 function* tryLogout(action: UserInfoRequestAction) {

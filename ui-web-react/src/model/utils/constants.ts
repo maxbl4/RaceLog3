@@ -1,4 +1,5 @@
 import Optional from "optional-js";
+import v1 from "uuid/v1";
 
 export const DEFAULT_ID = -1;
 export const DEFAULT_DATE = 0;
@@ -25,6 +26,10 @@ let currentAlertID = 1;
 
 export const getNextAlertID = (): number => {
   return currentAlertID++;
+}
+
+export const generateUUID = (): string => {
+  return v1();
 }
 
 export const isProdEnvironment = (): boolean => {

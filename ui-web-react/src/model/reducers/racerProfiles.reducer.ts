@@ -3,19 +3,16 @@ import Optional from "optional-js";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
 import {
-  RACER_PROFILES_REQUESTED,
-  RACER_PROFILES_LOADED,
-  RACER_PROFILES_UPDATED,
-  RacerProfilesDataAction
+  RacerProfilesDataAction,
+  RACER_PROFILES_REQUESTED_ALL,
+  RACER_PROFILES_UPDATE_REQUESTED,
+  RACER_PROFILES_REQUEST_FAILED,
+  RACER_PROFILES_UPDATE_RECEIVED
 } from "../actions/actions";
 
 export const INITIAL_RACER_PROFILES: RacerProfiles = {
   isFetching: false,
-  // items: Optional.empty<RacerProfile[]>()
-  items: Optional.of<RacerProfile[]>([
-    { uuid: "asdf", userUUID: "asdfadsf", name: "Dima Komarov", bikeNumber: 87 },
-    { uuid: "asdf", userUUID: "asdfadsf", name: "Dima Komarov", bikeNumber: 87 }
-  ])
+  items: Optional.empty<RacerProfile[]>()
 };
 
 export function racerProfilesReducer(
@@ -24,18 +21,30 @@ export function racerProfilesReducer(
 ) {
   LoggingService.getInstance().logReducer(action, state);
   switch (action.type) {
-    case RACER_PROFILES_REQUESTED:
+    case RACER_PROFILES_REQUESTED_ALL:
+    case RACER_PROFILES_UPDATE_REQUESTED:
       return {
         ...state,
         isFetching: true
       };
-    case RACER_PROFILES_LOADED:
-    case RACER_PROFILES_UPDATED:
+    case RACER_PROFILES_UPDATE_RECEIVED:
       return {
-        items: (action as RacerProfilesDataAction).items,
+        items: processProfiles(action as RacerProfilesDataAction),
+        isFetching: false
+      };
+    case RACER_PROFILES_REQUEST_FAILED:
+      return {
+        ...state,
         isFetching: false
       };
     default:
       return state;
   }
+}
+
+function processProfiles(action: RacerProfilesDataAction): Optional<RacerProfile[]> {
+  const result: RacerProfile[] = [];
+  action.itemsAdded.ifPresent(profiles => result.concat(profiles));
+  action.itemsUpdated.ifPresent(profiles => result.concat(profiles));
+  return result.length > 0 ? Optional.of(result) : Optional.empty<RacerProfile[]>();
 }

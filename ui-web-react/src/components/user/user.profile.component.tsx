@@ -17,6 +17,8 @@ import { Theme } from "@material-ui/core";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { commonStyles } from "../styles/common";
 import RacerProfileComponent from "./racer.profile.component";
+import { generateUUID } from "../../model/utils/constants";
+import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
 
 const useStyles = makeStyles((theme: Theme) => {
   const styles = commonStyles(theme);
@@ -45,13 +47,29 @@ export type UserProfileComponentProps = {
   user: User;
   racerProfiles: RacerProfiles;
   onLogout: (userInfo: UserInfo) => void;
+  onProfilesUpdate: (added: RacerProfile[], removed: RacerProfile[], updated: RacerProfile[]) => void;
 };
 
 const UserProfileComponent: React.FC<UserProfileComponentProps> = (
   props: UserProfileComponentProps
 ) => {
+  const createProfile = (): RacerProfile => ({
+    uuid: generateUUID(),
+    userUUID: props.user.info.orElse(INITIAL_USER_INFO).uuid,
+    name: "",
+    bikeNumber: 0
+  });
   const classes = useStyles();
-  const [profiles, setProfiles] = useState<RacerProfile[]>(props.racerProfiles.items.get());
+  const [profiles, setProfiles] = useState<RacerProfile[]>(props.racerProfiles.items.orElse([createProfile()]));
+
+  const handleProfilesUpdateButtonClick = (): void => {
+    const initialProfiles = props.racerProfiles.items.orElse([]);
+    props.onProfilesUpdate(
+      profiles.filter(profile => initialProfiles.find(value => value.uuid === profile.uuid) === undefined),
+      initialProfiles.filter(profile => profiles.find(value => value.uuid === profile.uuid) === undefined),
+      profiles.filter(profile => initialProfiles.find(value => value.uuid === profile.uuid) !== undefined)
+    );
+  };
 
   const handleUpdates = (profile: RacerProfile): void => {
     const index = profiles.findIndex((item, index, array) => item.uuid === profile.uuid);
@@ -64,12 +82,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = (
     if (isAddButton) {
       setProfiles([
         ...profiles,
-        {
-          uuid: "asdf",
-          userUUID: props.user.info.get().uuid,
-          name: "",
-          bikeNumber: 0
-        }
+        createProfile()
       ]);
     } else {
       setProfiles(profiles.filter((item, index, array) => item.uuid !== profileId));
@@ -103,7 +116,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = (
               variant="contained"
               color="primary"
               className={classes.logout}
-              onClick={() => console.log(JSON.stringify(profiles))}
+              onClick={handleProfilesUpdateButtonClick}
             >
               Обновить
             </Button>

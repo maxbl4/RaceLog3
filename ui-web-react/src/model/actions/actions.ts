@@ -1,5 +1,13 @@
 import { AnyAction } from "redux";
-import { NewsItem, RaceItem, NewsItemExt, RaceItemExt, UserInfo, Alert, RacerProfile } from "../types/datatypes";
+import {
+  NewsItem,
+  RaceItem,
+  NewsItemExt,
+  RaceItemExt,
+  UserInfo,
+  Alert,
+  RacerProfile
+} from "../types/datatypes";
 import Optional from "optional-js";
 
 // ----------------------------------------------------------------------
@@ -27,9 +35,10 @@ export const USER_AUTHORIZED_FAIL = "USER_AUTHORIZED_FAIL";
 export const ALERTS_SHOW = "ALERTS_SHOW";
 export const ALERTS_HIDE = "ALERTS_HIDE";
 
-export const RACER_PROFILES_REQUESTED = "RACER_PROFILES_REQUESTED";
-export const RACER_PROFILES_LOADED = "RACER_PROFILES_LOADED";
-export const RACER_PROFILES_UPDATED = "RACER_PROFILES_UPDATED";
+export const RACER_PROFILES_REQUESTED_ALL = "RACER_PROFILES_REQUESTED_ALL";
+export const RACER_PROFILES_UPDATE_REQUESTED = "RACER_PROFILES_UPDATE_REQUESTED";
+export const RACER_PROFILES_UPDATE_RECEIVED = "RACER_PROFILES_UPDATE_RECEIVED";
+export const RACER_PROFILES_REQUEST_FAILED = "RACER_PROFILES_REQUEST_FAILED";
 
 // ----------------------------------------------------------------------
 // Actions classes
@@ -67,12 +76,17 @@ export type UserInfoAuthorizedAction = AnyAction & {
 
 export type AlertsAction = AnyAction & {
   alert: Alert;
-}
-
-export type RacerProfilesRequestedAction = AnyAction;
-export type RacerProfilesDataAction = AnyAction & {
-  items: Optional<RacerProfile[]>;
 };
+
+export type RacerProfilesRequestedAction = AnyAction & {
+  userUUID: string;
+};
+export type RacerProfilesDataAction = AnyAction & {
+  itemsAdded: Optional<RacerProfile[]>;
+  itemsRemoved: Optional<RacerProfile[]>;
+  itemsUpdated: Optional<RacerProfile[]>;
+};
+export type RacerProfilesRequestFailedAction = AnyAction;
 
 // ----------------------------------------------------------------------
 // Actions
@@ -143,14 +157,33 @@ export const alertsHide = (alert: Alert): AlertsAction => ({
   alert: alert
 });
 
-export const racerProfilesRequested = (): RacerProfilesRequestedAction => ({
-  type: RACER_PROFILES_REQUESTED
+export const racerProfilesRequestedAll = (userUUID: string): RacerProfilesRequestedAction => ({
+  type: RACER_PROFILES_REQUESTED_ALL,
+  userUUID
 });
-export const racerProfilesLoaded = (items: RacerProfile[]): RacerProfilesDataAction => ({
-  type: RACER_PROFILES_LOADED,
-  items: Optional.of(items)
+export const racerProfilesUpdateRequested = (
+  added: RacerProfile[],
+  removed: RacerProfile[],
+  updated: RacerProfile[]
+): RacerProfilesDataAction =>
+  racerProfilesUpdate(RACER_PROFILES_UPDATE_REQUESTED, added, removed, updated);
+export const racerProfilesUpdateReceived = (
+  added: RacerProfile[],
+  removed: RacerProfile[],
+  updated: RacerProfile[]
+): RacerProfilesDataAction =>
+  racerProfilesUpdate(RACER_PROFILES_UPDATE_RECEIVED, added, removed, updated);
+const racerProfilesUpdate = (
+  type: string,
+  added: RacerProfile[],
+  removed: RacerProfile[],
+  updated: RacerProfile[]
+): RacerProfilesDataAction => ({
+  type,
+  itemsAdded: Optional.of(added),
+  itemsRemoved: Optional.of(removed),
+  itemsUpdated: Optional.of(updated)
 });
-export const racerProfilesUpdated = (items: RacerProfile[]): RacerProfilesDataAction => ({
-  type: RACER_PROFILES_UPDATED,
-  items: Optional.of(items)
+export const racerProfilesRequestFailed = (): RacerProfilesRequestFailedAction => ({
+  type: RACER_PROFILES_REQUEST_FAILED
 });

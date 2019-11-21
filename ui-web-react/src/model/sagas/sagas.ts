@@ -8,6 +8,7 @@ import {
   userLoginOnStartSaga
 } from "./user.saga";
 import { alertsHideSaga } from "./alerts.saga";
+import { racerProfilesRequestAll, racerProfilesUpdate } from "./racerProfiles.saga";
 
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
@@ -21,7 +22,9 @@ function* raceLogSaga() {
     call(userLoginOnStartSaga),
     call(userLogoutSaga),
     call(userRegistrationSaga),
-    call(alertsHideSaga)
+    call(alertsHideSaga),
+    call(racerProfilesRequestAll),
+    call(racerProfilesUpdate)
   ]);
 }
 
