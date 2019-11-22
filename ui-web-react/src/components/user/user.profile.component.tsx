@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { UserInfo, User, RacerProfile, RacerProfiles } from "../../model/types/datatypes";
 import { getRoleName } from "../../model/types/roles.model";
 import { FetchingComponent } from "../fetching/fetching.component";
@@ -19,6 +19,7 @@ import { commonStyles } from "../styles/common";
 import RacerProfileComponent from "./racer.profile.component";
 import { generateUUID } from "../../model/utils/constants";
 import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
+import SpinnerButton from "../common/spinner-button";
 
 const useStyles = makeStyles((theme: Theme) => {
   const styles = commonStyles(theme);
@@ -47,7 +48,11 @@ export type UserProfileComponentProps = {
   user: User;
   racerProfiles: RacerProfiles;
   onLogout: (userInfo: UserInfo) => void;
-  onProfilesUpdate: (added: RacerProfile[], removed: RacerProfile[], updated: RacerProfile[]) => void;
+  onProfilesUpdate: (
+    added: RacerProfile[],
+    removed: RacerProfile[],
+    updated: RacerProfile[]
+  ) => void;
 };
 
 const UserProfileComponent: React.FC<UserProfileComponentProps> = (
@@ -60,14 +65,25 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = (
     bikeNumber: 0
   });
   const classes = useStyles();
-  const [profiles, setProfiles] = useState<RacerProfile[]>(props.racerProfiles.items.orElse([createProfile()]));
+  const [profiles, setProfiles] = useState<RacerProfile[]>(
+    props.racerProfiles.items.orElse([createProfile()])
+  );
+  useEffect(() => {
+    setProfiles(props.racerProfiles.items.orElse([createProfile()]));
+  }, [props.racerProfiles.items]);
 
   const handleProfilesUpdateButtonClick = (): void => {
     const initialProfiles = props.racerProfiles.items.orElse([]);
     props.onProfilesUpdate(
-      profiles.filter(profile => initialProfiles.find(value => value.uuid === profile.uuid) === undefined),
-      initialProfiles.filter(profile => profiles.find(value => value.uuid === profile.uuid) === undefined),
-      profiles.filter(profile => initialProfiles.find(value => value.uuid === profile.uuid) !== undefined)
+      profiles.filter(
+        profile => initialProfiles.find(value => value.uuid === profile.uuid) === undefined
+      ),
+      initialProfiles.filter(
+        profile => profiles.find(value => value.uuid === profile.uuid) === undefined
+      ),
+      profiles.filter(
+        profile => initialProfiles.find(value => value.uuid === profile.uuid) !== undefined
+      )
     );
   };
 
@@ -80,10 +96,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = (
 
   const handleAddRemoveButtonClick = (profileId: string, isAddButton: boolean): void => {
     if (isAddButton) {
-      setProfiles([
-        ...profiles,
-        createProfile()
-      ]);
+      setProfiles([...profiles, createProfile()]);
     } else {
       setProfiles(profiles.filter((item, index, array) => item.uuid !== profileId));
     }
@@ -108,18 +121,14 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = (
                 paintAddButton={index === array.length - 1}
                 handleUpdates={handleUpdates}
                 handleButtonClick={handleAddRemoveButtonClick}
+                disabled={props.racerProfiles.isFetching}
               />
             ))}
-            <Button
-              type="button"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.logout}
-              onClick={handleProfilesUpdateButtonClick}
-            >
-              Обновить
-            </Button>
+            <SpinnerButton
+              label="Обновить"
+              showSpinner={props.racerProfiles.isFetching}
+              handleClick={handleProfilesUpdateButtonClick}
+            />
           </Container>
         </ExpansionPanelDetails>
       </ExpansionPanel>

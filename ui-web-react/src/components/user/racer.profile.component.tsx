@@ -11,6 +11,7 @@ import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 type RacerProfileProps = {
   profile: RacerProfile;
   paintAddButton: boolean;
+  disabled: boolean;
   handleUpdates: (profile: RacerProfile) => void;
   handleButtonClick: (profileId: string, isAddButton: boolean) => void;
 };
@@ -35,6 +36,7 @@ const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileP
           <Grid container spacing={1}>
             <Grid item xs={8}>
               <TextField
+                disabled={props.disabled}
                 required
                 id="name"
                 variant="outlined"
@@ -50,6 +52,7 @@ const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileP
             </Grid>
             <Grid item xs={3}>
               <TextField
+                disabled={props.disabled}
                 required
                 id="bikeNumber"
                 variant="outlined"
@@ -65,6 +68,7 @@ const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileP
             </Grid>
             <Grid item xs={1}>
               <IconButton
+                disabled={props.disabled}
                 color={props.paintAddButton ? "primary" : "secondary"}
                 onClick={() => props.handleButtonClick(props.profile.uuid, props.paintAddButton)}
               >

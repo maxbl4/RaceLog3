@@ -43,8 +43,8 @@ export function racerProfilesReducer(
 }
 
 function processProfiles(action: RacerProfilesDataAction): Optional<RacerProfile[]> {
-  const result: RacerProfile[] = [];
-  action.itemsAdded.ifPresent(profiles => result.concat(profiles));
-  action.itemsUpdated.ifPresent(profiles => result.concat(profiles));
+  let result: RacerProfile[] = [];
+  action.itemsAdded.ifPresent(profiles => result = result.concat(profiles));
+  action.itemsUpdated.ifPresent(profiles => result = result.concat(profiles));
   return result.length > 0 ? Optional.of(result) : Optional.empty<RacerProfile[]>();
 }
