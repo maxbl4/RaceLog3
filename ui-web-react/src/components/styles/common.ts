@@ -10,7 +10,7 @@ export const commonStyles = (theme: Theme) => {
     } as CSSProperties,
     paper: {
       padding: theme.spacing(2),
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(5),
       display: "flex",
       overflow: "auto",
       flexDirection: "column",

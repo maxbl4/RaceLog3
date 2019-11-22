@@ -28,7 +28,7 @@ function* tryRacerProfilesRequestAll(action: RacerProfilesDataAction) {
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(racerProfilesRequestFailed());
-    yield put(alertsShow(createRacerProfilesErrorAlert("Невозможно обновить данные")));
+    yield put(alertsShow(createRacerProfilesAlert(AlertType.ERROR, "Невозможно обновить данные")));
   }
 }
 
@@ -42,17 +42,18 @@ function* tryRacerProfilesUpdate(action: RacerProfilesDataAction) {
         action.itemsUpdated.orElse([])
       )
     );
+    yield put(alertsShow(createRacerProfilesAlert(AlertType.SUCCESS, "Данные успешно обновлены")));
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(racerProfilesRequestFailed());
-    yield put(alertsShow(createRacerProfilesErrorAlert("Невозможно обновить данные")));
+    yield put(alertsShow(createRacerProfilesAlert(AlertType.ERROR, "Невозможно обновить данные")));
   }
 }
 
-function createRacerProfilesErrorAlert(content: string): Alert {
+function createRacerProfilesAlert(type: AlertType, content: string): Alert {
   return {
     id: getNextAlertID(),
-    type: AlertType.ERROR,
+    type,
     header: "Профили гонщика",
     content
   };

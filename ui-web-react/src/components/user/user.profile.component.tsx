@@ -104,7 +104,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = (
 
   const renderRacerProfile = (): JSX.Element => {
     return (
-      <ExpansionPanel className="mt-2">
+      <ExpansionPanel className="mt-3">
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="racerProfile-content"
