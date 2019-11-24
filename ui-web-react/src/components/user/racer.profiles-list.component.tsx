@@ -11,6 +11,7 @@ import { Theme } from "@material-ui/core";
 import SpinnerButton from "../common/spinner-button";
 import { RacerProfile } from "../../model/types/datatypes";
 import { generateUUID } from "../../model/utils/constants";
+import Optional from "optional-js";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
@@ -41,7 +42,7 @@ const RacerProfilesListComponent: React.FC<RacerProfilesListProps> = (
 ) => {
   const createProfile = (): RacerProfile => ({
     uuid: generateUUID(),
-    userUUID: props.userUUID,
+    userUUID: Optional.of(props.userUUID),
     name: "",
     bikeNumber: 0
   });

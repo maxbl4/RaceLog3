@@ -3,7 +3,8 @@ import {
   UNKNOWN_ACTION_TYPE,
   DEFAULT_RACE_ITEM_1,
   DEFAULT_RACE_ITEM_2,
-  DEFAULT_RACE_ITEM_EXT
+  DEFAULT_RACE_ITEM_EXT,
+  compareProfiles
 } from "../utils/test.utils";
 import {
   RACES_REQUESTED,
@@ -72,7 +73,7 @@ describe("race.reducer - selectedRaceReducer", () => {
       const items2 = ri2.participants.orElse([]);
       expect(items1.length).toEqual(items2.length);
       for (let i = 0; i < items1.length; i++) {
-        expect(items1[0]).toEqual(items2[0]);
+        compareProfiles(items1[i], items2[i]);
       }
     } else {
       expect(ri2.participants.isPresent()).toBeFalsy();

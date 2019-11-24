@@ -2,7 +2,7 @@ import { StoredState } from "../../model/types/datatypes";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { selectedRaceRequested } from "../../model/actions/actions";
-import { RaceInfoComponent } from "./race-info.component";
+import RaceInfoComponent from "./race-info.component";
 
 const mapStateToProps = (state: StoredState) => {
   return {

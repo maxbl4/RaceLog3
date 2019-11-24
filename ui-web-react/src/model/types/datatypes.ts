@@ -42,11 +42,6 @@ export type UserInfo = {
   role: Role;
 };
 
-export type RacerInfo = {
-  bikeNumber: number;
-  raceStatistics: Optional<RaceStatistics[]>;
-};
-
 export type RaceItem = {
   id: number;
   name: string;
@@ -60,13 +55,8 @@ export type RaceItem = {
 export type RaceItemExt = RaceItem &
   Fetchable & {
     description: string;
-    participants: Optional<string[]>;
+    participants: Optional<RacerProfile[]>;
   };
-
-export type RaceStatistics = {
-  raceID: number;
-  position: number;
-};
 
 // ----------------------------------------------------------------------
 // Alerts
@@ -95,7 +85,7 @@ export enum AlertType {
 
 export type RacerProfile = {
   uuid: string;
-  userUUID: string;
+  userUUID: Optional<string>;
   name: string;
   bikeNumber: number;
 };

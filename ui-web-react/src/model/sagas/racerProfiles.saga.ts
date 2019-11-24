@@ -11,6 +11,7 @@ import { Alert, AlertType } from "../types/datatypes";
 import { getNextAlertID } from "../utils/constants";
 import { delay } from "./sagas";
 import { LoggingService } from "../utils/logging-service";
+import Optional from "optional-js";
 
 function* tryRacerProfilesRequestAll(action: RacerProfilesDataAction) {
   try {
@@ -18,8 +19,8 @@ function* tryRacerProfilesRequestAll(action: RacerProfilesDataAction) {
     yield put(
       racerProfilesUpdateReceived(
         [
-          { uuid: "some-uuid_1", userUUID: "dimaUserUUID", name: "Dima Komarov", bikeNumber: 87 },
-          { uuid: "some-uuid_2", userUUID: "dimaUserUUID", name: "Vova Perevalov", bikeNumber: 91 }
+          { uuid: "some-uuid_1", userUUID: Optional.of("dimaUserUUID"), name: "Dima Komarov", bikeNumber: 87 },
+          { uuid: "some-uuid_2", userUUID: Optional.of("dimaUserUUID"), name: "Vova Perevalov", bikeNumber: 91 }
         ],
         [],
         []

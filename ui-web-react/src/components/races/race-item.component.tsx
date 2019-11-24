@@ -35,7 +35,7 @@ const RaceItemComponent: React.FC<RaceItemProps> = (props: RaceItemProps) => {
     <Card className={classes.card}>
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
-          {new Date(props.item.date).toDateString()}
+          {new Date(props.item.date).toLocaleDateString()}
         </Typography>
         <Typography variant="h5" component="h2" className={classes.pos}>
           {props.item.name}

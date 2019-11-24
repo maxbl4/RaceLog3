@@ -3,7 +3,8 @@ import {
   DEFAULT_RACER_PROFILE_1,
   DEFAULT_RACER_PROFILE_2,
   DEFAULT_RACER_PROFILE_3,
-  DEFAULT_RACER_PROFILE_4
+  DEFAULT_RACER_PROFILE_4,
+  compareProfiles
 } from "../utils/test.utils";
 import { racerProfilesReducer } from "./racerProfiles.reducer";
 import {
@@ -132,11 +133,4 @@ describe("racerProfiles.reducer - racerProfilesReducer", () => {
     expect(profiles.length).toEqual(1);
     compareProfiles(profiles[0], DEFAULT_RACER_PROFILE_2);
   });
-
-  function compareProfiles(rp1: RacerProfile, rp2: RacerProfile): void {
-    expect(rp1.uuid).toEqual(rp2.uuid);
-    expect(rp1.userUUID).toEqual(rp2.userUUID);
-    expect(rp1.name).toEqual(rp2.name);
-    expect(rp1.bikeNumber).toEqual(rp2.bikeNumber);
-  }
 });

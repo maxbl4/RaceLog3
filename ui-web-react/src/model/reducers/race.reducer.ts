@@ -1,4 +1,4 @@
-import { Races, RaceItemExt, RaceItem } from "../types/datatypes";
+import { Races, RaceItemExt, RaceItem, RacerProfile } from "../types/datatypes";
 import Optional from "optional-js";
 import {
   RACES_REQUESTED,
@@ -24,7 +24,7 @@ export const INITIAL_SELECTED_RACE: RaceItemExt = {
   date: DEFAULT_DATE,
   location: "",
   description: "",
-  participants: Optional.empty<string[]>()
+  participants: Optional.empty<RacerProfile[]>()
 };
 
 export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {

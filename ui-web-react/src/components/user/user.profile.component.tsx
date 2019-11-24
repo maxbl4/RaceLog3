@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { UserInfo, User, RacerProfile, RacerProfiles } from "../../model/types/datatypes";
 import { getRoleName } from "../../model/types/roles.model";
 import { FetchingComponent } from "../fetching/fetching.component";
