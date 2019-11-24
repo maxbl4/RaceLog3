@@ -29,7 +29,7 @@ export type Races = Fetchable & {
 
 export type RacerProfiles = Fetchable & {
   items: Optional<RacerProfile[]>;
-}
+};
 
 // ----------------------------------------------------------------------
 // Minimum info for stored data
@@ -48,9 +48,10 @@ export type RacerInfo = {
 };
 
 export type RaceItem = {
-  id: Optional<number>;
-  name: Optional<string>;
-  date: Optional<number>;
+  id: number;
+  name: string;
+  date: number;
+  location: string;
 };
 
 // ----------------------------------------------------------------------
@@ -58,18 +59,13 @@ export type RaceItem = {
 // ----------------------------------------------------------------------
 export type RaceItemExt = RaceItem &
   Fetchable & {
-    location: Optional<string>;
-    participants: Optional<RaceParticipant[]>;
+    description: string;
+    participants: Optional<string[]>;
   };
 
 export type RaceStatistics = {
   raceID: number;
   position: number;
-};
-
-export type RaceParticipant = {
-  racerID: number;
-  racerName: string;
 };
 
 // ----------------------------------------------------------------------
@@ -78,14 +74,14 @@ export type RaceParticipant = {
 
 export type AlertsQueue = {
   alerts: Alert[];
-}
+};
 
 export type Alert = {
   id: number;
   type: AlertType;
   header: string;
   content: string;
-}
+};
 
 export enum AlertType {
   ERROR = "ERROR",
@@ -102,4 +98,4 @@ export type RacerProfile = {
   userUUID: string;
   name: string;
   bikeNumber: number;
-}
+};

@@ -1,7 +1,6 @@
 import React from "react";
 import { RaceItem } from "../../model/types/datatypes";
 import { DELIMITER, RACES } from "../../model/routing/paths";
-import { DEFAULT_ID, DEFAULT_DATE } from "../../model/utils/constants";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
@@ -36,16 +35,16 @@ const RaceItemComponent: React.FC<RaceItemProps> = (props: RaceItemProps) => {
     <Card className={classes.card}>
       <CardContent>
         <Typography className={classes.title} color="textSecondary" gutterBottom>
-          {new Date(props.item.date.orElse(DEFAULT_DATE)).toDateString()}
+          {new Date(props.item.date).toDateString()}
         </Typography>
         <Typography variant="h5" component="h2" className={classes.pos}>
-          {props.item.name.orElse("")}
+          {props.item.name}
         </Typography>
       </CardContent>
       <CardActions>
         <Button
           size="small"
-          onClick={() => reRouteTo(RACES + DELIMITER + props.item.id.orElse(DEFAULT_ID))}
+          onClick={() => reRouteTo(RACES + DELIMITER + props.item.id)}
         >
           Подробнее
         </Button>

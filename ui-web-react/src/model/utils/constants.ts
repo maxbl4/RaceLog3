@@ -2,6 +2,7 @@ import Optional from "optional-js";
 import v1 from "uuid/v1";
 
 export const DEFAULT_ID = -1;
+export const DEFAULT_UUID = "DEFAULT_UUID";
 export const DEFAULT_DATE = 0;
 /**
  * Default timeout for operations: 10 seconds

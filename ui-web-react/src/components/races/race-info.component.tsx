@@ -1,7 +1,7 @@
 import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { RaceItemExt } from "../../model/types/datatypes";
-import { DEFAULT_ID, DEFAULT_DATE } from "../../model/utils/constants";
+import { DEFAULT_ID } from "../../model/utils/constants";
 import { FetchingComponent } from "../fetching/fetching.component";
 
 interface RaceInfoParams {
@@ -22,24 +22,20 @@ export class RaceInfoComponent extends React.Component<RaceInfoComponentProps> {
   render() {
     if (this.props.raceItemExt.isFetching) {
       return <FetchingComponent />;
-    } else if (!this.props.raceItemExt.id.isPresent()) {
-      return <div>Упс... Что то мы ничего не знаем об этой гонке.</div>;
     } else {
       return (
         <div>
           <div className="row">
             <div className="col-lg-3">Название: </div>
-            <div className="col-lg-5">{this.props.raceItemExt.name.orElse("")}</div>
+            <div className="col-lg-5">{this.props.raceItemExt.name}</div>
           </div>
           <div className="row">
             <div className="col-lg-3">Дата: </div>
-            <div className="col-lg-5">
-              {new Date(this.props.raceItemExt.date.orElse(DEFAULT_DATE)).toDateString()}
-            </div>
+            <div className="col-lg-5">{new Date(this.props.raceItemExt.date).toDateString()}</div>
           </div>
           <div className="row">
             <div className="col-lg-3">Место провиденя: </div>
-            <div className="col-lg-5">{this.props.raceItemExt.location.orElse("")}</div>
+            <div className="col-lg-5">{this.props.raceItemExt.location}</div>
           </div>
           <div className="row">
             <div className="col-lg-3">Участники: </div>
@@ -53,8 +49,8 @@ export class RaceInfoComponent extends React.Component<RaceInfoComponentProps> {
               </thead>
               <tbody>
                 {this.props.raceItemExt.participants.orElse([]).map(item => (
-                  <tr key={item.racerName}>
-                    <td>{item.racerName}</td>
+                  <tr key={item}>
+                    <td>{item}</td>
                   </tr>
                 ))}
               </tbody>

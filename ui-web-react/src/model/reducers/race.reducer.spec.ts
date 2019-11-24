@@ -1,11 +1,9 @@
-import { racesReducer, selectedRaceReducer } from "./race.reducer";
+import { racesReducer, selectedRaceReducer, INITIAL_SELECTED_RACE } from "./race.reducer";
 import {
   UNKNOWN_ACTION_TYPE,
   DEFAULT_RACE_ITEM_1,
   DEFAULT_RACE_ITEM_2,
-  DEFAULT_RACE_ITEM_EXT,
-  DEFAULT_RACE_PARTICIPANT_1,
-  DEFAULT_RACE_PARTICIPANT_2
+  DEFAULT_RACE_ITEM_EXT
 } from "../utils/test.utils";
 import {
   RACES_REQUESTED,
@@ -14,6 +12,7 @@ import {
   SELECTED_RACE_LOADED
 } from "../actions/actions";
 import Optional from "optional-js";
+import { RaceItemExt } from "../types/datatypes";
 
 describe("race.reducer - racesReducer", () => {
   it("should return default state for unknown action", () => {
@@ -44,21 +43,13 @@ describe("race.reducer - selectedRaceReducer", () => {
   it("should return default state for unknown action", () => {
     const raceState = selectedRaceReducer(undefined, { type: UNKNOWN_ACTION_TYPE });
     expect(raceState.isFetching).toBeFalsy();
-    expect(raceState.id.isPresent()).toBeFalsy();
-    expect(raceState.name.isPresent()).toBeFalsy();
-    expect(raceState.date.isPresent()).toBeFalsy();
-    expect(raceState.location.isPresent()).toBeFalsy();
-    expect(raceState.participants.isPresent()).toBeFalsy();
+    compareRaceItems(raceState, INITIAL_SELECTED_RACE);
   });
 
   it("should return fetching empty state for SELECTED_RACE_REQUESTED action", () => {
     const raceState = selectedRaceReducer(undefined, { type: SELECTED_RACE_REQUESTED });
     expect(raceState.isFetching).toBeTruthy();
-    expect(raceState.id.isPresent()).toBeFalsy();
-    expect(raceState.name.isPresent()).toBeFalsy();
-    expect(raceState.date.isPresent()).toBeFalsy();
-    expect(raceState.location.isPresent()).toBeFalsy();
-    expect(raceState.participants.isPresent()).toBeFalsy();
+    compareRaceItems(raceState, INITIAL_SELECTED_RACE);
   });
 
   it("should return fetched non-emtpy state for SELECTED_RACE_LOADED action", () => {
@@ -67,15 +58,24 @@ describe("race.reducer - selectedRaceReducer", () => {
       raceItemExt: DEFAULT_RACE_ITEM_EXT
     });
     expect(raceState.isFetching).toBeFalsy();
-    expect(raceState.id.get()).toEqual(DEFAULT_RACE_ITEM_EXT.id.get());
-    expect(raceState.name.get()).toEqual(DEFAULT_RACE_ITEM_EXT.name.get());
-    expect(raceState.date.get()).toEqual(DEFAULT_RACE_ITEM_EXT.date.get());
-    expect(raceState.location.get()).toEqual(DEFAULT_RACE_ITEM_EXT.location.get());
-
-    expect(raceState.participants.isPresent()).toBeTruthy();
-    const items = raceState.participants.orElse([]);
-    expect(items).toHaveLength(2);
-    expect(items[0]).toEqual(DEFAULT_RACE_PARTICIPANT_1);
-    expect(items[1]).toEqual(DEFAULT_RACE_PARTICIPANT_2);
+    compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
   });
+
+  function compareRaceItems(ri1: RaceItemExt, ri2: RaceItemExt): void {
+    expect(ri1.id).toEqual(ri2.id);
+    expect(ri1.name).toEqual(ri2.name);
+    expect(ri1.date).toEqual(ri2.date);
+    expect(ri1.location).toEqual(ri2.location);
+    expect(ri1.description).toEqual(ri2.description);
+    if (ri1.participants.isPresent()) {
+      const items1 = ri1.participants.orElse([]);
+      const items2 = ri2.participants.orElse([]);
+      expect(items1.length).toEqual(items2.length);
+      for (let i = 0; i < items1.length; i++) {
+        expect(items1[0]).toEqual(items2[0]);
+      }
+    } else {
+      expect(ri2.participants.isPresent()).toBeFalsy();
+    }
+  }
 });
