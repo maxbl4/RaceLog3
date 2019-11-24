@@ -4,8 +4,6 @@ import Optional from "optional-js";
 export type StoredState = {
   user: User;
   racerProfiles: RacerProfiles;
-  news: News;
-  selectedNews: NewsItemExt;
   races: Races;
   selectedRace: RaceItemExt;
   alertsQueue: AlertsQueue;
@@ -23,10 +21,6 @@ export type Fetchable = {
 // ----------------------------------------------------------------------
 export type User = Fetchable & {
   info: Optional<UserInfo>;
-};
-
-export type News = Fetchable & {
-  items: Optional<NewsItem[]>;
 };
 
 export type Races = Fetchable & {
@@ -53,12 +47,6 @@ export type RacerInfo = {
   raceStatistics: Optional<RaceStatistics[]>;
 };
 
-export type NewsItem = {
-  id: Optional<number>;
-  header: Optional<string>;
-  date: Optional<number>;
-};
-
 export type RaceItem = {
   id: Optional<number>;
   name: Optional<string>;
@@ -68,11 +56,6 @@ export type RaceItem = {
 // ----------------------------------------------------------------------
 // Extended info for showing on particular pages
 // ----------------------------------------------------------------------
-export type NewsItemExt = NewsItem &
-  Fetchable & {
-    text: Optional<string>;
-  };
-
 export type RaceItemExt = RaceItem &
   Fetchable & {
     location: Optional<string>;

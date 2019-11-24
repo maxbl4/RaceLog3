@@ -1,8 +1,8 @@
 import React from "react";
-import NewsListContainer from "../news/news-list.container";
 import Container from "@material-ui/core/Container";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { makeStyles } from "@material-ui/core/styles";
+import RaceListContainer from "../races/race-list.container";
 
 const useStyles = makeStyles(theme => ({
   mainImg: {
@@ -26,7 +26,7 @@ const HomeComponent: React.FC = () => {
           title="Photo by Daniel from Pexels"
           alt="Картинка с байкером"
         />
-        <NewsListContainer />
+        <RaceListContainer />
       </Container>
     </React.Fragment>
   );

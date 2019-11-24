@@ -5,13 +5,11 @@ import HomeComponent from "./components/home/home.component";
 import {
   DEFAULT,
   RACES_INFO,
-  NEWS_INFO,
   USER_PROFILE,
   USER_SIGN_IN,
   USER_SIGN_UP
 } from "./model/routing/paths";
 import RaceInfoContainer from "./components/races/race-info.container";
-import NewsInfoContainer from "./components/news/news-info.container";
 import Optional from "optional-js";
 import { UserInfo } from "./model/types/datatypes";
 import { LoggingService } from "./model/utils/logging-service";
@@ -55,7 +53,6 @@ export class MainComponent extends React.Component<MainComponentProps> {
           <Route path={USER_SIGN_IN} component={UserSignInContainer} />
           <Route path={USER_SIGN_UP} component={UserSignUpContainer} />
           <Route path={RACES_INFO} component={RaceInfoContainer} />
-          <Route path={NEWS_INFO} component={NewsInfoContainer} />
         </div>
       </Router>
     );
