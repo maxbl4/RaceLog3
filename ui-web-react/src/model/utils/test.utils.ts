@@ -6,7 +6,8 @@ import {
   RaceParticipant,
   UserInfo,
   Alert,
-  AlertType
+  AlertType,
+  RacerProfile
 } from "../types/datatypes";
 import Optional from "optional-js";
 
@@ -75,4 +76,28 @@ export const DEFAULT_ALERT_2: Alert = {
   type: AlertType.INFO,
   header: "Some header 2",
   content: "Info alert"
+};
+export const DEFAULT_RACER_PROFILE_1: RacerProfile = {
+  uuid: "d816d19e-0eb0-11ea-8d71-362b9e155667",
+  userUUID: "d816cf32-0eb0-11ea-8d71-362b9e155667",
+  name: "Valentino Rossi",
+  bikeNumber: 46
+};
+export const DEFAULT_RACER_PROFILE_2: RacerProfile = {
+  uuid: "d816d2f2-0eb0-11ea-8d71-362b9e155667",
+  userUUID: "d816cf32-0eb0-11ea-8d71-362b9e155667",
+  name: "Jorge Lorenzo",
+  bikeNumber: 99
+};
+export const DEFAULT_RACER_PROFILE_3: RacerProfile = {
+  uuid: "d816d428-0eb0-11ea-8d71-362b9e155667",
+  userUUID: "d816cf32-0eb0-11ea-8d71-362b9e155667",
+  name: "Dani Pedrosa",
+  bikeNumber: 26
+};
+export const DEFAULT_RACER_PROFILE_4: RacerProfile = {
+  uuid: "d816d554-0eb0-11ea-8d71-362b9e155667",
+  userUUID: "d816cf32-0eb0-11ea-8d71-362b9e155667",
+  name: "Marc Márquez",
+  bikeNumber: 93
 };
