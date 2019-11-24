@@ -16,19 +16,22 @@ function* fetchRaces() {
     yield put(
       racesLoaded([
         {
-          id: Optional.of(1),
-          name: Optional.of("Гонка 1"),
-          date: Optional.of(1568235600000)
+          id: 1,
+          name: "Гонка 1",
+          date: 1568235600000,
+          location: "Монца"
         },
         {
-          id: Optional.of(2),
-          name: Optional.of("Гонка 2"),
-          date: Optional.of(1568322000000)
+          id: 2,
+          name: "Гонка 2",
+          date: 1568322000000,
+          location: "Барселона"
         },
         {
-          id: Optional.of(3),
-          name: Optional.of("Гонка 3"),
-          date: Optional.of(1568408400000)
+          id: 3,
+          name: "Гонка 3",
+          date: 1568408400000,
+          location: "Сан-Паулу"
         }
       ])
     );
@@ -43,20 +46,13 @@ function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
     yield put(
       selectedRaceLoaded({
         isFetching: false,
-        id: Optional.of(action.id),
-        name: Optional.of("Гонка в Тучково"),
-        date: Optional.of(1568235600000),
-        location: Optional.of("Тучково Raceway"),
-        participants: Optional.of([
-          {
-            racerID: 1,
-            racerName: "Дима"
-          },
-          {
-            racerID: 2,
-            racerName: "Вова"
-          }
-        ])
+        id: action.id,
+        name: "Гонка в Тучково",
+        date: 1568235600000,
+        location: "Тучково Raceway",
+        description:
+          "Culpa cupidatat veniam consequat cupidatat officia pariatur pariatur consectetur nisi est ut. Ipsum voluptate qui dolor adipisicing do esse eiusmod mollit in eu tempor. Lorem eiusmod labore adipisicing voluptate consequat consequat cupidatat pariatur.",
+        participants: Optional.of(["Дима", "Вова"])
       })
     );
   } catch (e) {
