@@ -52,10 +52,13 @@ function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
         location: "Тучково Raceway",
         description:
           "Culpa cupidatat veniam consequat cupidatat officia pariatur pariatur consectetur nisi est ut. Ipsum voluptate qui dolor adipisicing do esse eiusmod mollit in eu tempor. Lorem eiusmod labore adipisicing voluptate consequat consequat cupidatat pariatur.",
-        participants: Optional.of([
-          { uuid: "some-uuid_1", userUUID: Optional.of("dimaUserUUID"), name: "Dima Komarov", bikeNumber: 87 },
-          { uuid: "some-uuid_2", userUUID: Optional.of("dimaUserUUID"), name: "Vova Perevalov", bikeNumber: 91 }
-        ])
+        participants: {
+          isFetching: false,
+          items: Optional.of([
+            { uuid: "some-uuid_1", userUUID: Optional.of("dimaUserUUID"), name: "Dima Komarov", bikeNumber: 87 },
+            { uuid: "some-uuid_2", userUUID: Optional.of("dimaUserUUID"), name: "Vova Perevalov", bikeNumber: 91 }
+          ])
+        }
       })
     );
   } catch (e) {

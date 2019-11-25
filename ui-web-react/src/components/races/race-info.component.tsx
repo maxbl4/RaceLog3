@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { RaceItemExt } from "../../model/types/datatypes";
+import { RaceItemExt, RacerProfiles, RacerProfile } from "../../model/types/datatypes";
 import { DEFAULT_ID } from "../../model/utils/constants";
 import { FetchingComponent } from "../fetching/fetching.component";
 import { makeStyles } from "@material-ui/core/styles";
@@ -11,27 +11,23 @@ import Paper from "@material-ui/core/Paper";
 import { Theme } from "@material-ui/core";
 import { commonStyles } from "../styles/common";
 import RaceParticipantListComponent from "./race-participant-list.component";
+import RaceRegistrationListComponent from "./race-registration-list.component";
+import Optional from "optional-js";
 
 const useStyles = makeStyles((theme: Theme) => {
-  const styles = commonStyles(theme);
+  const common = commonStyles(theme);
   return {
-    "@global": styles.global,
-    paperTop: styles.paper,
+    "@global": common.global,
+    paperTop: common.paper,
     paper: {
-      ...styles.paper,
+      ...common.paper,
       marginTop: theme.spacing(2)
     },
     logout: {
       margin: theme.spacing(3, 0, 2)
     },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightMedium
-    },
-    profileContainer: {
-      margin: 0,
-      padding: 0
-    }
+    heading: common.heading,
+    profileContainer: common.profileContainer
   };
 });
 
@@ -40,7 +36,9 @@ interface RaceInfoParams {
 }
 
 interface RaceInfoComponentProps extends RouteComponentProps<RaceInfoParams> {
+  loggedIn: boolean;
   raceItemExt: RaceItemExt;
+  racerProfiles: Optional<RacerProfile[]>;
   onDataReload: (id: number) => void;
 }
 
@@ -50,6 +48,9 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
     const raceID = props.match.params.id;
     props.onDataReload(raceID ? parseInt(raceID) : DEFAULT_ID);
   }, [props.match.params.id]);
+  const onRegistrationUpdate = (added: RacerProfile[], removed: RacerProfile[]): void => {
+
+  };
 
   if (props.raceItemExt.isFetching) {
     return <FetchingComponent />;
@@ -62,11 +63,20 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
             {props.raceItemExt.name}
           </Typography>
           <Typography component="p" variant="h6">
-            {`${props.raceItemExt.location}, ${new Date(props.raceItemExt.date).toLocaleDateString()}`}
+            {`${props.raceItemExt.location}, ${new Date(
+              props.raceItemExt.date
+            ).toLocaleDateString()}`}
           </Typography>
           <Typography color="textSecondary">{props.raceItemExt.description}</Typography>
         </Paper>
-        <RaceParticipantListComponent participants={props.raceItemExt.participants}/>
+        <RaceParticipantListComponent participants={props.raceItemExt.participants.items} />
+        <RaceRegistrationListComponent
+          loggedIn={props.loggedIn}
+          isUpdating={props.raceItemExt.participants.isFetching}
+          allProfiles={props.racerProfiles}
+          registeredProfiles={props.raceItemExt.participants.items}
+          onRegistrationUpdate={onRegistrationUpdate}
+        />
       </Container>
     );
   }

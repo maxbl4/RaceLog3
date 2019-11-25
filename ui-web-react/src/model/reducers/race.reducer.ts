@@ -6,7 +6,10 @@ import {
   RacesLoadedAction,
   SELECTED_RACE_REQUESTED,
   SELECTED_RACE_LOADED,
-  SelectedRaceLoadedAction
+  SelectedRaceLoadedAction,
+  RACE_PARTICIPANTS_UPDATE_REQUESTED,
+  RACE_PARTICIPANTS_UPDATED,
+  RaceParticipantsAction
 } from "../actions/actions";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
@@ -24,7 +27,10 @@ export const INITIAL_SELECTED_RACE: RaceItemExt = {
   date: DEFAULT_DATE,
   location: "",
   description: "",
-  participants: Optional.empty<RacerProfile[]>()
+  participants: {
+    isFetching: false,
+    items: Optional.empty<RacerProfile[]>()
+  }
 };
 
 export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
@@ -45,10 +51,7 @@ export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
   }
 }
 
-export function selectedRaceReducer(
-  state: RaceItemExt = INITIAL_SELECTED_RACE,
-  action: AnyAction
-) {
+export function selectedRaceReducer(state: RaceItemExt = INITIAL_SELECTED_RACE, action: AnyAction) {
   LoggingService.getInstance().logReducer(action, state);
   switch (action.type) {
     case SELECTED_RACE_REQUESTED:
@@ -61,7 +64,32 @@ export function selectedRaceReducer(
         ...(action as SelectedRaceLoadedAction).raceItemExt,
         isFetching: false
       };
+    case RACE_PARTICIPANTS_UPDATE_REQUESTED:
+      return {
+        ...state,
+        participants: {
+          ...state.participants,
+          isFetching: true,
+        }
+      };
+    case RACE_PARTICIPANTS_UPDATED:
+      return {
+        ...state,
+        participants: {
+          isFetching: false,
+          items: processRaceParticipants(state.participants.items, action as RaceParticipantsAction)
+        }
+      };
     default:
       return state;
   }
+}
+
+function processRaceParticipants(currentItems: Optional<RacerProfile[]>, action: RaceParticipantsAction): Optional<RacerProfile[]> {
+  const removed = action.itemsRemoved.orElse([]);
+  
+  let items = currentItems.orElse([]);
+  items = items.filter(item => removed.find(curr => item.uuid === curr.uuid) === undefined);
+  items = items.concat(action.itemsAdded.orElse([]));
+  return items.length === 0 ? Optional.empty<RacerProfile[]>() : Optional.of(items);
 }

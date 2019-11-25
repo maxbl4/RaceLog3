@@ -55,8 +55,12 @@ export type RaceItem = {
 export type RaceItemExt = RaceItem &
   Fetchable & {
     description: string;
-    participants: Optional<RacerProfile[]>;
+    participants: RaceParticipants;
   };
+
+export type RaceParticipants = Fetchable & {
+  items: Optional<RacerProfile[]>;
+};
 
 // ----------------------------------------------------------------------
 // Alerts

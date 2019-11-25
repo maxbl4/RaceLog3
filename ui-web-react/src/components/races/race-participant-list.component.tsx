@@ -14,17 +14,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
+import { commonStyles } from "../styles/common";
 
 const useStyles = makeStyles((theme: Theme) => {
+  const common = commonStyles(theme);
   return {
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightMedium
-    },
-    profileContainer: {
-      margin: 0,
-      padding: 0
-    }
+    heading: common.heading,
+    profileContainer: common.profileContainer
   };
 });
 

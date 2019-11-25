@@ -1,11 +1,5 @@
 import { AnyAction } from "redux";
-import {
-  RaceItem,
-  RaceItemExt,
-  UserInfo,
-  Alert,
-  RacerProfile
-} from "../types/datatypes";
+import { RaceItem, RaceItemExt, UserInfo, Alert, RacerProfile } from "../types/datatypes";
 import Optional from "optional-js";
 
 // ----------------------------------------------------------------------
@@ -16,6 +10,8 @@ export const RACES_LOADED = "RACES_LOADED";
 
 export const SELECTED_RACE_REQUESTED = "SELECTED_RACE_REQUESTED";
 export const SELECTED_RACE_LOADED = "SELECTED_RACE_LOADED";
+export const RACE_PARTICIPANTS_UPDATE_REQUESTED = "RACE_PARTICIPANTS_UPDATE_REQUESTED";
+export const RACE_PARTICIPANTS_UPDATED = "RACE_PARTICIPANTS_UPDATED";
 
 export const USER_REGISTRATION = "USER_REGISTRATION";
 export const USER_LOGIN = "USER_LOGIN";
@@ -45,6 +41,10 @@ export type SelectedRaceRequestedAction = AnyAction & {
 };
 export type SelectedRaceLoadedAction = AnyAction & {
   raceItemExt: RaceItemExt;
+};
+export type RaceParticipantsAction = AnyAction & {
+  itemsAdded: Optional<RacerProfile[]>;
+  itemsRemoved: Optional<RacerProfile[]>;
 };
 
 export type UserInfoRequestAction = AnyAction & {
@@ -77,6 +77,24 @@ export const racesRequested = (): RacesRequestedAction => ({
 export const racesLoaded = (items: RaceItem[]): RacesLoadedAction => ({
   type: RACES_LOADED,
   items: Optional.of(items)
+});
+export const raceParticipantsUpdateRequested = (
+  added: RacerProfile[],
+  removed: RacerProfile[]
+): RaceParticipantsAction =>
+  raceParticipants(RACE_PARTICIPANTS_UPDATE_REQUESTED, added, removed);
+export const raceParticipantsUpdated = (
+  added: RacerProfile[],
+  removed: RacerProfile[]
+): RaceParticipantsAction => raceParticipants(RACE_PARTICIPANTS_UPDATED, added, removed);
+const raceParticipants = (
+  type: string,
+  added: RacerProfile[],
+  removed: RacerProfile[]
+): RaceParticipantsAction => ({
+  type,
+  itemsAdded: Optional.of(added),
+  itemsRemoved: Optional.of(removed)
 });
 
 export const selectedRaceRequested = (id: number): SelectedRaceRequestedAction => ({

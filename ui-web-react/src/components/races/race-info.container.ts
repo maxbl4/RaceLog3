@@ -6,6 +6,8 @@ import RaceInfoComponent from "./race-info.component";
 
 const mapStateToProps = (state: StoredState) => {
   return {
+    loggedIn: state.user.info.isPresent(),
+    racerProfiles: state.racerProfiles.items,
     raceItemExt: state.selectedRace
   };
 };
