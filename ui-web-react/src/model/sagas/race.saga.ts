@@ -16,32 +16,17 @@ import Optional from "optional-js";
 import { LoggingService } from "../utils/logging-service";
 import { AlertType, Alert } from "../types/datatypes";
 import { getNextAlertID } from "../utils/constants";
+import {
+  DEFAULT_RACE_ITEM_1,
+  DEFAULT_RACE_ITEM_2,
+  DEFAULT_RACER_PROFILE_1,
+  DEFAULT_RACER_PROFILE_2
+} from "../utils/test.utils";
 
 function* fetchRaces() {
   try {
     yield delay(2000);
-    yield put(
-      racesLoaded([
-        {
-          id: 1,
-          name: "Гонка 1",
-          date: 1568235600000,
-          location: "Монца"
-        },
-        {
-          id: 2,
-          name: "Гонка 2",
-          date: 1568322000000,
-          location: "Барселона"
-        },
-        {
-          id: 3,
-          name: "Гонка 3",
-          date: 1568408400000,
-          location: "Сан-Паулу"
-        }
-      ])
-    );
+    yield put(racesLoaded([DEFAULT_RACE_ITEM_1, DEFAULT_RACE_ITEM_2]));
   } catch (e) {
     LoggingService.getInstance().logSagaError(e);
   }
@@ -61,20 +46,7 @@ function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
           "Culpa cupidatat veniam consequat cupidatat officia pariatur pariatur consectetur nisi est ut. Ipsum voluptate qui dolor adipisicing do esse eiusmod mollit in eu tempor. Lorem eiusmod labore adipisicing voluptate consequat consequat cupidatat pariatur.",
         participants: {
           isFetching: false,
-          items: Optional.of([
-            {
-              uuid: "some-uuid_1",
-              userUUID: Optional.of("dimaUserUUID"),
-              name: "Dima Komarov",
-              bikeNumber: 87
-            },
-            {
-              uuid: "some-uuid_2",
-              userUUID: Optional.of("dimaUserUUID"),
-              name: "Vova Perevalov",
-              bikeNumber: 91
-            }
-          ])
+          items: Optional.of([DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2])
         }
       })
     );
