@@ -57,7 +57,14 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
     setCheckedProfiles(newChecked);
   };
 
-  const handleUpdateButtonClick = (): void => {};
+  const handleUpdateButtonClick = (): void => {
+    const initialRegedProfiles = props.registeredProfiles.orElse([]);
+    props.onRegistrationUpdate(
+      checkedProfiles.filter(value => initialRegedProfiles.find(profile => profile.uuid === value.uuid) === undefined),
+      initialRegedProfiles.filter(value => checkedProfiles.find(profile => profile.uuid === value.uuid) === undefined)
+    );
+  };
+
   return (
     <ExpansionPanel className="mt-3" disabled={!props.loggedIn || profiles.length === 0}>
       <ExpansionPanelSummary
@@ -79,7 +86,14 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
             {profiles.map((value, index, array) => {
               const labelId = "checkbox-list-label-" + value.uuid;
               return (
-                <ListItem key={value.uuid} role={undefined} dense button onClick={handleToggle(value)}>
+                <ListItem
+                  key={value.uuid}
+                  role={undefined}
+                  dense
+                  button
+                  onClick={handleToggle(value)}
+                  disabled={props.isUpdating}
+                >
                   <ListItemIcon>
                     <Checkbox
                       edge="start"
@@ -94,7 +108,11 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
               );
             })}
           </List>
-          <SpinnerButton label="Обновить" showSpinner={props.isUpdating} handleClick={handleUpdateButtonClick}/>
+          <SpinnerButton
+            label="Обновить"
+            showSpinner={props.isUpdating}
+            handleClick={handleUpdateButtonClick}
+          />
         </Container>
       </ExpansionPanelDetails>
     </ExpansionPanel>

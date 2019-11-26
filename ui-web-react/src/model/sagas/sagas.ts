@@ -1,5 +1,5 @@
 import { all, call } from "redux-saga/effects";
-import { racesSaga, selectedRaceSaga } from "./race.saga";
+import { racesSaga, selectedRaceSaga, raceParticipantsUpdateRequestSaga } from "./race.saga";
 import {
   userLoginSaga,
   userRegistrationSaga,
@@ -21,7 +21,8 @@ function* raceLogSaga() {
     call(userRegistrationSaga),
     call(alertsHideSaga),
     call(racerProfilesRequestAll),
-    call(racerProfilesUpdate)
+    call(racerProfilesUpdate),
+    call(raceParticipantsUpdateRequestSaga)
   ]);
 }
 

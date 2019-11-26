@@ -1,7 +1,10 @@
-import { StoredState } from "../../model/types/datatypes";
+import { StoredState, RacerProfile } from "../../model/types/datatypes";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { selectedRaceRequested } from "../../model/actions/actions";
+import {
+  selectedRaceRequested,
+  raceParticipantsUpdateRequested
+} from "../../model/actions/actions";
 import RaceInfoComponent from "./race-info.component";
 
 const mapStateToProps = (state: StoredState) => {
@@ -13,12 +16,11 @@ const mapStateToProps = (state: StoredState) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onDataReload: (id: number) => dispatch(selectedRaceRequested(id))
+  onDataReload: (id: number) => dispatch(selectedRaceRequested(id)),
+  onRegistrationUpdate: (raceID: number, added: RacerProfile[], removed: RacerProfile[]) =>
+    dispatch(raceParticipantsUpdateRequested(raceID, added, removed))
 });
 
-const RaceInfoContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(RaceInfoComponent);
+const RaceInfoContainer = connect(mapStateToProps, mapDispatchToProps)(RaceInfoComponent);
 
 export default RaceInfoContainer;

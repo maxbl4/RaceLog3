@@ -9,7 +9,8 @@ import {
   SelectedRaceLoadedAction,
   RACE_PARTICIPANTS_UPDATE_REQUESTED,
   RACE_PARTICIPANTS_UPDATED,
-  RaceParticipantsAction
+  RaceParticipantsAction,
+  RACE_PARTICIPANTS_UPDATE_FAILED
 } from "../actions/actions";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
@@ -69,7 +70,7 @@ export function selectedRaceReducer(state: RaceItemExt = INITIAL_SELECTED_RACE, 
         ...state,
         participants: {
           ...state.participants,
-          isFetching: true,
+          isFetching: true
         }
       };
     case RACE_PARTICIPANTS_UPDATED:
@@ -80,14 +81,25 @@ export function selectedRaceReducer(state: RaceItemExt = INITIAL_SELECTED_RACE, 
           items: processRaceParticipants(state.participants.items, action as RaceParticipantsAction)
         }
       };
+    case RACE_PARTICIPANTS_UPDATE_FAILED:
+      return {
+        ...state,
+        participants: {
+          ...state.participants,
+          isFetching: false
+        }
+      };
     default:
       return state;
   }
 }
 
-function processRaceParticipants(currentItems: Optional<RacerProfile[]>, action: RaceParticipantsAction): Optional<RacerProfile[]> {
+function processRaceParticipants(
+  currentItems: Optional<RacerProfile[]>,
+  action: RaceParticipantsAction
+): Optional<RacerProfile[]> {
   const removed = action.itemsRemoved.orElse([]);
-  
+
   let items = currentItems.orElse([]);
   items = items.filter(item => removed.find(curr => item.uuid === curr.uuid) === undefined);
   items = items.concat(action.itemsAdded.orElse([]));

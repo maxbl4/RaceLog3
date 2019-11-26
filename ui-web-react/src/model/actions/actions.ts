@@ -12,6 +12,7 @@ export const SELECTED_RACE_REQUESTED = "SELECTED_RACE_REQUESTED";
 export const SELECTED_RACE_LOADED = "SELECTED_RACE_LOADED";
 export const RACE_PARTICIPANTS_UPDATE_REQUESTED = "RACE_PARTICIPANTS_UPDATE_REQUESTED";
 export const RACE_PARTICIPANTS_UPDATED = "RACE_PARTICIPANTS_UPDATED";
+export const RACE_PARTICIPANTS_UPDATE_FAILED = "RACE_PARTICIPANTS_UPDATE_FAILED";
 
 export const USER_REGISTRATION = "USER_REGISTRATION";
 export const USER_LOGIN = "USER_LOGIN";
@@ -43,9 +44,13 @@ export type SelectedRaceLoadedAction = AnyAction & {
   raceItemExt: RaceItemExt;
 };
 export type RaceParticipantsAction = AnyAction & {
+  raceID: number;
   itemsAdded: Optional<RacerProfile[]>;
   itemsRemoved: Optional<RacerProfile[]>;
 };
+export type RaceParticipantsUpdateFailedAction = AnyAction & {
+  raceID: number;
+}
 
 export type UserInfoRequestAction = AnyAction & {
   userInfo: UserInfo;
@@ -79,22 +84,30 @@ export const racesLoaded = (items: RaceItem[]): RacesLoadedAction => ({
   items: Optional.of(items)
 });
 export const raceParticipantsUpdateRequested = (
+  raceID: number,
   added: RacerProfile[],
   removed: RacerProfile[]
 ): RaceParticipantsAction =>
-  raceParticipants(RACE_PARTICIPANTS_UPDATE_REQUESTED, added, removed);
+  raceParticipants(RACE_PARTICIPANTS_UPDATE_REQUESTED, raceID, added, removed);
 export const raceParticipantsUpdated = (
+  raceID: number,
   added: RacerProfile[],
   removed: RacerProfile[]
-): RaceParticipantsAction => raceParticipants(RACE_PARTICIPANTS_UPDATED, added, removed);
+): RaceParticipantsAction => raceParticipants(RACE_PARTICIPANTS_UPDATED, raceID, added, removed);
 const raceParticipants = (
   type: string,
+  raceID: number,
   added: RacerProfile[],
   removed: RacerProfile[]
 ): RaceParticipantsAction => ({
   type,
+  raceID,
   itemsAdded: Optional.of(added),
   itemsRemoved: Optional.of(removed)
+});
+export const raceParticipantsUpdateFailed = (raceID: number): RaceParticipantsUpdateFailedAction => ({
+  type: RACE_PARTICIPANTS_UPDATE_FAILED,
+  raceID
 });
 
 export const selectedRaceRequested = (id: number): SelectedRaceRequestedAction => ({

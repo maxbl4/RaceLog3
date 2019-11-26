@@ -40,6 +40,7 @@ interface RaceInfoComponentProps extends RouteComponentProps<RaceInfoParams> {
   raceItemExt: RaceItemExt;
   racerProfiles: Optional<RacerProfile[]>;
   onDataReload: (id: number) => void;
+  onRegistrationUpdate: (raceID: number, added: RacerProfile[], removed: RacerProfile[]) => void;
 }
 
 const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComponentProps) => {
@@ -48,8 +49,8 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
     const raceID = props.match.params.id;
     props.onDataReload(raceID ? parseInt(raceID) : DEFAULT_ID);
   }, [props.match.params.id]);
-  const onRegistrationUpdate = (added: RacerProfile[], removed: RacerProfile[]): void => {
-
+  const registrationUpdateHandler = (added: RacerProfile[], removed: RacerProfile[]): void => {
+    props.onRegistrationUpdate(props.raceItemExt.id, added, removed);
   };
 
   if (props.raceItemExt.isFetching) {
@@ -75,7 +76,7 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
           isUpdating={props.raceItemExt.participants.isFetching}
           allProfiles={props.racerProfiles}
           registeredProfiles={props.raceItemExt.participants.items}
-          onRegistrationUpdate={onRegistrationUpdate}
+          onRegistrationUpdate={registrationUpdateHandler}
         />
       </Container>
     );

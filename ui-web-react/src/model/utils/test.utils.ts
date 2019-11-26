@@ -20,6 +20,32 @@ export const compareProfiles = (rp1: RacerProfile, rp2: RacerProfile): void => {
   }
 };
 
+export const compareRaceItems = (ri1: RaceItemExt, ri2: RaceItemExt): void => {
+  expect(ri1.id).toEqual(ri2.id);
+  expect(ri1.name).toEqual(ri2.name);
+  expect(ri1.date).toEqual(ri2.date);
+  expect(ri1.location).toEqual(ri2.location);
+  expect(ri1.description).toEqual(ri2.description);
+  if (!!ri1.participants) {
+    expect(!!ri2.participants).toBeTruthy();
+
+    const partItems1 = ri1.participants.items;
+    const partItems2 = ri2.participants.items;
+    if (partItems1.isPresent()) {
+      const items1 = partItems1.orElse([]);
+      const items2 = partItems2.orElse([]);
+      expect(items1.length).toEqual(items2.length);
+      for (let i = 0; i < items1.length; i++) {
+        compareProfiles(items1[i], items2[i]);
+      }
+    } else {
+      expect(partItems2.isPresent()).toBeFalsy();
+    }
+  } else {
+    expect(!!ri2.participants).toBeFalsy();
+  }
+};
+
 export const UNKNOWN_ACTION_TYPE = "UNKNOWN_ACTION_TYPE";
 
 export const DEFAULT_RACE_ITEM_1: RaceItem = {
@@ -33,37 +59,6 @@ export const DEFAULT_RACE_ITEM_2: RaceItem = {
   name: "Some race name 2",
   date: 1571529537459,
   location: "Some location 2"
-};
-export const DEFAULT_RACE_ITEM_EXT: RaceItemExt = {
-  isFetching: false,
-  id: 1,
-  name: "Some race name 1",
-  date: 1570728837485,
-  location: "Some location 1",
-  description: "Some descr 1",
-  participants: Optional.of([
-    {uuid: "some_uuid_1", userUUID: Optional.of("some_user_uuid-1"), name: "Valentino Rossi", bikeNumber: 46},
-    {uuid: "some_uuid_2", userUUID: Optional.of("some_user_uuid-2"), name: "Jorge Lorenzo", bikeNumber: 99}
-  ])
-};
-export const DEFAULT_USER_INFO: UserInfo = {
-  uuid: "f0449b54-f815-11e9-aad5-362b9e155667",
-  name: "Valentino Rossi",
-  email: "valentino.rossi@yamaha.jp",
-  password: "rossiGp46",
-  role: "user"
-};
-export const DEFAULT_ALERT_1: Alert = {
-  id: 1,
-  type: AlertType.SUCCESS,
-  header: "Some header 1",
-  content: "Success alert"
-};
-export const DEFAULT_ALERT_2: Alert = {
-  id: 2,
-  type: AlertType.INFO,
-  header: "Some header 2",
-  content: "Info alert"
 };
 export const DEFAULT_RACER_PROFILE_1: RacerProfile = {
   uuid: "d816d19e-0eb0-11ea-8d71-362b9e155667",
@@ -88,4 +83,36 @@ export const DEFAULT_RACER_PROFILE_4: RacerProfile = {
   userUUID: Optional.of("d816cf32-0eb0-11ea-8d71-362b9e155667"),
   name: "Marc Márquez",
   bikeNumber: 93
+};
+
+export const DEFAULT_RACE_ITEM_EXT: RaceItemExt = {
+  isFetching: false,
+  id: 1,
+  name: "Some race name 1",
+  date: 1570728837485,
+  location: "Some location 1",
+  description: "Some descr 1",
+  participants: {
+    isFetching: false,
+    items: Optional.of([DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2])
+  }
+};
+export const DEFAULT_USER_INFO: UserInfo = {
+  uuid: "f0449b54-f815-11e9-aad5-362b9e155667",
+  name: "Valentino Rossi",
+  email: "valentino.rossi@yamaha.jp",
+  password: "rossiGp46",
+  role: "user"
+};
+export const DEFAULT_ALERT_1: Alert = {
+  id: 1,
+  type: AlertType.SUCCESS,
+  header: "Some header 1",
+  content: "Success alert"
+};
+export const DEFAULT_ALERT_2: Alert = {
+  id: 2,
+  type: AlertType.INFO,
+  header: "Some header 2",
+  content: "Info alert"
 };

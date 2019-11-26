@@ -4,13 +4,20 @@ import {
   DEFAULT_RACE_ITEM_1,
   DEFAULT_RACE_ITEM_2,
   DEFAULT_RACE_ITEM_EXT,
-  compareProfiles
+  compareProfiles,
+  compareRaceItems,
+  DEFAULT_RACER_PROFILE_3,
+  DEFAULT_RACER_PROFILE_1,
+  DEFAULT_RACER_PROFILE_2
 } from "../utils/test.utils";
 import {
   RACES_REQUESTED,
   RACES_LOADED,
   SELECTED_RACE_REQUESTED,
-  SELECTED_RACE_LOADED
+  SELECTED_RACE_LOADED,
+  RACE_PARTICIPANTS_UPDATE_REQUESTED,
+  RACE_PARTICIPANTS_UPDATE_FAILED,
+  RACE_PARTICIPANTS_UPDATED
 } from "../actions/actions";
 import Optional from "optional-js";
 import { RaceItemExt } from "../types/datatypes";
@@ -62,21 +69,43 @@ describe("race.reducer - selectedRaceReducer", () => {
     compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
   });
 
-  function compareRaceItems(ri1: RaceItemExt, ri2: RaceItemExt): void {
-    expect(ri1.id).toEqual(ri2.id);
-    expect(ri1.name).toEqual(ri2.name);
-    expect(ri1.date).toEqual(ri2.date);
-    expect(ri1.location).toEqual(ri2.location);
-    expect(ri1.description).toEqual(ri2.description);
-    if (ri1.participants.isPresent()) {
-      const items1 = ri1.participants.orElse([]);
-      const items2 = ri2.participants.orElse([]);
-      expect(items1.length).toEqual(items2.length);
-      for (let i = 0; i < items1.length; i++) {
-        compareProfiles(items1[i], items2[i]);
+  it("should return the same state with isFetching = 'true' for RACE_PARTICIPANTS_UPDATE_REQUESTED action", () => {
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
+      type: RACE_PARTICIPANTS_UPDATE_REQUESTED,
+      raceID: 1,
+      itemsAdded: Optional.of([DEFAULT_RACER_PROFILE_3]),
+      itemsRemoved: Optional.of([DEFAULT_RACER_PROFILE_1])
+    });
+    expect(!!raceState.participants).toBeTruthy();
+    expect(raceState.participants.isFetching).toBeTruthy();
+    compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
+  });
+
+  it("should update participants list for RACE_PARTICIPANTS_UPDATED action", () => {
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
+      type: RACE_PARTICIPANTS_UPDATED,
+      raceID: 1,
+      itemsAdded: Optional.of([DEFAULT_RACER_PROFILE_3]),
+      itemsRemoved: Optional.of([DEFAULT_RACER_PROFILE_1])
+    });
+    expect(!!raceState.participants).toBeTruthy();
+    expect(raceState.participants.isFetching).toBeFalsy();
+    compareRaceItems(raceState, {
+      ...DEFAULT_RACE_ITEM_EXT,
+      participants: {
+        ...DEFAULT_RACE_ITEM_EXT.participants,
+        items: Optional.of([DEFAULT_RACER_PROFILE_2, DEFAULT_RACER_PROFILE_3])
       }
-    } else {
-      expect(ri2.participants.isPresent()).toBeFalsy();
-    }
-  }
+    });
+  });
+
+  it("should return the same state with isFetching = 'false' for RACE_PARTICIPANTS_UPDATE_FAILED action", () => {
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
+      type: RACE_PARTICIPANTS_UPDATE_FAILED,
+      raceID: 1
+    });
+    expect(!!raceState.participants).toBeTruthy();
+    expect(raceState.participants.isFetching).toBeFalsy();
+    compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
+  });
 });
