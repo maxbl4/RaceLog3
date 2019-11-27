@@ -1,36 +1,45 @@
-import { put, takeEvery } from "redux-saga/effects";
+import { call, put, takeEvery } from "redux-saga/effects";
 import {
   RACER_PROFILES_REQUESTED_ALL,
   RACER_PROFILES_UPDATE_REQUESTED,
   RacerProfilesDataAction,
   racerProfilesUpdateReceived,
   racerProfilesRequestFailed,
-  alertsShow
+  alertsShow,
+  RacerProfilesRequestedAction
 } from "../actions/actions";
-import { Alert, AlertType } from "../types/datatypes";
+import { Alert, AlertType, RacerProfile } from "../types/datatypes";
 import { getNextAlertID } from "../utils/constants";
-import { delay } from "./sagas";
 import { LoggingService } from "../utils/logging-service";
-import { DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2 } from "../utils/test.utils";
+import { requestRacerProfilesApiRequest, updateRacerProfilesApiRequest } from "../api/transport";
+import Optional from "optional-js";
 
-function* tryRacerProfilesRequestAll(action: RacerProfilesDataAction) {
+function* tryRacerProfilesRequestAll(action: RacerProfilesRequestedAction) {
   try {
-    yield delay(3000);
-    yield put(
-      racerProfilesUpdateReceived([DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2], [], [])
+    const profiles: Optional<RacerProfile[]> = yield call(
+      requestRacerProfilesApiRequest,
+      action.userUUID
     );
+    yield put(racerProfilesUpdateReceived(action.userUUID, profiles.orElse([]), [], []));
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
     yield put(racerProfilesRequestFailed());
-    yield put(alertsShow(createRacerProfilesAlert(AlertType.ERROR, "Невозможно обновить данные")));
+    yield put(alertsShow(createRacerProfilesAlert(AlertType.ERROR, "Невозможно получить данные")));
   }
 }
 
 function* tryRacerProfilesUpdate(action: RacerProfilesDataAction) {
   try {
-    yield delay(3000);
+    yield call(
+      updateRacerProfilesApiRequest,
+      action.userUUID,
+      action.itemsAdded.orElse([]),
+      action.itemsRemoved.orElse([]),
+      action.itemsUpdated.orElse([])
+    );
     yield put(
       racerProfilesUpdateReceived(
+        action.userUUID,
         action.itemsAdded.orElse([]),
         action.itemsRemoved.orElse([]),
         action.itemsUpdated.orElse([])

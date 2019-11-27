@@ -43,6 +43,7 @@ export type UserProfileComponentProps = {
   racerProfiles: RacerProfiles;
   onLogout: (userInfo: UserInfo) => void;
   onProfilesUpdate: (
+    userUUID: string,
     added: RacerProfile[],
     removed: RacerProfile[],
     updated: RacerProfile[]
@@ -58,38 +59,47 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = (
     return <FetchingComponent />;
   } else {
     return props.user.info
-      .map(info => (
-        <React.Fragment>
-          <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <Paper className={classes.paperTop}>
-              <Typography component="h2" variant="h4" color="primary" gutterBottom>
-                {info.name}
-              </Typography>
-              <Typography component="p" variant="h6">
-                {info.email}
-              </Typography>
-              <Typography color="textSecondary">{getRoleName(info.role)}</Typography>
-              <Button
-                type="button"
-                fullWidth
-                variant="contained"
-                color="primary"
-                className={classes.logout}
-                onClick={() => props.onLogout(info)}
-              >
-                Финишировать
-              </Button>
-            </Paper>
-            <RacerProfilesListComponent
-              isFetching={props.racerProfiles.isFetching}
-              onProfilesUpdate={props.onProfilesUpdate}
-              userUUID={props.user.info.orElse(INITIAL_USER_INFO).uuid}
-              initialProfiles={props.racerProfiles.items.orElse([])}
-            />
-          </Container>
-        </React.Fragment>
-      ))
+      .map(info => {
+        const profilesUpdateHandler = (
+          added: RacerProfile[],
+          removed: RacerProfile[],
+          updated: RacerProfile[]
+        ) => {
+          props.onProfilesUpdate(info.uuid, added, removed, updated);
+        };
+        return (
+          <React.Fragment>
+            <Container component="main" maxWidth="xs">
+              <CssBaseline />
+              <Paper className={classes.paperTop}>
+                <Typography component="h2" variant="h4" color="primary" gutterBottom>
+                  {info.name}
+                </Typography>
+                <Typography component="p" variant="h6">
+                  {info.email}
+                </Typography>
+                <Typography color="textSecondary">{getRoleName(info.role)}</Typography>
+                <Button
+                  type="button"
+                  fullWidth
+                  variant="contained"
+                  color="primary"
+                  className={classes.logout}
+                  onClick={() => props.onLogout(info)}
+                >
+                  Финишировать
+                </Button>
+              </Paper>
+              <RacerProfilesListComponent
+                isFetching={props.racerProfiles.isFetching}
+                onProfilesUpdate={profilesUpdateHandler}
+                userUUID={props.user.info.orElse(INITIAL_USER_INFO).uuid}
+                initialProfiles={props.racerProfiles.items.orElse([])}
+              />
+            </Container>
+          </React.Fragment>
+        );
+      })
       .orElse(<Redirect to={USER_SIGN_IN} />);
   }
 };

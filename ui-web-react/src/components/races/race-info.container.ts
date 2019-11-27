@@ -9,7 +9,7 @@ import RaceInfoComponent from "./race-info.component";
 
 const mapStateToProps = (state: StoredState) => {
   return {
-    loggedIn: state.user.info.isPresent(),
+    user: state.user.info,
     racerProfiles: state.racerProfiles.items,
     raceItemExt: state.selectedRace
   };
@@ -17,8 +17,8 @@ const mapStateToProps = (state: StoredState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   onDataReload: (id: number) => dispatch(selectedRaceRequested(id)),
-  onRegistrationUpdate: (raceID: number, added: RacerProfile[], removed: RacerProfile[]) =>
-    dispatch(raceParticipantsUpdateRequested(raceID, added, removed))
+  onRegistrationUpdate: (userUUID: string, raceID: number, added: RacerProfile[], removed: RacerProfile[]) =>
+    dispatch(raceParticipantsUpdateRequested(userUUID, raceID, added, removed))
 });
 
 const RaceInfoContainer = connect(mapStateToProps, mapDispatchToProps)(RaceInfoComponent);

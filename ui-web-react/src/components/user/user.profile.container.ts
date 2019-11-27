@@ -13,8 +13,8 @@ const mapStateToProps = (state: StoredState) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   onLogout: (userInfo: UserInfo) => dispatch(userLogout(userInfo)),
-  onProfilesUpdate: (added: RacerProfile[], removed: RacerProfile[], updated: RacerProfile[]) =>
-    dispatch(racerProfilesUpdateRequested(added, removed, updated))
+  onProfilesUpdate: (userUUID: string, added: RacerProfile[], removed: RacerProfile[], updated: RacerProfile[]) =>
+    dispatch(racerProfilesUpdateRequested(userUUID, added, removed, updated))
 });
 
 const UserProfileContainer = connect(mapStateToProps, mapDispatchToProps)(UserProfileComponent);

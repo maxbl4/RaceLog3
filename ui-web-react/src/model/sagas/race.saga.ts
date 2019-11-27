@@ -1,4 +1,4 @@
-import { put, takeLatest, takeEvery } from "redux-saga/effects";
+import { call, put, takeLatest, takeEvery } from "redux-saga/effects";
 import {
   RACES_REQUESTED,
   racesLoaded,
@@ -11,22 +11,20 @@ import {
   alertsShow,
   raceParticipantsUpdateFailed
 } from "../actions/actions";
-import { delay } from "./sagas";
 import Optional from "optional-js";
 import { LoggingService } from "../utils/logging-service";
-import { AlertType, Alert } from "../types/datatypes";
+import { AlertType, Alert, RaceItem, RaceItemExt } from "../types/datatypes";
 import { getNextAlertID } from "../utils/constants";
 import {
-  DEFAULT_RACE_ITEM_1,
-  DEFAULT_RACE_ITEM_2,
-  DEFAULT_RACER_PROFILE_1,
-  DEFAULT_RACER_PROFILE_2
-} from "../utils/test.utils";
+  requestRacesApiRequest,
+  requestSelectedRaceApiRequest,
+  updateRaceParticipantsApiRequest
+} from "../api/transport";
 
 function* fetchRaces() {
   try {
-    yield delay(2000);
-    yield put(racesLoaded([DEFAULT_RACE_ITEM_1, DEFAULT_RACE_ITEM_2]));
+    const races: Optional<RaceItem[]> = yield call(requestRacesApiRequest);
+    yield put(racesLoaded(races.orElse([])));
   } catch (e) {
     LoggingService.getInstance().logSagaError(e);
   }
@@ -34,32 +32,35 @@ function* fetchRaces() {
 
 function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
   try {
-    yield delay(1000);
-    yield put(
-      selectedRaceLoaded({
-        isFetching: false,
-        id: action.id,
-        name: "Гонка в Тучково",
-        date: 1568235600000,
-        location: "Тучково Raceway",
-        description:
-          "Culpa cupidatat veniam consequat cupidatat officia pariatur pariatur consectetur nisi est ut. Ipsum voluptate qui dolor adipisicing do esse eiusmod mollit in eu tempor. Lorem eiusmod labore adipisicing voluptate consequat consequat cupidatat pariatur.",
-        participants: {
-          isFetching: false,
-          items: Optional.of([DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2])
-        }
-      })
-    );
+    const race: Optional<RaceItemExt> = yield call(requestSelectedRaceApiRequest, action.id);
+    yield put(selectedRaceLoaded(race.orElseThrow(() => new Error("Невозможно получить данные"))));
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
+    yield put(alertsShow(createSelectedRaceAlert(AlertType.ERROR, "Невозможно получить данные")));
   }
+}
+
+function createSelectedRaceAlert(type: AlertType, content: string): Alert {
+  return {
+    id: getNextAlertID(),
+    type,
+    header: "Информация о гонке",
+    content
+  };
 }
 
 function* tryUpdateRaceParticipants(action: RaceParticipantsAction) {
   try {
-    yield delay(2000);
+    yield call(
+      updateRaceParticipantsApiRequest,
+      action.userUUID,
+      action.raceID,
+      action.itemsAdded.orElse([]),
+      action.itemsRemoved.orElse([])
+    );
     yield put(
       raceParticipantsUpdated(
+        action.userUUID,
         action.raceID,
         action.itemsAdded.orElse([]),
         action.itemsRemoved.orElse([])
