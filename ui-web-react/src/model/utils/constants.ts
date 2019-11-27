@@ -37,6 +37,10 @@ export const isProdEnvironment = (): boolean => {
   return process.env.REACT_APP_ENVIRONMENT === "prod";
 };
 
+export const isTestEnvironment = (): boolean => {
+  return process.env.REACT_APP_ENVIRONMENT === "test";
+};
+
 export const getLogServerURL = (): string => {
   return getServerURL() + LOGGER_PATH;
 };

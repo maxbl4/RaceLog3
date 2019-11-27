@@ -13,8 +13,8 @@ import {
 import Optional from "optional-js";
 import { UserInfo, Alert, AlertType } from "../types/datatypes";
 import { LoggingService } from "../utils/logging-service";
-import { login, aboutMe, logout, register } from "../api/cms.api";
 import { getNextAlertID } from "../utils/constants";
+import { registerApiRequest, loginApiRequest, aboutMeApiRequest, logoutApiRequest } from "../api/transport";
 
 function createAuthorizationFailAlert(rejectReason: string): Alert {
   return {
@@ -27,7 +27,7 @@ function createAuthorizationFailAlert(rejectReason: string): Alert {
 
 function* tryRegister(action: UserInfoRequestAction) {
   try {
-    const userInfoOpt: Optional<UserInfo> = yield call(register, action.userInfo);
+    const userInfoOpt: Optional<UserInfo> = yield call(registerApiRequest, action.userInfo);
     userInfoOpt.orElseThrow(
       () => new Error(`Cannot create user with name "${action.userInfo.name}"`)
     );
@@ -50,7 +50,7 @@ function* tryLogin(action: UserInfoRequestAction) {
 }
 
 function* tryLoginAndGetUserInfo(userInfo: UserInfo) {
-  yield call(login, userInfo.email, userInfo.password);
+  yield call(loginApiRequest, userInfo.email, userInfo.password);
   yield tryGetUserInfo();
 }
 
@@ -63,7 +63,7 @@ function* tryLoginOnStart() {
 }
 
 function* tryGetUserInfo() {
-  const userInfoOpt: Optional<UserInfo> = yield call(aboutMe);
+  const userInfoOpt: Optional<UserInfo> = yield call(aboutMeApiRequest);
   const userInfo: UserInfo = userInfoOpt.orElseThrow(
     () => new Error("Empty response from server for login action")
   );
@@ -73,7 +73,7 @@ function* tryGetUserInfo() {
 
 function* tryLogout(action: UserInfoRequestAction) {
   try {
-    yield call(logout);
+    yield call(logoutApiRequest);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
   }
