@@ -4,7 +4,8 @@ import {
   UserInfo,
   Alert,
   AlertType,
-  RacerProfile
+  RacerProfile,
+  Races
 } from "../types/datatypes";
 import Optional from "optional-js";
 
@@ -45,6 +46,41 @@ export const compareRaceItems = (ri1: RaceItemExt, ri2: RaceItemExt): void => {
     expect(!!ri2.participants).toBeFalsy();
   }
 };
+
+export const compareRaceItemsSimple = (ri1: RaceItem, ri2: RaceItem): void => {
+  expect(ri1.id).toEqual(ri2.id);
+  expect(ri1.date).toEqual(ri2.date);
+  expect(ri1.location).toEqual(ri2.location);
+  expect(ri1.name).toEqual(ri2.name);
+}
+
+export const compareRaces = (r1: Races, r2: Races): void => {
+  if (!r1) {
+    expect(!r2).toBeTruthy();
+    return;
+  }
+
+  if (!r2) {
+    expect(!r1).toBeTruthy();
+    return;
+  }
+
+  if (r1.items.isPresent()) {
+    expect(r2.items.isPresent()).toBeTruthy();
+  }
+
+  if (r2.items.isPresent()) {
+    expect(r1.items.isPresent()).toBeTruthy();
+  }
+
+  const items1 = r1.items.orElse([]);
+  const items2 = r1.items.orElse([]);
+  expect(items1.length).toEqual(items2.length);
+
+  for (let i = 0; i < items1.length; i++) {
+    compareRaceItemsSimple(items1[i], items2[i]);
+  }
+} 
 
 export const UNKNOWN_ACTION_TYPE = "UNKNOWN_ACTION_TYPE";
 
@@ -115,4 +151,8 @@ export const DEFAULT_ALERT_2: Alert = {
   type: AlertType.INFO,
   header: "Some header 2",
   content: "Info alert"
+};
+export const DEFAULT_RACES: Races = {
+  isFetching: false,
+  items: Optional.of([DEFAULT_RACE_ITEM_1, DEFAULT_RACE_ITEM_2])
 };

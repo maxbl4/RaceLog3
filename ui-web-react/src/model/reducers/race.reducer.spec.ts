@@ -4,11 +4,12 @@ import {
   DEFAULT_RACE_ITEM_1,
   DEFAULT_RACE_ITEM_2,
   DEFAULT_RACE_ITEM_EXT,
-  compareProfiles,
   compareRaceItems,
   DEFAULT_RACER_PROFILE_3,
   DEFAULT_RACER_PROFILE_1,
-  DEFAULT_RACER_PROFILE_2
+  DEFAULT_RACER_PROFILE_2,
+  DEFAULT_RACES,
+  compareRaces
 } from "../utils/test.utils";
 import {
   RACES_REQUESTED,
@@ -17,10 +18,11 @@ import {
   SELECTED_RACE_LOADED,
   RACE_PARTICIPANTS_UPDATE_REQUESTED,
   RACE_PARTICIPANTS_UPDATE_FAILED,
-  RACE_PARTICIPANTS_UPDATED
+  RACE_PARTICIPANTS_UPDATED,
+  RACES_REQUEST_FAILED,
+  SELECTED_RACE_REQUEST_FAILED
 } from "../actions/race.actions";
 import Optional from "optional-js";
-import { RaceItemExt } from "../types/datatypes";
 
 describe("race.reducer - racesReducer", () => {
   it("should return default state for unknown action", () => {
@@ -33,6 +35,13 @@ describe("race.reducer - racesReducer", () => {
     const raceState = racesReducer(undefined, { type: RACES_REQUESTED });
     expect(raceState.isFetching).toBeTruthy();
     expect(raceState.items.isPresent()).toBeFalsy();
+  });
+
+  it("should return the same state for RACES_REQUEST_FAILED and isFetching='false' action", () => {
+    const raceState = racesReducer(DEFAULT_RACES, { type: RACES_REQUEST_FAILED });
+    expect(raceState.isFetching).toBeFalsy();
+    expect(raceState.items.isPresent()).toBeTruthy();
+    compareRaces(raceState, DEFAULT_RACES);
   });
 
   it("should return fetched non-emtpy state for RACES_LOADED action", () => {
@@ -58,6 +67,12 @@ describe("race.reducer - selectedRaceReducer", () => {
     const raceState = selectedRaceReducer(undefined, { type: SELECTED_RACE_REQUESTED });
     expect(raceState.isFetching).toBeTruthy();
     compareRaceItems(raceState, INITIAL_SELECTED_RACE);
+  });
+
+  it("should return the same state and isFetching='false' for SELECTED_RACE_REQUEST_FAILED action", () => {
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, { type: SELECTED_RACE_REQUEST_FAILED });
+    expect(raceState.isFetching).toBeFalsy();
+    compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
   });
 
   it("should return fetched non-emtpy state for SELECTED_RACE_LOADED action", () => {

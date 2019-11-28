@@ -9,7 +9,9 @@ import {
   RACE_PARTICIPANTS_UPDATE_REQUESTED,
   RaceParticipantsAction,
   raceParticipantsUpdated,
-  raceParticipantsUpdateFailed
+  raceParticipantsUpdateFailed,
+  racesRequestFailed,
+  selectedRaceRequestFailed
 } from "../actions/race.actions";
 import Optional from "optional-js";
 import { LoggingService } from "../utils/logging-service";
@@ -27,7 +29,19 @@ function* fetchRaces() {
     yield put(racesLoaded(races.orElse([])));
   } catch (e) {
     LoggingService.getInstance().logSagaError(e);
+    yield put(racesRequestFailed());
+    yield put(alertsShow(createRacesAlert(AlertType.ERROR, "Невозможно получить данные о гонках")))
+
   }
+}
+
+function createRacesAlert(type: AlertType, content: string): Alert {
+  return {
+    id: getNextAlertID(),
+    type,
+    header: "Информация о гонках",
+    content
+  };
 }
 
 function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
@@ -36,6 +50,7 @@ function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
     yield put(selectedRaceLoaded(race.orElseThrow(() => new Error("Невозможно получить данные"))));
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
+    yield put(selectedRaceRequestFailed(action.id));
     yield put(alertsShow(createSelectedRaceAlert(AlertType.ERROR, "Невозможно получить данные")));
   }
 }

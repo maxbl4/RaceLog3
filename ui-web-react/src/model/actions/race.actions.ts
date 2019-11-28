@@ -3,9 +3,11 @@ import { RaceItem, RaceItemExt, RacerProfile } from "../types/datatypes";
 import Optional from "optional-js";
 
 export const RACES_REQUESTED = "RACES_REQUESTED";
+export const RACES_REQUEST_FAILED = "RACES_REQUEST_FAILED";
 export const RACES_LOADED = "RACES_LOADED";
 
 export const SELECTED_RACE_REQUESTED = "SELECTED_RACE_REQUESTED";
+export const SELECTED_RACE_REQUEST_FAILED = "SELECTED_RACE_REQUEST_FAILED";
 export const SELECTED_RACE_LOADED = "SELECTED_RACE_LOADED";
 export const RACE_PARTICIPANTS_UPDATE_REQUESTED = "RACE_PARTICIPANTS_UPDATE_REQUESTED";
 export const RACE_PARTICIPANTS_UPDATED = "RACE_PARTICIPANTS_UPDATED";
@@ -34,6 +36,9 @@ export type RaceParticipantsUpdateFailedAction = AnyAction & {
 
 export const racesRequested = (): RacesRequestedAction => ({
   type: RACES_REQUESTED
+});
+export const racesRequestFailed = (): RacesRequestedAction => ({
+  type: RACES_REQUEST_FAILED
 });
 export const racesLoaded = (items: RaceItem[]): RacesLoadedAction => ({
   type: RACES_LOADED,
@@ -75,6 +80,10 @@ export const raceParticipantsUpdateFailed = (
 
 export const selectedRaceRequested = (id: number): SelectedRaceRequestedAction => ({
   type: SELECTED_RACE_REQUESTED,
+  id: id
+});
+export const selectedRaceRequestFailed = (id: number): SelectedRaceRequestedAction => ({
+  type: SELECTED_RACE_REQUEST_FAILED,
   id: id
 });
 export const selectedRaceLoaded = (raceItemExt: RaceItemExt): SelectedRaceLoadedAction => ({

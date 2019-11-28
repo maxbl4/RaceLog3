@@ -10,7 +10,9 @@ import {
   RACE_PARTICIPANTS_UPDATE_REQUESTED,
   RACE_PARTICIPANTS_UPDATED,
   RaceParticipantsAction,
-  RACE_PARTICIPANTS_UPDATE_FAILED
+  RACE_PARTICIPANTS_UPDATE_FAILED,
+  RACES_REQUEST_FAILED,
+  SELECTED_RACE_REQUEST_FAILED
 } from "../actions/race.actions";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
@@ -47,6 +49,11 @@ export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
         isFetching: false,
         items: (action as RacesLoadedAction).items
       };
+    case RACES_REQUEST_FAILED:
+      return {
+        ...state,
+        isFetching: false
+      };
     default:
       return state;
   }
@@ -59,6 +66,11 @@ export function selectedRaceReducer(state: RaceItemExt = INITIAL_SELECTED_RACE, 
       return {
         ...state,
         isFetching: true
+      };
+    case SELECTED_RACE_REQUEST_FAILED:
+      return {
+        ...state,
+        isFetching: false
       };
     case SELECTED_RACE_LOADED:
       return {
