@@ -6,5 +6,3 @@ export const RACES_INFO = RACES + DELIMITER + ":id";
 export const USER_PROFILE = "/user/profile";
 export const USER_SIGN_IN = "/user/signIn";
 export const USER_SIGN_UP = "/user/signUp";
-export const NEWS = "/news";
-export const NEWS_INFO = NEWS + DELIMITER + ":id";

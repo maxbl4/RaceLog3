@@ -8,7 +8,7 @@ import {
   USER_AUTHORIZED_FAIL,
   USER_AUTHORIZED_OK,
   UserInfoAuthorizedAction
-} from "../actions/actions";
+} from "../actions/user.actions";
 import { LoggingService } from "../utils/logging-service";
 
 export const INITIAL_USER: User = {

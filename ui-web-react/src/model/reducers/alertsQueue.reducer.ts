@@ -1,7 +1,7 @@
 import { AlertsQueue, Alert } from "../types/datatypes";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
-import { ALERTS_SHOW, ALERTS_HIDE, AlertsAction } from "../actions/actions";
+import { ALERTS_SHOW, ALERTS_HIDE, AlertsAction } from "../actions/alerts.actions";
 
 export const INITIAL_ALERTS_QUEUE: AlertsQueue = {
   alerts: []

@@ -6,14 +6,20 @@ import {
   userAuthorizedOk,
   userAuthorizedFail,
   USER_LOGOUT,
-  USER_LOGIN_ON_START,
-  alertsShow
-} from "../actions/actions";
+  USER_LOGIN_ON_START
+} from "../actions/user.actions";
+import { alertsShow } from "../actions/alerts.actions";
+import { racerProfilesRequestedAll } from "../actions/racerProfiles.actions";
 import Optional from "optional-js";
 import { UserInfo, Alert, AlertType } from "../types/datatypes";
 import { LoggingService } from "../utils/logging-service";
-import { login, aboutMe, logout, register } from "../api/cms.api";
 import { getNextAlertID } from "../utils/constants";
+import {
+  registerApiRequest,
+  loginApiRequest,
+  aboutMeApiRequest,
+  logoutApiRequest
+} from "../api/transport";
 
 function createAuthorizationFailAlert(rejectReason: string): Alert {
   return {
@@ -21,12 +27,12 @@ function createAuthorizationFailAlert(rejectReason: string): Alert {
     type: AlertType.ERROR,
     header: "Ошибка авторизации",
     content: rejectReason
-  }
+  };
 }
 
 function* tryRegister(action: UserInfoRequestAction) {
   try {
-    const userInfoOpt: Optional<UserInfo> = yield call(register, action.userInfo);
+    const userInfoOpt: Optional<UserInfo> = yield call(registerApiRequest, action.userInfo);
     userInfoOpt.orElseThrow(
       () => new Error(`Cannot create user with name "${action.userInfo.name}"`)
     );
@@ -49,7 +55,7 @@ function* tryLogin(action: UserInfoRequestAction) {
 }
 
 function* tryLoginAndGetUserInfo(userInfo: UserInfo) {
-  yield call(login, userInfo.email, userInfo.password);
+  yield call(loginApiRequest, userInfo.email, userInfo.password);
   yield tryGetUserInfo();
 }
 
@@ -62,17 +68,17 @@ function* tryLoginOnStart() {
 }
 
 function* tryGetUserInfo() {
-  const userInfo: Optional<UserInfo> = yield call(aboutMe);
-  yield put(
-    userAuthorizedOk(
-      userInfo.orElseThrow(() => new Error("Empty response from server for login action"))
-    )
+  const userInfoOpt: Optional<UserInfo> = yield call(aboutMeApiRequest);
+  const userInfo: UserInfo = userInfoOpt.orElseThrow(
+    () => new Error("Empty response from server for login action")
   );
+  yield put(userAuthorizedOk(userInfo));
+  yield put(racerProfilesRequestedAll(userInfo.uuid));
 }
 
 function* tryLogout(action: UserInfoRequestAction) {
   try {
-    yield call(logout);
+    yield call(logoutApiRequest);
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
   }

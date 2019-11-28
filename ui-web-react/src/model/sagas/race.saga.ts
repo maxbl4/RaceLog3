@@ -1,67 +1,105 @@
-import { put, takeLatest } from "redux-saga/effects";
+import { call, put, takeLatest, takeEvery } from "redux-saga/effects";
+import { alertsShow } from "../actions/alerts.actions";
 import {
   RACES_REQUESTED,
   racesLoaded,
   SELECTED_RACE_REQUESTED,
   selectedRaceLoaded,
-  SelectedRaceRequestedAction
-} from "../actions/actions";
-import { delay } from "./sagas";
+  SelectedRaceRequestedAction,
+  RACE_PARTICIPANTS_UPDATE_REQUESTED,
+  RaceParticipantsAction,
+  raceParticipantsUpdated,
+  raceParticipantsUpdateFailed,
+  racesRequestFailed,
+  selectedRaceRequestFailed
+} from "../actions/race.actions";
 import Optional from "optional-js";
 import { LoggingService } from "../utils/logging-service";
+import { AlertType, Alert, RaceItem, RaceItemExt } from "../types/datatypes";
+import { getNextAlertID } from "../utils/constants";
+import {
+  requestRacesApiRequest,
+  requestSelectedRaceApiRequest,
+  updateRaceParticipantsApiRequest
+} from "../api/transport";
 
 function* fetchRaces() {
   try {
-    yield delay(2000);
-    yield put(
-      racesLoaded([
-        {
-          id: Optional.of(1),
-          name: Optional.of("Гонка 1"),
-          date: Optional.of(1568235600000)
-        },
-        {
-          id: Optional.of(2),
-          name: Optional.of("Гонка 2"),
-          date: Optional.of(1568322000000)
-        },
-        {
-          id: Optional.of(3),
-          name: Optional.of("Гонка 3"),
-          date: Optional.of(1568408400000)
-        }
-      ])
-    );
+    const races: Optional<RaceItem[]> = yield call(requestRacesApiRequest);
+    yield put(racesLoaded(races.orElse([])));
   } catch (e) {
     LoggingService.getInstance().logSagaError(e);
+    yield put(racesRequestFailed());
+    yield put(alertsShow(createRacesAlert(AlertType.ERROR, "Невозможно получить данные о гонках")))
+
   }
+}
+
+function createRacesAlert(type: AlertType, content: string): Alert {
+  return {
+    id: getNextAlertID(),
+    type,
+    header: "Информация о гонках",
+    content
+  };
 }
 
 function* fetchSelectedRace(action: SelectedRaceRequestedAction) {
   try {
-    yield delay(1000);
+    const race: Optional<RaceItemExt> = yield call(requestSelectedRaceApiRequest, action.id);
+    yield put(selectedRaceLoaded(race.orElseThrow(() => new Error("Невозможно получить данные"))));
+  } catch (e) {
+    LoggingService.getInstance().logSagaError(e, action);
+    yield put(selectedRaceRequestFailed(action.id));
+    yield put(alertsShow(createSelectedRaceAlert(AlertType.ERROR, "Невозможно получить данные")));
+  }
+}
+
+function createSelectedRaceAlert(type: AlertType, content: string): Alert {
+  return {
+    id: getNextAlertID(),
+    type,
+    header: "Информация о гонке",
+    content
+  };
+}
+
+function* tryUpdateRaceParticipants(action: RaceParticipantsAction) {
+  try {
+    yield call(
+      updateRaceParticipantsApiRequest,
+      action.userUUID,
+      action.raceID,
+      action.itemsAdded.orElse([]),
+      action.itemsRemoved.orElse([])
+    );
     yield put(
-      selectedRaceLoaded({
-        isFetching: false,
-        id: Optional.of(action.id),
-        name: Optional.of("Гонка в Тучково"),
-        date: Optional.of(1568235600000),
-        location: Optional.of("Тучково Raceway"),
-        participants: Optional.of([
-          {
-            racerID: 1,
-            racerName: "Дима"
-          },
-          {
-            racerID: 2,
-            racerName: "Вова"
-          }
-        ])
-      })
+      raceParticipantsUpdated(
+        action.userUUID,
+        action.raceID,
+        action.itemsAdded.orElse([]),
+        action.itemsRemoved.orElse([])
+      )
+    );
+    yield put(
+      alertsShow(createRaceParticipantsAlert(AlertType.SUCCESS, "Регистрация прошла успешно"))
     );
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
+    yield put(raceParticipantsUpdateFailed(action.raceID));
+    yield put(
+      alertsShow(createRaceParticipantsAlert(AlertType.ERROR, "Не удалось зарегистрироваться"))
+    );
   }
+}
+
+function createRaceParticipantsAlert(type: AlertType, content: string): Alert {
+  return {
+    id: getNextAlertID(),
+    type,
+    header: "Регистрация на гонку",
+    content
+  };
 }
 
 export function* racesSaga() {
@@ -70,4 +108,8 @@ export function* racesSaga() {
 
 export function* selectedRaceSaga() {
   yield takeLatest(SELECTED_RACE_REQUESTED, fetchSelectedRace);
+}
+
+export function* raceParticipantsUpdateRequestSaga() {
+  yield takeEvery(RACE_PARTICIPANTS_UPDATE_REQUESTED, tryUpdateRaceParticipants);
 }

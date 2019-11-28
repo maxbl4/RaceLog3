@@ -1,6 +1,8 @@
 import Optional from "optional-js";
+import v1 from "uuid/v1";
 
 export const DEFAULT_ID = -1;
+export const DEFAULT_UUID = "DEFAULT_UUID";
 export const DEFAULT_DATE = 0;
 /**
  * Default timeout for operations: 10 seconds
@@ -27,8 +29,16 @@ export const getNextAlertID = (): number => {
   return currentAlertID++;
 }
 
+export const generateUUID = (): string => {
+  return v1();
+}
+
 export const isProdEnvironment = (): boolean => {
   return process.env.REACT_APP_ENVIRONMENT === "prod";
+};
+
+export const isTestEnvironment = (): boolean => {
+  return process.env.REACT_APP_ENVIRONMENT === "test";
 };
 
 export const getLogServerURL = (): string => {

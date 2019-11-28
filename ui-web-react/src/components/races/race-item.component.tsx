@@ -1,26 +1,56 @@
 import React from "react";
 import { RaceItem } from "../../model/types/datatypes";
-import { NavLink } from "react-router-dom";
 import { DELIMITER, RACES } from "../../model/routing/paths";
-import { DEFAULT_DATE, DEFAULT_ID } from "../../model/utils/constants";
+import { makeStyles } from "@material-ui/core/styles";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
+// @ts-ignore
+import { useHistory } from "react-router-dom";
+
+const useStyles = makeStyles({
+  card: {
+    minWidth: 200
+  },
+  title: {
+    fontSize: 14
+  },
+  pos: {
+    marginBottom: 12
+  }
+});
 
 export type RaceItemProps = {
   item: RaceItem;
 };
 
-export class RaceItemComponent extends React.Component<RaceItemProps> {
-  render() {
-    return (
-      <div className="row">
-        <div className="col-lg-3">
-          {new Date(this.props.item.date.orElse(DEFAULT_DATE)).toDateString()}
-        </div>
-        <div className="col-lg-3">
-          <NavLink exact to={RACES + DELIMITER + this.props.item.id.orElse(DEFAULT_ID)}>
-            {this.props.item.name.orElse("")}
-          </NavLink>
-        </div>
-      </div>
-    );
-  }
-}
+const RaceItemComponent: React.FC<RaceItemProps> = (props: RaceItemProps) => {
+  const classes = useStyles();
+  const history = useHistory();
+  const reRouteTo = (path: string): void => history.push(path);
+
+  return (
+    <Card className={classes.card}>
+      <CardContent>
+        <Typography className={classes.title} color="textSecondary" gutterBottom>
+          {new Date(props.item.date).toLocaleDateString()}
+        </Typography>
+        <Typography variant="h5" component="h2" className={classes.pos}>
+          {props.item.name}
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button
+          size="small"
+          onClick={() => reRouteTo(RACES + DELIMITER + props.item.id)}
+        >
+          Подробнее
+        </Button>
+      </CardActions>
+    </Card>
+  );
+};
+
+export default RaceItemComponent;
