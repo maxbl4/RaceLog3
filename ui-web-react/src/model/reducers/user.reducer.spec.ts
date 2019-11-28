@@ -6,7 +6,7 @@ import {
   USER_LOGOUT,
   USER_AUTHORIZED_FAIL,
   USER_AUTHORIZED_OK
-} from "../actions/actions";
+} from "../actions/user.actions";
 import Optional from "optional-js";
 
 describe("user.reducer - userReducer", () => {

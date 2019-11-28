@@ -6,15 +6,20 @@ import {
   userAuthorizedOk,
   userAuthorizedFail,
   USER_LOGOUT,
-  USER_LOGIN_ON_START,
-  alertsShow,
-  racerProfilesRequestedAll
-} from "../actions/actions";
+  USER_LOGIN_ON_START
+} from "../actions/user.actions";
+import { alertsShow } from "../actions/alerts.actions";
+import { racerProfilesRequestedAll } from "../actions/racerProfiles.actions";
 import Optional from "optional-js";
 import { UserInfo, Alert, AlertType } from "../types/datatypes";
 import { LoggingService } from "../utils/logging-service";
 import { getNextAlertID } from "../utils/constants";
-import { registerApiRequest, loginApiRequest, aboutMeApiRequest, logoutApiRequest } from "../api/transport";
+import {
+  registerApiRequest,
+  loginApiRequest,
+  aboutMeApiRequest,
+  logoutApiRequest
+} from "../api/transport";
 
 function createAuthorizationFailAlert(rejectReason: string): Alert {
   return {

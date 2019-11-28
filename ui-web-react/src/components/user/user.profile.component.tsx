@@ -1,7 +1,7 @@
 import React from "react";
 import { UserInfo, User, RacerProfile, RacerProfiles } from "../../model/types/datatypes";
 import { getRoleName } from "../../model/types/roles.model";
-import { FetchingComponent } from "../fetching/fetching.component";
+import { FetchingComponent } from "../common/fetching.component";
 import { Redirect } from "react-router";
 import { USER_SIGN_IN } from "../../model/routing/paths";
 import { makeStyles } from "@material-ui/core/styles";

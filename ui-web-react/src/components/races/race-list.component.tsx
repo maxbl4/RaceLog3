@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Races } from "../../model/types/datatypes";
-import { FetchingComponent } from "../fetching/fetching.component";
+import { FetchingComponent } from "../common/fetching.component";
 import RaceItemComponent from "./race-item.component";
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";

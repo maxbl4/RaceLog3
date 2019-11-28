@@ -12,7 +12,7 @@ import {
   RACER_PROFILES_UPDATE_REQUESTED,
   RACER_PROFILES_UPDATE_RECEIVED,
   RACER_PROFILES_REQUEST_FAILED
-} from "../actions/actions";
+} from "../actions/racerProfiles.actions";
 import Optional from "optional-js";
 import { RacerProfile } from "../types/datatypes";
 

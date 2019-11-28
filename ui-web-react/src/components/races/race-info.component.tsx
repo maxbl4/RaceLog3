@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { RaceItemExt, RacerProfiles, RacerProfile, UserInfo } from "../../model/types/datatypes";
 import { DEFAULT_ID } from "../../model/utils/constants";
-import { FetchingComponent } from "../fetching/fetching.component";
+import { FetchingComponent } from "../common/fetching.component";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";

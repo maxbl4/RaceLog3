@@ -5,9 +5,9 @@ import {
   RacerProfilesDataAction,
   racerProfilesUpdateReceived,
   racerProfilesRequestFailed,
-  alertsShow,
   RacerProfilesRequestedAction
-} from "../actions/actions";
+} from "../actions/racerProfiles.actions";
+import { alertsShow } from "../actions/alerts.actions";
 import { Alert, AlertType, RacerProfile } from "../types/datatypes";
 import { getNextAlertID } from "../utils/constants";
 import { LoggingService } from "../utils/logging-service";

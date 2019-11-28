@@ -4,7 +4,7 @@ import { Dispatch } from "redux";
 import {
   selectedRaceRequested,
   raceParticipantsUpdateRequested
-} from "../../model/actions/actions";
+} from "../../model/actions/race.actions";
 import RaceInfoComponent from "./race-info.component";
 
 const mapStateToProps = (state: StoredState) => {

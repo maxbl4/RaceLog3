@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { StoredState } from "./model/types/datatypes";
 import { MainComponent } from "./main.component";
-import { userLoginOnStart } from "./model/actions/actions";
+import { userLoginOnStart } from "./model/actions/user.actions";
 
 const mapStateToProps = (state: StoredState) => {
   return {

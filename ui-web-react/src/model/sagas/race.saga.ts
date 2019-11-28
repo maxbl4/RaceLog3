@@ -1,4 +1,5 @@
 import { call, put, takeLatest, takeEvery } from "redux-saga/effects";
+import { alertsShow } from "../actions/alerts.actions";
 import {
   RACES_REQUESTED,
   racesLoaded,
@@ -8,9 +9,8 @@ import {
   RACE_PARTICIPANTS_UPDATE_REQUESTED,
   RaceParticipantsAction,
   raceParticipantsUpdated,
-  alertsShow,
   raceParticipantsUpdateFailed
-} from "../actions/actions";
+} from "../actions/race.actions";
 import Optional from "optional-js";
 import { LoggingService } from "../utils/logging-service";
 import { AlertType, Alert, RaceItem, RaceItemExt } from "../types/datatypes";

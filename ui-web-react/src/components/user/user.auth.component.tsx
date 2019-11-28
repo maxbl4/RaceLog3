@@ -13,7 +13,7 @@ import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
 import Paper from '@material-ui/core/Paper';
 import { makeStyles } from "@material-ui/core/styles";
-import { FetchingComponent } from "../fetching/fetching.component";
+import { FetchingComponent } from "../common/fetching.component";
 import { Redirect } from "react-router";
 import { USER_PROFILE, USER_SIGN_UP, USER_SIGN_IN } from "../../model/routing/paths";
 import { Link } from "react-router-dom";

@@ -1,7 +1,7 @@
 import { UserInfo, StoredState } from "../../model/types/datatypes";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { userLogin } from "../../model/actions/actions";
+import { userLogin } from "../../model/actions/user.actions";
 import UserAuthComponent, { AuthMode } from "./user.auth.component";
 
 const mapStateToProps = (state: StoredState) => {

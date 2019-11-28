@@ -8,7 +8,7 @@ import {
   RACER_PROFILES_UPDATE_REQUESTED,
   RACER_PROFILES_REQUEST_FAILED,
   RACER_PROFILES_UPDATE_RECEIVED
-} from "../actions/actions";
+} from "../actions/racerProfiles.actions";
 
 export const INITIAL_RACER_PROFILES: RacerProfiles = {
   isFetching: false,

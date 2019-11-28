@@ -18,7 +18,7 @@ import {
   RACE_PARTICIPANTS_UPDATE_REQUESTED,
   RACE_PARTICIPANTS_UPDATE_FAILED,
   RACE_PARTICIPANTS_UPDATED
-} from "../actions/actions";
+} from "../actions/race.actions";
 import Optional from "optional-js";
 import { RaceItemExt } from "../types/datatypes";
 

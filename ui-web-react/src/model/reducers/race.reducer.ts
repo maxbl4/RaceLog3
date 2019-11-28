@@ -11,7 +11,7 @@ import {
   RACE_PARTICIPANTS_UPDATED,
   RaceParticipantsAction,
   RACE_PARTICIPANTS_UPDATE_FAILED
-} from "../actions/actions";
+} from "../actions/race.actions";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
 import { DEFAULT_DATE, DEFAULT_ID } from "../utils/constants";

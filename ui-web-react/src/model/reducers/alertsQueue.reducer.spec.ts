@@ -1,7 +1,7 @@
 import { alertsQueueReducer } from "./alertsQueue.reducer";
 import { UNKNOWN_ACTION_TYPE, DEFAULT_ALERT_1, DEFAULT_ALERT_2 } from "../utils/test.utils";
 import { Alert } from "../types/datatypes";
-import { ALERTS_SHOW, ALERTS_HIDE } from "../actions/actions";
+import { ALERTS_SHOW, ALERTS_HIDE } from "../actions/alerts.actions";
 
 describe("alertsQueue.reducer - alertsQueueReducer", () => {
   it("should return default state for unknown action", () => {
