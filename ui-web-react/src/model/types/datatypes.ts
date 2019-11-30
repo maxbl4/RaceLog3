@@ -134,3 +134,11 @@ export const INITIAL_SELECTED_RACE: RaceItemExt = {
 export const INITIAL_ALERTS_QUEUE: AlertsQueue = {
   alerts: []
 };
+
+export const INITIAL_STORED_STATE: StoredState = {
+  user: INITIAL_USER,
+  racerProfiles: INITIAL_RACER_PROFILES,
+  races: INITIAL_RACES,
+  selectedRace: INITIAL_SELECTED_RACE,
+  alertsQueue: INITIAL_ALERTS_QUEUE
+};

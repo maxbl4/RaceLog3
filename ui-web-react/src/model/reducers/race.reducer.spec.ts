@@ -1,4 +1,4 @@
-import { racesReducer, selectedRaceReducer, INITIAL_SELECTED_RACE } from "./race.reducer";
+import { racesReducer, selectedRaceReducer } from "./race.reducer";
 import {
   UNKNOWN_ACTION_TYPE,
   DEFAULT_RACE_ITEM_1,
@@ -23,6 +23,7 @@ import {
   SELECTED_RACE_REQUEST_FAILED
 } from "../actions/race.actions";
 import Optional from "optional-js";
+import { INITIAL_SELECTED_RACE } from "../types/datatypes";
 
 describe("race.reducer - racesReducer", () => {
   it("should return default state for unknown action", () => {

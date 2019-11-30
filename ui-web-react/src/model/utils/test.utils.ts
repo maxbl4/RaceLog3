@@ -156,3 +156,11 @@ export const DEFAULT_RACES: Races = {
   isFetching: false,
   items: Optional.of([DEFAULT_RACE_ITEM_1, DEFAULT_RACE_ITEM_2])
 };
+
+export const inputText = (text: string) => {
+  return {
+    target: {
+      value: text
+    }
+  };
+};
