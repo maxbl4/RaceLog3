@@ -1,3 +1,10 @@
+import React from "react";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import { BrowserRouter as Router } from "react-router-dom";
+import { render } from "@testing-library/react";
+import raceLogAppState from "../../model/reducers/reducers";
+import { StoredState, INITIAL_STORED_STATE } from "../../model/types/datatypes";
 import {
   RaceItem,
   RaceItemExt,
@@ -8,6 +15,24 @@ import {
   Races
 } from "../types/datatypes";
 import Optional from "optional-js";
+
+export const renderWithRedux = (
+  ui: React.ReactElement,
+  initialState: StoredState = INITIAL_STORED_STATE
+) => {
+  const store = createStore(raceLogAppState, initialState);
+  return {
+    ...render(<Provider store={store}>{ui}</Provider>),
+    store
+  };
+};
+
+export const renderWithReduxAndRouter = (
+  ui: React.ReactElement,
+  initialState: StoredState = INITIAL_STORED_STATE
+) => {
+  return renderWithRedux(<Router>{ui}</Router>, initialState);
+};
 
 export const compareProfiles = (rp1: RacerProfile, rp2: RacerProfile): void => {
   expect(rp1.uuid).toEqual(rp2.uuid);
@@ -52,7 +77,7 @@ export const compareRaceItemsSimple = (ri1: RaceItem, ri2: RaceItem): void => {
   expect(ri1.date).toEqual(ri2.date);
   expect(ri1.location).toEqual(ri2.location);
   expect(ri1.name).toEqual(ri2.name);
-}
+};
 
 export const compareRaces = (r1: Races, r2: Races): void => {
   if (!r1) {
@@ -80,7 +105,7 @@ export const compareRaces = (r1: Races, r2: Races): void => {
   for (let i = 0; i < items1.length; i++) {
     compareRaceItemsSimple(items1[i], items2[i]);
   }
-} 
+};
 
 export const UNKNOWN_ACTION_TYPE = "UNKNOWN_ACTION_TYPE";
 
