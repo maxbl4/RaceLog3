@@ -1,6 +1,6 @@
 import React from "react";
 import { UserInfo, User } from "../../model/types/datatypes";
-import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
+import { INITIAL_USER_INFO } from "../../model/types/datatypes";
 import { Formik, Form, FormikProps, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import Avatar from "@material-ui/core/Avatar";

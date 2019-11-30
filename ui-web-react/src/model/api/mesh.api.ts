@@ -11,7 +11,7 @@ import { UserInfo, RacerProfile, RaceItem, RaceItemExt } from "../types/datatype
 import { ITransport } from "./transport";
 import * as Cookies from "js-cookie";
 import { COOKIE_MESH_TOKEN } from "../utils/constants";
-import { INITIAL_USER_INFO } from "../reducers/user.reducer";
+import { INITIAL_USER_INFO } from "../types/datatypes";
 
 type CMSResponse = {
   success: boolean;

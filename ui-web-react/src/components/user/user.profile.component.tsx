@@ -12,7 +12,7 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import { Theme } from "@material-ui/core";
 import { commonStyles } from "../styles/common";
-import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
+import { INITIAL_USER_INFO } from "../../model/types/datatypes";
 import RacerProfilesListComponent from "./racer.profiles-list.component";
 
 const useStyles = makeStyles((theme: Theme) => {
