@@ -5,16 +5,16 @@ import {
   DEFAULT_RACER_PROFILE_3,
   DEFAULT_RACER_PROFILE_4,
   compareProfiles
-} from "../utils/test.utils";
-import { racerProfilesReducer } from "./racerProfiles.reducer";
+} from "../../test.utils";
+import { racerProfilesReducer } from "../../../model/reducers/racerProfiles.reducer";
 import {
   RACER_PROFILES_REQUESTED_ALL,
   RACER_PROFILES_UPDATE_REQUESTED,
   RACER_PROFILES_UPDATE_RECEIVED,
   RACER_PROFILES_REQUEST_FAILED
-} from "../actions/racerProfiles.actions";
+} from "../../../model/actions/racerProfiles.actions";
 import Optional from "optional-js";
-import { RacerProfile } from "../types/datatypes";
+import { RacerProfile } from "../../../model/types/datatypes";
 
 describe("racerProfiles.reducer - racerProfilesReducer", () => {
   it("should return default state for unknown action", () => {

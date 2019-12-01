@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { RaceItemExt, RacerProfiles, RacerProfile, UserInfo } from "../../model/types/datatypes";
+import { RaceItemExt, RacerProfiles, RacerProfile, UserInfo, INITIAL_USER_INFO } from "../../model/types/datatypes";
 import { DEFAULT_ID } from "../../model/utils/constants";
 import { FetchingComponent } from "../common/fetching.component";
 import { makeStyles } from "@material-ui/core/styles";
@@ -13,7 +13,6 @@ import { commonStyles } from "../styles/common";
 import RaceParticipantListComponent from "./race-participant-list.component";
 import RaceRegistrationListComponent from "./race-registration-list.component";
 import Optional from "optional-js";
-import { DEFAULT_USER_INFO } from "../../model/utils/test.utils";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -57,7 +56,7 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
   }, [props.match.params.id]);
   const registrationUpdateHandler = (added: RacerProfile[], removed: RacerProfile[]): void => {
     props.onRegistrationUpdate(
-      props.user.orElse(DEFAULT_USER_INFO).uuid,
+      props.user.orElse(INITIAL_USER_INFO).uuid,
       props.raceItemExt.id,
       added,
       removed

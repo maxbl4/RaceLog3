@@ -1,4 +1,4 @@
-import { renderWithReduxAndRouter, inputText } from "../../model/utils/test.utils";
+import { renderWithReduxAndRouter, inputText } from "../../test.utils";
 import { waitForElementToBeRemoved, fireEvent } from "@testing-library/dom";
 
 export async function emailChecks(ui: React.ReactElement) {

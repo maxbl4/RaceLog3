@@ -1,9 +1,9 @@
 import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import UserSignUpContainer from "./user.sign-up.container";
-import { renderWithReduxAndRouter } from "../../model/utils/test.utils";
+import { renderWithReduxAndRouter } from "../../test.utils";
 import { emailChecks, passwordChecks, nameChecks } from "./user.sign.container.common";
+import UserSignUpContainer from "../../../components/user/user.sign-up.container";
 
 test("loads and displays sign-up form", async () => {
   const { getByLabelText, getByText } = renderWithReduxAndRouter(<UserSignUpContainer />);

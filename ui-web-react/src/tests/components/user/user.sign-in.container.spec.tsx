@@ -1,9 +1,9 @@
 import React from "react";
 import { fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import UserSignInContainer from "./user.sign-in.container";
-import { renderWithReduxAndRouter } from "../../model/utils/test.utils";
+import { renderWithReduxAndRouter } from "../../test.utils";
 import { emailChecks, passwordChecks } from "./user.sign.container.common";
+import UserSignInContainer from "../../../components/user/user.sign-in.container";
 
 test("loads and displays sign-in", async () => {
   const { getByLabelText, getByText } = renderWithReduxAndRouter(<UserSignInContainer />);

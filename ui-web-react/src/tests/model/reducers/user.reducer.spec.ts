@@ -1,13 +1,14 @@
-import { userReducer, INITIAL_USER_INFO } from "./user.reducer";
-import { UNKNOWN_ACTION_TYPE, DEFAULT_USER_INFO } from "../utils/test.utils";
+import { userReducer } from "../../../model/reducers/user.reducer";
+import { UNKNOWN_ACTION_TYPE, DEFAULT_USER_INFO } from "../../test.utils";
 import {
   USER_LOGIN,
   USER_REGISTRATION,
   USER_LOGOUT,
   USER_AUTHORIZED_FAIL,
   USER_AUTHORIZED_OK
-} from "../actions/user.actions";
+} from "../../../model/actions/user.actions";
 import Optional from "optional-js";
+import { INITIAL_USER_INFO } from "../../../model/types/datatypes";
 
 describe("user.reducer - userReducer", () => {
   it("should return default state for unknown action", () => {

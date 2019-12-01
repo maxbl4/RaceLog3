@@ -8,7 +8,7 @@ import {
   DEFAULT_RACE_ITEM_1,
   DEFAULT_RACE_ITEM_2,
   DEFAULT_RACE_ITEM_EXT
-} from "../utils/test.utils";
+} from "../../tests/test.utils";
 
 export class FakeApi implements ITransport {
   login(userName: string, userPassword: string): Promise<any> {

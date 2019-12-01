@@ -3,8 +3,8 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { render } from "@testing-library/react";
-import raceLogAppState from "../../model/reducers/reducers";
-import { StoredState, INITIAL_STORED_STATE } from "../../model/types/datatypes";
+import raceLogAppState from "../model/reducers/reducers";
+import { StoredState, INITIAL_STORED_STATE } from "../model/types/datatypes";
 import {
   RaceItem,
   RaceItemExt,
@@ -13,7 +13,7 @@ import {
   AlertType,
   RacerProfile,
   Races
-} from "../types/datatypes";
+} from "../model/types/datatypes";
 import Optional from "optional-js";
 
 export const renderWithRedux = (

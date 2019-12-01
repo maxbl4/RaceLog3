@@ -1,7 +1,7 @@
-import { alertsQueueReducer } from "./alertsQueue.reducer";
-import { UNKNOWN_ACTION_TYPE, DEFAULT_ALERT_1, DEFAULT_ALERT_2 } from "../utils/test.utils";
-import { Alert } from "../types/datatypes";
-import { ALERTS_SHOW, ALERTS_HIDE } from "../actions/alerts.actions";
+import { alertsQueueReducer } from "../../../model/reducers/alertsQueue.reducer";
+import { UNKNOWN_ACTION_TYPE, DEFAULT_ALERT_1, DEFAULT_ALERT_2 } from "../../test.utils";
+import { ALERTS_SHOW, ALERTS_HIDE } from "../../../model/actions/alerts.actions";
+import { Alert } from "../../../model/types/datatypes";
 
 describe("alertsQueue.reducer - alertsQueueReducer", () => {
   it("should return default state for unknown action", () => {
