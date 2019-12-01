@@ -8,6 +8,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Tooltip from "@material-ui/core/Tooltip";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -71,6 +72,23 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
           </ListItemIcon>
           <ListItemText primary={"Домой"} />
         </ListItem>
+        {props.userInfo
+          .map(info => (
+            <ListItem button key={"Профиль"} onClick={() => reRouteTo(USER_PROFILE)}>
+              <ListItemIcon>
+                <AccountCircle />
+              </ListItemIcon>
+              <ListItemText primary={"Профиль"} />
+            </ListItem>
+          ))
+          .orElse(
+            <ListItem button key={"Войти"} onClick={() => reRouteTo(USER_SIGN_IN)}>
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Войти"} />
+            </ListItem>
+          )}
       </List>
     </div>
   );

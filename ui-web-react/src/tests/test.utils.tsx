@@ -34,6 +34,14 @@ export const renderWithReduxAndRouter = (
   return renderWithRedux(<Router>{ui}</Router>, initialState);
 };
 
+export const inputText = (text: string) => {
+  return {
+    target: {
+      value: text
+    }
+  };
+};
+
 export const compareProfiles = (rp1: RacerProfile, rp2: RacerProfile): void => {
   expect(rp1.uuid).toEqual(rp2.uuid);
   expect(rp1.userUUID).toEqual(rp2.userUUID);
@@ -182,10 +190,18 @@ export const DEFAULT_RACES: Races = {
   items: Optional.of([DEFAULT_RACE_ITEM_1, DEFAULT_RACE_ITEM_2])
 };
 
-export const inputText = (text: string) => {
-  return {
-    target: {
-      value: text
-    }
-  };
-};
+export const DEFAULT_STORED_STATE: StoredState = {
+  user: {
+    isFetching: false,
+    info: Optional.of(DEFAULT_USER_INFO)
+  },
+  racerProfiles: {
+    isFetching: false,
+    items: Optional.of([DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2])
+  },
+  races: DEFAULT_RACES,
+  selectedRace: DEFAULT_RACE_ITEM_EXT,
+  alertsQueue: {
+    alerts: []
+  }
+}
