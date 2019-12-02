@@ -119,15 +119,27 @@ export const UNKNOWN_ACTION_TYPE = "UNKNOWN_ACTION_TYPE";
 
 export const DEFAULT_RACE_ITEM_1: RaceItem = {
   id: 1,
-  name: "Some race name 1",
-  date: 1570728837485,
-  location: "Some location 1"
+  name: "Grand Prix of France",
+  date: 1558040400000,
+  location: "Le Mans, France"
 };
 export const DEFAULT_RACE_ITEM_2: RaceItem = {
   id: 2,
-  name: "Some race name 2",
-  date: 1571529537459,
-  location: "Some location 2"
+  name: "Grand Prix of Catalunya",
+  date: 1559854800000,
+  location: "Barcelona, Spain"
+};
+export const DEFAULT_RACE_ITEM_3: RaceItem = {
+  id: 3,
+  name: "Grand Prix of Germany",
+  date: 1561064400000,
+  location: "Sachsenring, Germany"
+};
+export const DEFAULT_RACE_ITEM_4: RaceItem = {
+  id: 4,
+  name: "Grand Prix of Great Britain",
+  date: 1567112400000,
+  location: "Silverstone, Great Britain"
 };
 export const DEFAULT_RACER_PROFILE_1: RacerProfile = {
   uuid: "d816d19e-0eb0-11ea-8d71-362b9e155667",
@@ -156,14 +168,18 @@ export const DEFAULT_RACER_PROFILE_4: RacerProfile = {
 
 export const DEFAULT_RACE_ITEM_EXT: RaceItemExt = {
   isFetching: false,
-  id: 1,
-  name: "Some race name 1",
-  date: 1570728837485,
-  location: "Some location 1",
-  description: "Some descr 1",
+  id: 5,
+  name: "Grand Prix of Austria",
+  date: 1565902800000,
+  location: "Spielberg, Austria",
+  description:
+    "The Red Bull Ring in Spielberg is located beautifully in the Murtal-region of Styria, Austria. The circuit was originally built in 1969, then known as the Österreichring. In 1996, it was rebuilt with the track-layout it still has today and in 2011 was reopened as the Red Bull Ring and again became the centre of Austrian motorsports. The sloping terrain and the natural arena are trademark features of the Red Bull Ring with the 18-metre-high landmark “Bull of Spielberg” in the centre and the voestalpine wing offering a spectacular architectural highlight. With a length of 4.318 km it features 10 turns and an altitude difference of 65 metres. The 2016 season saw the Red Bull Ring host its first MotoGP™ race as the World Championship returned to Austria for the first time since 1997.",
   participants: {
     isFetching: false,
-    items: Optional.of([DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2])
+    items: Optional.of([
+      DEFAULT_RACER_PROFILE_1,
+      DEFAULT_RACER_PROFILE_2,
+    ])
   }
 };
 export const DEFAULT_USER_INFO: UserInfo = {
@@ -187,7 +203,12 @@ export const DEFAULT_ALERT_2: Alert = {
 };
 export const DEFAULT_RACES: Races = {
   isFetching: false,
-  items: Optional.of([DEFAULT_RACE_ITEM_1, DEFAULT_RACE_ITEM_2])
+  items: Optional.of([
+    DEFAULT_RACE_ITEM_1,
+    DEFAULT_RACE_ITEM_2,
+    DEFAULT_RACE_ITEM_3,
+    DEFAULT_RACE_ITEM_4
+  ])
 };
 
 export const DEFAULT_STORED_STATE: StoredState = {
@@ -204,4 +225,4 @@ export const DEFAULT_STORED_STATE: StoredState = {
   alertsQueue: {
     alerts: []
   }
-}
+};

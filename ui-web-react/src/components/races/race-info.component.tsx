@@ -1,6 +1,11 @@
 import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { RaceItemExt, RacerProfile, UserInfo, INITIAL_USER_INFO } from "../../model/types/datatypes";
+import {
+  RaceItemExt,
+  RacerProfile,
+  UserInfo,
+  INITIAL_USER_INFO
+} from "../../model/types/datatypes";
 import { DEFAULT_ID } from "../../model/utils/constants";
 import { FetchingComponent } from "../common/fetching.component";
 import { makeStyles } from "@material-ui/core/styles";
@@ -27,7 +32,10 @@ const useStyles = makeStyles((theme: Theme) => {
       margin: theme.spacing(3, 0, 2)
     },
     heading: common.heading,
-    profileContainer: common.profileContainer
+    profileContainer: common.profileContainer,
+    justifyText: {
+      textAlign: "justify"
+    }
   };
 });
 
@@ -78,7 +86,9 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
               props.raceItemExt.date
             ).toLocaleDateString()}`}
           </Typography>
-          <Typography color="textSecondary">{props.raceItemExt.description}</Typography>
+          <Typography color="textSecondary" className={classes.justifyText}>
+            {props.raceItemExt.description}
+          </Typography>
         </Paper>
         <RaceParticipantListComponent participants={props.raceItemExt.participants.items} />
         <RaceRegistrationListComponent
