@@ -1,6 +1,5 @@
 import { AnyAction } from "redux";
-import { RaceItem, RaceItemExt, Alert, RacerProfile } from "../types/datatypes";
-import Optional from "optional-js";
+import { Alert } from "../types/datatypes";
 
 export const ALERTS_SHOW = "ALERTS_SHOW";
 export const ALERTS_HIDE = "ALERTS_HIDE";

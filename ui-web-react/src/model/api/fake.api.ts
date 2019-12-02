@@ -1,16 +1,27 @@
 import { ITransport } from "./transport";
 import Optional from "optional-js";
-import { UserInfo, RacerProfile, RaceItem, RaceItemExt } from "../types/datatypes";
-import {
-  DEFAULT_USER_INFO,
-  DEFAULT_RACER_PROFILE_1,
-  DEFAULT_RACER_PROFILE_2,
-  DEFAULT_RACE_ITEM_1,
-  DEFAULT_RACE_ITEM_2,
-  DEFAULT_RACE_ITEM_EXT
-} from "../../tests/test.utils";
+import { UserInfo, RacerProfile, RaceItem, RaceItemExt, StoredState } from "../types/datatypes";
+import { DEFAULT_STORED_STATE } from "../../tests/test.utils";
 
 export class FakeApi implements ITransport {
+  private fakeStoredState: StoredState = {
+    ...DEFAULT_STORED_STATE
+  };
+
+  private processRacerProfiles = (
+    srcList: RacerProfile[],
+    added: RacerProfile[],
+    removed: RacerProfile[],
+    updated: RacerProfile[]
+  ): RacerProfile[] => {
+    return [...srcList]
+      .filter(profile => removed.find(rem => rem.uuid === profile.uuid) === undefined)
+      .map(profile =>
+        Optional.ofNullable(updated.find(upd => upd.uuid === profile.uuid)).orElse(profile)
+      )
+      .concat(added);
+  };
+
   login(userName: string, userPassword: string): Promise<any> {
     return new Promise<any>(resolve => resolve());
   }
@@ -18,14 +29,15 @@ export class FakeApi implements ITransport {
     return new Promise<any>(resolve => resolve());
   }
   aboutMe(): Promise<Optional<UserInfo>> {
-    return new Promise<Optional<UserInfo>>(resolve => resolve(Optional.of(DEFAULT_USER_INFO)));
+    return new Promise<Optional<UserInfo>>(resolve => resolve(this.fakeStoredState.user.info));
   }
   register(userInfo: UserInfo): Promise<Optional<UserInfo>> {
-    return new Promise<Optional<UserInfo>>(resolve => resolve(Optional.of(userInfo)));
+    this.fakeStoredState.user.info = Optional.of(userInfo);
+    return new Promise<Optional<UserInfo>>(resolve => resolve(this.fakeStoredState.user.info));
   }
   requestRacerProfiles(userUUID: string): Promise<Optional<RacerProfile[]>> {
     return new Promise<Optional<RacerProfile[]>>(resolve =>
-      resolve(Optional.of([DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2]))
+      resolve(this.fakeStoredState.racerProfiles.items)
     );
   }
   updateRacerProfiles(
@@ -34,16 +46,22 @@ export class FakeApi implements ITransport {
     removed: RacerProfile[],
     updated: RacerProfile[]
   ): Promise<any> {
+    this.fakeStoredState.racerProfiles.items = Optional.of(
+      this.processRacerProfiles(
+        this.fakeStoredState.racerProfiles.items.orElse([]),
+        added,
+        removed,
+        updated
+      )
+    );
     return new Promise<any>(resolve => resolve());
   }
   requestRaces(): Promise<Optional<RaceItem[]>> {
-    return new Promise<Optional<RaceItem[]>>(resolve =>
-      resolve(Optional.of([DEFAULT_RACE_ITEM_1, DEFAULT_RACE_ITEM_2]))
-    );
+    return new Promise<Optional<RaceItem[]>>(resolve => resolve(this.fakeStoredState.races.items));
   }
   requestSelectedRace(raceID: number): Promise<Optional<RaceItemExt>> {
     return new Promise<Optional<RaceItemExt>>(resolve =>
-      resolve(Optional.of(DEFAULT_RACE_ITEM_EXT))
+      resolve(Optional.of(this.fakeStoredState.selectedRace))
     );
   }
   updateRaceParticipants(
@@ -52,6 +70,14 @@ export class FakeApi implements ITransport {
     added: RacerProfile[],
     removed: RacerProfile[]
   ): Promise<any> {
+    this.fakeStoredState.selectedRace.participants.items = Optional.of(
+      this.processRacerProfiles(
+        this.fakeStoredState.selectedRace.participants.items.orElse([]),
+        added,
+        removed,
+        []
+      )
+    );
     return new Promise<any>(resolve => resolve());
   }
 }

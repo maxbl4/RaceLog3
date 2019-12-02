@@ -22,6 +22,13 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
+const createProfile = (userUUID: string): RacerProfile => ({
+  uuid: generateUUID(),
+  userUUID: Optional.of(userUUID),
+  name: "",
+  bikeNumber: 0
+});
+
 type RacerProfilesListProps = {
   isFetching: boolean;
   initialProfiles: RacerProfile[];
@@ -36,19 +43,13 @@ type RacerProfilesListProps = {
 const RacerProfilesListComponent: React.FC<RacerProfilesListProps> = (
   props: RacerProfilesListProps
 ) => {
-  const createProfile = (): RacerProfile => ({
-    uuid: generateUUID(),
-    userUUID: Optional.of(props.userUUID),
-    name: "",
-    bikeNumber: 0
-  });
   const classes = useStyles();
   const [profiles, setProfiles] = useState<RacerProfile[]>(
-    props.initialProfiles.length === 0 ? [createProfile()] : props.initialProfiles
+    props.initialProfiles.length === 0 ? [createProfile(props.userUUID)] : props.initialProfiles
   );
   useEffect(() => {
-    setProfiles(props.initialProfiles.length === 0 ? [createProfile()] : props.initialProfiles);
-  }, [props.initialProfiles]);
+    setProfiles(props.initialProfiles.length === 0 ? [createProfile(props.userUUID)] : props.initialProfiles);
+  }, [props.initialProfiles, props.userUUID]);
 
   const handleProfilesUpdateButtonClick = (): void => {
     props.onProfilesUpdate(
@@ -73,7 +74,7 @@ const RacerProfilesListComponent: React.FC<RacerProfilesListProps> = (
 
   const handleAddRemoveButtonClick = (profileId: string, isAddButton: boolean): void => {
     if (isAddButton) {
-      setProfiles([...profiles, createProfile()]);
+      setProfiles([...profiles, createProfile(props.userUUID)]);
     } else {
       setProfiles(profiles.filter((item, index, array) => item.uuid !== profileId));
     }
