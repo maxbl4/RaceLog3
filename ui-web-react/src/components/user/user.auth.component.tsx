@@ -11,7 +11,7 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from '@material-ui/core/Paper';
+import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { FetchingComponent } from "../common/fetching.component";
 import { Redirect } from "react-router";
@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => {
     submit: {
       margin: theme.spacing(3, 0, 2)
     }
-  }
+  };
 });
 
 const isSignInMode = (mode: AuthMode): boolean => mode === AuthMode.SIGN_IN;
@@ -114,6 +114,7 @@ const renderField = (
           autoComplete={fieldName}
           helperText={hasErrors ? getErrorText(formikBag, fieldName) : null}
           type={fieldType}
+          inputProps={{ "data-testid": fieldName + "-testid" }}
         />
       </Grid>
     </>

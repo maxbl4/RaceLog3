@@ -1,7 +1,9 @@
 import React from "react";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router } from "react-router-dom";
+import { MemoryRouter as Router } from "react-router-dom";
+import { createLocation, createMemoryHistory } from "history";
+import { match as routerMatch } from "react-router";
 import { render } from "@testing-library/react";
 import raceLogAppState from "../model/reducers/reducers";
 import { StoredState, INITIAL_STORED_STATE } from "../model/types/datatypes";
@@ -15,6 +17,48 @@ import {
   Races
 } from "../model/types/datatypes";
 import Optional from "optional-js";
+
+// const {history, location, match} = routerTestProps(RACES_INFO, {id: "1"})
+// const {findByText} = renderWithReduxAndRouter(<RaceInfoContainer history={history} location={location} match={match}/>, DEFAULT_STORED_STATE)
+
+type MatchParameter<Params> = { [K in keyof Params]?: string };
+
+export const routerTestProps = <Params extends MatchParameter<Params> = {}>(
+  path: string,
+  params: Params,
+  extendMatch: Partial<routerMatch<any>> = {}
+) => {
+  const match: routerMatch<Params> = Object.assign(
+    {},
+    {
+      isExact: false,
+      path,
+      url: generateUrl(path, params),
+      params
+    },
+    extendMatch
+  );
+  const history = createMemoryHistory();
+  const location = createLocation(match.url);
+
+  return { history, location, match };
+};
+
+const generateUrl = <Params extends MatchParameter<Params>>(
+  path: string,
+  params: Params
+): string => {
+  let tempPath = path;
+
+  for (const param in params) {
+    if (params.hasOwnProperty(param)) {
+      const value = params[param];
+      tempPath = tempPath.replace(`:${param}`, value as NonNullable<typeof value>);
+    }
+  }
+
+  return tempPath;
+};
 
 export const renderWithRedux = (
   ui: React.ReactElement,
@@ -176,10 +220,7 @@ export const DEFAULT_RACE_ITEM_EXT: RaceItemExt = {
     "The Red Bull Ring in Spielberg is located beautifully in the Murtal-region of Styria, Austria. The circuit was originally built in 1969, then known as the Österreichring. In 1996, it was rebuilt with the track-layout it still has today and in 2011 was reopened as the Red Bull Ring and again became the centre of Austrian motorsports. The sloping terrain and the natural arena are trademark features of the Red Bull Ring with the 18-metre-high landmark “Bull of Spielberg” in the centre and the voestalpine wing offering a spectacular architectural highlight. With a length of 4.318 km it features 10 turns and an altitude difference of 65 metres. The 2016 season saw the Red Bull Ring host its first MotoGP™ race as the World Championship returned to Austria for the first time since 1997.",
   participants: {
     isFetching: false,
-    items: Optional.of([
-      DEFAULT_RACER_PROFILE_1,
-      DEFAULT_RACER_PROFILE_2,
-    ])
+    items: Optional.of([DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2])
   }
 };
 export const DEFAULT_USER_INFO: UserInfo = {
