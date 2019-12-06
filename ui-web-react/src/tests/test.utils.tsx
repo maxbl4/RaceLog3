@@ -6,7 +6,14 @@ import { createLocation, createMemoryHistory } from "history";
 import { match as routerMatch } from "react-router";
 import { render } from "@testing-library/react";
 import raceLogAppState from "../model/reducers/reducers";
-import { StoredState, INITIAL_STORED_STATE } from "../model/types/datatypes";
+import {
+  StoredState,
+  INITIAL_STORED_STATE,
+  INITIAL_RACER_PROFILES,
+  INITIAL_ALERTS_QUEUE,
+  INITIAL_USER,
+  INITIAL_SELECTED_RACE
+} from "../model/types/datatypes";
 import {
   RaceItem,
   RaceItemExt,
@@ -185,6 +192,34 @@ export const DEFAULT_RACE_ITEM_4: RaceItem = {
   date: 1567112400000,
   location: "Silverstone, Great Britain"
 };
+export const DEFAULT_RACE_ITEM_EXT_1: RaceItemExt = {
+  ...DEFAULT_RACE_ITEM_1,
+  isFetching: false,
+  description:
+    "Built in 1965 around the existing 24-Hour track, the Le Mans Bugatti Grand Prix race circuit lies 5km south of the city of Le Mans and 200km south-west of Paris. The venue has hosted Grand Prix since the late sixties but a serious accident to Spanish rider Alberto Puig in 1995 saw it struck off the calendar until 2000 whilst stringent safety improvements were carried out. Le Mans is a tight track dominated by first gear corners that place the emphasis on late braking and hard acceleration, whilst rear end traction is also a key area. With the capacity to comfortably accommodate up to 100,000 spectators, the Bugatti circuit also plays host to the 24 hour truck race, the FIA GP2 Championship, French Touring Car and GT races.",
+  participants: { ...INITIAL_RACER_PROFILES }
+};
+export const DEFAULT_RACE_ITEM_EXT_2: RaceItemExt = {
+  ...DEFAULT_RACE_ITEM_2,
+  isFetching: false,
+  description:
+    "In 1989, through the joint collaboration of the Catalan Autonomous Government, the Montmeló Town Council and the Royal Automobile Club of Catalunya (RACC), work began on giving one of Europe’s most beautiful cities a state of the art race track to match. The Circuit de Catalunya opened on the doorstep of Barcelona in September 1991 and welcomed its first international event that same month, hosting the Spanish F1 Grand Prix. It went on to host the European Motorcycle Grand Prix and in 1995 became home to the Gran Premio de Catalunya. Considered to be one of the best designed circuits of the recent era, the Circuito de Catalunya won the much coveted IRTA ‘Best Grand Prix’ trophy for 2001 and has a general admission capacity of 104,000 spectators.",
+  participants: { ...INITIAL_RACER_PROFILES }
+};
+export const DEFAULT_RACE_ITEM_EXT_3: RaceItemExt = {
+  ...DEFAULT_RACE_ITEM_3,
+  isFetching: false,
+  description:
+    "Car and bike races have been held on closed public roads in the area around the town of Chemnitz, Germany since the 1920s and were still taking place until as recently as 1990. It was decided, however, that the five mile course through such a densely populated area was no longer suitable and a new circuit was built five miles west of Chemnitz in 1996. Although mainly used as a driver training centre and road transport safety station, Sachsenring first hosted MotoGP in 1998 and many improvements have taken place since then, including a drastic layout enhancement in 2001. Numerous tight corners make it one of the slower tracks on the calendar but there is never any shortage of close racing action.",
+  participants: { ...INITIAL_RACER_PROFILES }
+};
+export const DEFAULT_RACE_ITEM_EXT_4: RaceItemExt = {
+  ...DEFAULT_RACE_ITEM_4,
+  isFetching: false,
+  description:
+    "With more than 60 years of history Silverstone has become one of the most prestigious venues dedicated to motorsport. Completely revamped in recent years, a multimillion pound investment saw the completion in 2010 of a first phase of works to greatly improve the venue, making it one of the fastest tracks on the MotoGP calendar and earning high praise from the World Championship riders who enjoyed the new layout. The ‘Silverstone Wing’, a state-of-the-art, multi-million pound complex, became a new landmark at the circuit from 2011, thus adding to already breathtaking facilities at Silverstone.",
+  participants: { ...INITIAL_RACER_PROFILES }
+};
 export const DEFAULT_RACER_PROFILE_1: RacerProfile = {
   uuid: "d816d19e-0eb0-11ea-8d71-362b9e155667",
   userUUID: Optional.of("d816cf32-0eb0-11ea-8d71-362b9e155667"),
@@ -263,7 +298,13 @@ export const DEFAULT_STORED_STATE: StoredState = {
   },
   races: DEFAULT_RACES,
   selectedRace: DEFAULT_RACE_ITEM_EXT,
-  alertsQueue: {
-    alerts: []
-  }
+  alertsQueue: INITIAL_ALERTS_QUEUE
+};
+
+export const DEFAULT_NON_AUTHORIZED_STORED_STATE: StoredState = {
+  user: INITIAL_USER,
+  racerProfiles: { ...INITIAL_RACER_PROFILES },
+  races: DEFAULT_RACES,
+  selectedRace: INITIAL_SELECTED_RACE,
+  alertsQueue: INITIAL_ALERTS_QUEUE
 };
