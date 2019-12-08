@@ -52,3 +52,20 @@ export const getServerURL = (): string => {
 export const getLogLevel = (): string => {
   return Optional.ofNullable(process.env.REACT_APP_LOG_LEVEL).orElse("info");
 };
+
+// Components IDs
+export const HEADER_ENTER_BUTTON = "headerEnterButtonID";
+export const HEADER_ACCOUNT_BUTTON = "headerAccountButtonID";
+export const LIST_ITEM_HOME_BUTTON = "listItemHomeButtonID";
+export const LIST_ITEM_ENTER_BUTTON = "listItemEnterButtonID";
+export const LIST_ITEM_ACCOUNT_BUTTON = "listItemAccountButtonID";
+export const AUTH_MODE_LABEL = "authModeLabelID";
+export const AUTH_NAME = "authNameID";
+export const AUTH_PASSWORD = "authPasswordID";
+export const AUTH_EMAIL = "authEmailID";
+export const AUTH_SUBMIT_BUTTON = "authSubmitButtonID";
+export const AUTH_CHANGE_MODE_LINK = "authChangeModeLinkID";
+export const PROFILE_NAME = "profileNameID";
+export const PROFILE_EMAIL = "profileEmailID";
+export const PROFILE_ROLE = "profileRoleID";
+export const PROFILE_LOGOUT_BUTTON = "profileLogoutButtonID";

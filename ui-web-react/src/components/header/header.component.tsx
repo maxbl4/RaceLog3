@@ -21,6 +21,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 // @ts-ignore
 import { useHistory } from "react-router-dom";
 import { getRoleName } from "../../model/types/roles.model";
+import {
+  HEADER_ENTER_BUTTON,
+  HEADER_ACCOUNT_BUTTON,
+  LIST_ITEM_HOME_BUTTON,
+  LIST_ITEM_ACCOUNT_BUTTON,
+  LIST_ITEM_ENTER_BUTTON
+} from "../../model/utils/constants";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -66,7 +73,12 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        <ListItem button key={"Домой"} onClick={() => reRouteTo(DEFAULT)}>
+        <ListItem
+          id={LIST_ITEM_HOME_BUTTON}
+          button
+          key={"Домой"}
+          onClick={() => reRouteTo(DEFAULT)}
+        >
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
@@ -74,7 +86,12 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
         </ListItem>
         {props.userInfo
           .map(info => (
-            <ListItem button key={"Профиль"} onClick={() => reRouteTo(USER_PROFILE)}>
+            <ListItem
+              id={LIST_ITEM_ACCOUNT_BUTTON}
+              button
+              key={"Профиль"}
+              onClick={() => reRouteTo(USER_PROFILE)}
+            >
               <ListItemIcon>
                 <AccountCircle />
               </ListItemIcon>
@@ -82,7 +99,12 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
             </ListItem>
           ))
           .orElse(
-            <ListItem button key={"Войти"} onClick={() => reRouteTo(USER_SIGN_IN)}>
+            <ListItem
+              id={LIST_ITEM_ENTER_BUTTON}
+              button
+              key={"Войти"}
+              onClick={() => reRouteTo(USER_SIGN_IN)}
+            >
               <ListItemIcon>
                 <ExitToAppIcon />
               </ListItemIcon>
@@ -116,6 +138,7 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
             .map(info => (
               <Tooltip title={`${info.name} (${getRoleName(info.role)}, ${info.email})`}>
                 <IconButton
+                  id={HEADER_ACCOUNT_BUTTON}
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
@@ -127,7 +150,11 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
               </Tooltip>
             ))
             .orElse(
-              <Button color="inherit" onClick={() => reRouteTo(USER_SIGN_IN)}>
+              <Button
+                id={HEADER_ENTER_BUTTON}
+                color="inherit"
+                onClick={() => reRouteTo(USER_SIGN_IN)}
+              >
                 Войти
               </Button>
             )}
