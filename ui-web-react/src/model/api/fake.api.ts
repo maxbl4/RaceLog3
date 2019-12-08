@@ -41,7 +41,11 @@ export class FakeApi implements ITransport {
   };
 
   login(userName: string, userPassword: string): Promise<any> {
-    this.fakeStoredState.user.info = Optional.of(DEFAULT_USER_INFO);
+    this.fakeStoredState.user.info = Optional.of({
+      ...DEFAULT_USER_INFO,
+      email: userName,
+      password: userPassword
+    });
     return new Promise<any>(resolve => resolve());
   }
   logout(): Promise<any> {
