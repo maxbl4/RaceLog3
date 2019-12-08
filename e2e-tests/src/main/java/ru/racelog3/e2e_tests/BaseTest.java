@@ -10,6 +10,22 @@ import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElemen
 public abstract class BaseTest {
 
 	private final static int EXCEPTION_TIMEOUT = 5; // in seconds
+	
+	protected final static String HEADER_ENTER_BUTTON = "headerEnterButtonID";
+	protected final static String HEADER_ACCOUNT_BUTTON = "headerAccountButtonID";
+	protected final static String LIST_ITEM_HOME_BUTTON = "listItemHomeButtonID";
+	protected final static String LIST_ITEM_ENTER_BUTTON = "listItemEnterButtonID";
+	protected final static String LIST_ITEM_ACCOUNT_BUTTON = "listItemAccountButtonID";
+	protected final static String AUTH_MODE_LABEL = "authModeLabelID";
+	protected final static String AUTH_NAME = "authNameID";
+	protected final static String AUTH_PASSWORD = "authPasswordID";
+	protected final static String AUTH_EMAIL = "authEmailID";
+	protected final static String AUTH_SUBMIT_BUTTON = "authSubmitButtonID";
+	protected final static String AUTH_CHANGE_MODE_LINK = "authChangeModeLinkID";
+	protected final static String PROFILE_NAME = "profileNameID";
+	protected final static String PROFILE_EMAIL = "profileEmailID";
+	protected final static String PROFILE_ROLE = "profileRoleID";
+	protected final static String PROFILE_LOGOUT_BUTTON = "profileLogoutButtonID";
 
 	private WebDriver webDriver;
 	private WebDriverWait wait;

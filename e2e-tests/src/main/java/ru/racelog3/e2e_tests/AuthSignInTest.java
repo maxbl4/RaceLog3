@@ -2,35 +2,30 @@ package ru.racelog3.e2e_tests;
 
 import org.openqa.selenium.WebDriver;
 
-public class AuthSignInTest extends BaseTest {
+public class AuthSignInTest extends AuthBaseTest {
 	private AuthSignInTest(WebDriver webDriver) {
 		super(webDriver);
 	}
-	
+
 	@Override
 	protected void testBody() {
-		clickElement("headerEnterButtonID");
-		
+		clickElement(HEADER_ENTER_BUTTON);
+
+		clickElement(createID(AUTH_CHANGE_MODE_LINK, "SI"));
+		clickElement(createID(AUTH_CHANGE_MODE_LINK, "SU"));
+
 		checkSignInPanelControls();
-		
-		typeText("authEmailID_SI", "valentino.rossi@yamaha.jp");
-		typeText("authPasswordID_SI", "valerossi46");
-		clickElement("authSubmitButtonID_SI");
-		
-		checkText("profileNameID", "Valentino Rossi", "Check the user's name on Profile page");
-		checkText("profileEmailID", "valentino.rossi@yamaha.jp", "Check the user's email on Profile page");
-		checkText("profileRoleID", "Пользователь", "Check the user's role on Profile page");
-		clickElement("profileLogoutButtonID");
-		
+
+		typeText(createID(AUTH_EMAIL, "SI"), "valentino.rossi@yamaha.jp");
+		typeText(createID(AUTH_PASSWORD, "SI"), "valerossi46");
+		clickElement(createID(AUTH_SUBMIT_BUTTON, "SI"));
+
+		checkProfilePanelControls();
+		clickElement(PROFILE_LOGOUT_BUTTON);
+
 		checkSignInPanelControls();
 	}
-	
-	private void checkSignInPanelControls() {
-		checkText("authModeLabelID_SI", "Войти", "Check the label of Auth form for Sign In");
-		checkText("authSubmitButtonID_SI", "ДАВИ НА ГАЗ!!!", "Check the submit button of Auth form for Sign In");
-		checkText("authChangeModeLinkID_SI", "Нет аккаунта? Создать", "Check the change link label of Auth form for Sign In");
-	}
-	
+
 	public static void runTest(WebDriver webDriver) {
 		new AuthSignInTest(webDriver).runTestImpl();
 	}

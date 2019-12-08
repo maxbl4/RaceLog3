@@ -2,7 +2,7 @@ package ru.racelog3.e2e_tests;
 
 import org.openqa.selenium.WebDriver;
 
-public class AuthSignUpTest extends BaseTest {
+public class AuthSignUpTest extends AuthBaseTest {
 
 	private AuthSignUpTest(WebDriver webDriver) {
 		super(webDriver);
@@ -10,27 +10,23 @@ public class AuthSignUpTest extends BaseTest {
 
 	@Override
 	protected void testBody() {
-		clickElement("headerEnterButtonID");
-		
-		clickElement("authChangeModeLinkID_SI");
-		
-		checkText("authModeLabelID_SU", "Зарегистрироваться", "Check the label of Auth form for Sign Up");
-		checkText("authSubmitButtonID_SU", "ДАВИ НА ГАЗ!!!", "Check the submit button of Auth form for Sign Up");
-		checkText("authChangeModeLinkID_SU", "Есть аккаунт? Войти", "Check the change link label of Auth form for Sign Up");
-		
-		typeText("authEmailID_SU", "valentino.rossi@yamaha.jp");
-		typeText("authPasswordID_SU", "valerossi46");
-		typeText("authNameID_SU", "Valentino Rossi");
-		clickElement("authSubmitButtonID_SU");
-		
-		checkText("profileNameID", "Valentino Rossi", "Check the user's name on Profile page");
-		checkText("profileEmailID", "valentino.rossi@yamaha.jp", "Check the user's email on Profile page");
-		checkText("profileRoleID", "Пользователь", "Check the user's role on Profile page");
-		clickElement("profileLogoutButtonID");
-		
-		checkText("authModeLabelID_SI", "Войти", "Check the label of Auth form for Sign In");
-		checkText("authSubmitButtonID_SI", "ДАВИ НА ГАЗ!!!", "Check the submit button of Auth form for Sign In");
-		checkText("authChangeModeLinkID_SI", "Нет аккаунта? Создать", "Check the change link label of Auth form for Sign In");
+		clickElement(HEADER_ENTER_BUTTON);
+
+		clickElement(createID(AUTH_CHANGE_MODE_LINK, "SI"));
+		clickElement(createID(AUTH_CHANGE_MODE_LINK, "SU"));
+		clickElement(createID(AUTH_CHANGE_MODE_LINK, "SI"));
+
+		checkSignUpPanelControls();
+
+		typeText(createID(AUTH_EMAIL, "SU"), "valentino.rossi@yamaha.jp");
+		typeText(createID(AUTH_PASSWORD, "SU"), "valerossi46");
+		typeText(createID(AUTH_NAME, "SU"), "Valentino Rossi");
+		clickElement(createID(AUTH_SUBMIT_BUTTON, "SU"));
+
+		checkProfilePanelControls();
+		clickElement(PROFILE_LOGOUT_BUTTON);
+
+		checkSignInPanelControls();
 	}
 
 	public static void runTest(WebDriver webDriver) {
