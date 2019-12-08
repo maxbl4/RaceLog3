@@ -28,6 +28,21 @@ const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileP
     });
   };
 
+  const nameChangeHandler = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const value = event.target.value;
+    setName(value);
+    fireUpdateListener(value, bikeNumber);
+  };
+
+  const numberChangeHandler = (event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const value = parseInt(event.target.value ? event.target.value : "0");
+    setBikeNumber(value);
+    fireUpdateListener(name, value);
+  };
+
+  const addRemoveButtonClickHundler = () =>
+    props.handleButtonClick(props.profile.uuid, props.paintAddButton);
+
   return (
     <React.Fragment>
       <Container component="main" maxWidth="xs">
@@ -43,11 +58,7 @@ const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileP
                 value={name}
                 type="text"
                 label="ФИО"
-                onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-                  const value = event.target.value;
-                  setName(value);
-                  fireUpdateListener(value, bikeNumber);
-                }}
+                onChange={nameChangeHandler}
               />
             </Grid>
             <Grid item xs={3}>
@@ -59,18 +70,14 @@ const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileP
                 value={bikeNumber}
                 type="number"
                 label="№"
-                onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-                  const value = parseInt(event.target.value ? event.target.value : "0");
-                  setBikeNumber(value);
-                  fireUpdateListener(name, value);
-                }}
+                onChange={numberChangeHandler}
               />
             </Grid>
             <Grid item xs={1}>
               <IconButton
                 disabled={props.disabled}
                 color={props.paintAddButton ? "primary" : "secondary"}
-                onClick={() => props.handleButtonClick(props.profile.uuid, props.paintAddButton)}
+                onClick={addRemoveButtonClickHundler}
               >
                 {props.paintAddButton ? <AddCircleIcon /> : <RemoveCircleIcon />}
               </IconButton>
