@@ -16,6 +16,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Optional from "optional-js";
 import { RacerProfile } from "../../model/types/datatypes";
 import SpinnerButton from "../common/spinner-button";
+import { RACE_REGISTRATION_LIST_SUBMIT_BUTTON } from "../../model/utils/constants";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -60,8 +61,12 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
   const handleUpdateButtonClick = (): void => {
     const initialRegedProfiles = props.registeredProfiles.orElse([]);
     props.onRegistrationUpdate(
-      checkedProfiles.filter(value => initialRegedProfiles.find(profile => profile.uuid === value.uuid) === undefined),
-      initialRegedProfiles.filter(value => checkedProfiles.find(profile => profile.uuid === value.uuid) === undefined)
+      checkedProfiles.filter(
+        value => initialRegedProfiles.find(profile => profile.uuid === value.uuid) === undefined
+      ),
+      initialRegedProfiles.filter(
+        value => checkedProfiles.find(profile => profile.uuid === value.uuid) === undefined
+      )
     );
   };
 
@@ -109,6 +114,7 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
             })}
           </List>
           <SpinnerButton
+            id={RACE_REGISTRATION_LIST_SUBMIT_BUTTON}
             label="Обновить"
             showSpinner={props.isUpdating}
             handleClick={handleUpdateButtonClick}

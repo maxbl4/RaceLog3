@@ -10,7 +10,11 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 import SpinnerButton from "../common/spinner-button";
 import { RacerProfile } from "../../model/types/datatypes";
-import { generateUUID } from "../../model/utils/constants";
+import {
+  generateUUID,
+  RACER_PROFILES_LIST_EXPAND_BUTTON,
+  RACER_PROFILES_LIST_SUBMIT_BUTTON
+} from "../../model/utils/constants";
 import Optional from "optional-js";
 import { commonStyles } from "../styles/common";
 
@@ -22,12 +26,16 @@ const useStyles = makeStyles((theme: Theme) => {
   };
 });
 
-const createProfile = (userUUID: string): RacerProfile => ({
-  uuid: generateUUID(),
-  userUUID: Optional.of(userUUID),
+const createProfile = (order: number): RacerProfile => ({
+  uuid: (order + 1).toString(),
+  userUUID: Optional.empty<string>(),
   name: "",
   bikeNumber: 0
 });
+
+const initProfiles = (profiles: RacerProfile[], order: number): RacerProfile[] => {
+  return [...profiles, createProfile(order)];
+};
 
 type RacerProfilesListProps = {
   isFetching: boolean;
@@ -45,17 +53,25 @@ const RacerProfilesListComponent: React.FC<RacerProfilesListProps> = (
 ) => {
   const classes = useStyles();
   const [profiles, setProfiles] = useState<RacerProfile[]>(
-    props.initialProfiles.length === 0 ? [createProfile(props.userUUID)] : props.initialProfiles
+    initProfiles(props.initialProfiles, props.initialProfiles.length)
   );
   useEffect(() => {
-    setProfiles(props.initialProfiles.length === 0 ? [createProfile(props.userUUID)] : props.initialProfiles);
+    setProfiles(initProfiles(props.initialProfiles, props.initialProfiles.length));
   }, [props.initialProfiles, props.userUUID]);
 
   const handleProfilesUpdateButtonClick = (): void => {
     props.onProfilesUpdate(
-      profiles.filter(
-        profile => props.initialProfiles.find(value => value.uuid === profile.uuid) === undefined
-      ),
+      profiles
+        .filter(
+          profile =>
+            props.initialProfiles.find(value => value.uuid === profile.uuid) === undefined &&
+            profile.name
+        )
+        .map(profile => ({
+          ...profile,
+          uuid: generateUUID(),
+          userUUID: Optional.of(props.userUUID)
+        })),
       props.initialProfiles.filter(
         profile => profiles.find(value => value.uuid === profile.uuid) === undefined
       ),
@@ -74,7 +90,7 @@ const RacerProfilesListComponent: React.FC<RacerProfilesListProps> = (
 
   const handleAddRemoveButtonClick = (profileId: string, isAddButton: boolean): void => {
     if (isAddButton) {
-      setProfiles([...profiles, createProfile(props.userUUID)]);
+      setProfiles(initProfiles(profiles, profiles.length));
     } else {
       setProfiles(profiles.filter((item, index, array) => item.uuid !== profileId));
     }
@@ -85,7 +101,7 @@ const RacerProfilesListComponent: React.FC<RacerProfilesListProps> = (
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="racerProfile-content"
-        id="racerProfile-header"
+        id={RACER_PROFILES_LIST_EXPAND_BUTTON}
       >
         <Typography className={classes.heading}>Профили гонщика</Typography>
       </ExpansionPanelSummary>
@@ -102,6 +118,7 @@ const RacerProfilesListComponent: React.FC<RacerProfilesListProps> = (
             />
           ))}
           <SpinnerButton
+            id={RACER_PROFILES_LIST_SUBMIT_BUTTON}
             label="Обновить"
             showSpinner={props.isFetching}
             handleClick={handleProfilesUpdateButtonClick}

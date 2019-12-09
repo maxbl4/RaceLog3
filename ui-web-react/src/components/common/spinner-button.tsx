@@ -19,6 +19,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type SpinnerButtonProps = {
+  id: string;
   label: string;
   showSpinner: boolean;
   handleClick: () => void;
@@ -30,6 +31,7 @@ const SpinnerButton: React.FC<SpinnerButtonProps> = (props: SpinnerButtonProps) 
   return (
     <div className={classes.wrapper}>
       <Button
+        id={props.id}
         type="button"
         fullWidth
         variant="contained"

@@ -7,6 +7,11 @@ import TextField from "@material-ui/core/TextField";
 import IconButton from "@material-ui/core/IconButton";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import {
+  RACER_PROFILE_NAME,
+  RACER_PROFILE_BIKE_NUMBER,
+  RACER_PROFILE_ADD_REMOVE_BUTTON
+} from "../../model/utils/constants";
 
 type RacerProfileProps = {
   profile: RacerProfile;
@@ -19,6 +24,16 @@ type RacerProfileProps = {
 const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileProps) => {
   const [name, setName] = useState(props.profile.name);
   const [bikeNumber, setBikeNumber] = useState(props.profile.bikeNumber);
+
+  const createID = (fieldName: string): string => {
+    return (
+      fieldName +
+      "_" +
+      (props.profile.userUUID.isPresent()
+        ? props.profile.name + "_" + props.profile.bikeNumber
+        : props.profile.uuid)
+    );
+  };
 
   const fireUpdateListener = (name: string, bikeNumber: number): void => {
     props.handleUpdates({
@@ -53,7 +68,7 @@ const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileP
               <TextField
                 disabled={props.disabled}
                 required
-                id="name"
+                id={createID(RACER_PROFILE_NAME)}
                 variant="outlined"
                 value={name}
                 type="text"
@@ -65,7 +80,7 @@ const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileP
               <TextField
                 disabled={props.disabled}
                 required
-                id="bikeNumber"
+                id={createID(RACER_PROFILE_BIKE_NUMBER)}
                 variant="outlined"
                 value={bikeNumber}
                 type="number"
@@ -75,6 +90,7 @@ const RacerProfileComponent: React.FC<RacerProfileProps> = (props: RacerProfileP
             </Grid>
             <Grid item xs={1}>
               <IconButton
+                id={createID(RACER_PROFILE_ADD_REMOVE_BUTTON)}
                 disabled={props.disabled}
                 color={props.paintAddButton ? "primary" : "secondary"}
                 onClick={addRemoveButtonClickHundler}

@@ -32,6 +32,9 @@ public abstract class AuthBaseTest extends BaseTest {
 		checkText(PROFILE_NAME, "Valentino Rossi", "Check the user's name on Profile page");
 		checkText(PROFILE_EMAIL, "valentino.rossi@yamaha.jp", "Check the user's email on Profile page");
 		checkText(PROFILE_ROLE, "Пользователь", "Check the user's role on Profile page");
+		clickElement(RACER_PROFILES_LIST_EXPAND_BUTTON);
+		checkText(createID(RACER_PROFILE_NAME, "1"), "", "Check the name of new racer profile");
+		checkText(createID(RACER_PROFILE_BIKE_NUMBER, "1"), "", "Check the bike number of new racer profile");
 	}
 
 }
