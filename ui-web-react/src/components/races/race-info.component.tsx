@@ -6,7 +6,12 @@ import {
   UserInfo,
   INITIAL_USER_INFO
 } from "../../model/types/datatypes";
-import { DEFAULT_ID } from "../../model/utils/constants";
+import {
+  DEFAULT_ID,
+  RACE_ITEM_INFO_NAME,
+  RACE_ITEM_INFO_DATE_LOCATION,
+  RACE_ITEM_INFO_DESCR
+} from "../../model/utils/constants";
 import { FetchingComponent } from "../common/fetching.component";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -78,15 +83,25 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Paper className={classes.paperTop}>
-          <Typography component="h2" variant="h4" color="primary" gutterBottom>
+          <Typography
+            id={RACE_ITEM_INFO_NAME}
+            component="h2"
+            variant="h4"
+            color="primary"
+            gutterBottom
+          >
             {props.raceItemExt.name}
           </Typography>
-          <Typography component="p" variant="h6">
+          <Typography id={RACE_ITEM_INFO_DATE_LOCATION} component="p" variant="h6">
             {`${props.raceItemExt.location}, ${new Date(
               props.raceItemExt.date
             ).toLocaleDateString()}`}
           </Typography>
-          <Typography color="textSecondary" className={classes.justifyText}>
+          <Typography
+            id={RACE_ITEM_INFO_DESCR}
+            color="textSecondary"
+            className={classes.justifyText}
+          >
             {props.raceItemExt.description}
           </Typography>
         </Paper>

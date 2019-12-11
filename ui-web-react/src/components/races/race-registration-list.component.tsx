@@ -16,7 +16,11 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Optional from "optional-js";
 import { RacerProfile } from "../../model/types/datatypes";
 import SpinnerButton from "../common/spinner-button";
-import { RACE_REGISTRATION_LIST_SUBMIT_BUTTON } from "../../model/utils/constants";
+import {
+  RACE_REGISTRATION_LIST_SUBMIT_BUTTON,
+  RACE_REGISTRATION_LIST_EXPAND_BUTTON,
+  RACE_REGISTRATION_LIST_PROFILE_ITEM
+} from "../../model/utils/constants";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -75,7 +79,7 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="raceRegistration-content"
-        id="raceRegistration-header"
+        id={RACE_REGISTRATION_LIST_EXPAND_BUTTON}
       >
         <Typography className={classes.heading}>
           {!props.loggedIn
@@ -89,7 +93,7 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
         <Container component="main" maxWidth="xs" className={classes.profileContainer}>
           <List>
             {profiles.map((value, index, array) => {
-              const labelId = "checkbox-list-label-" + value.uuid;
+              const labelId = RACE_REGISTRATION_LIST_PROFILE_ITEM + "_" + value.name;
               return (
                 <ListItem
                   key={value.uuid}

@@ -31,8 +31,15 @@ public abstract class BaseTest {
 	protected final static String RACER_PROFILE_ADD_REMOVE_BUTTON = "racerProfileAddRemoveButton";
 	protected final static String RACER_PROFILES_LIST_EXPAND_BUTTON = "racerProfilesListExpandButton";
 	protected final static String RACER_PROFILES_LIST_SUBMIT_BUTTON = "racerProfilesListSubmitButton";
-	protected final static String RACE_REGISTRATION_LIST_EXPAND_PARTICIPANTS_BUTTON = "raceRegistrationListExpandParticipantsButton";
-	protected final static String RACE_REGISTRATION_LIST_EXPAND_PROFILES_BUTTON = "raceRegistrationListExpandProfilesButton";
+	protected final static String RACE_ITEM_CARD_NAME = "raceItemCardName";
+	protected final static String RACE_ITEM_CARD_DATE = "raceItemCardDate";
+	protected final static String RACE_ITEM_CARD_MORE_BUTTON = "raceItemCardMoreButton";
+	protected final static String RACE_ITEM_INFO_NAME = "raceItemInfoName";
+	protected final static String RACE_ITEM_INFO_DATE_LOCATION = "raceItemInfoDateLocationa";
+	protected final static String RACE_ITEM_INFO_DESCR = "raceItemInfoDescr";
+	protected final static String RACE_PARTICIPANTS_LIST_EXPAND_BUTTON = "raceParticipantsListExpandButton";
+	protected final static String RACE_REGISTRATION_LIST_PROFILE_ITEM = "raceRegistrationListProfileItem";
+	protected final static String RACE_REGISTRATION_LIST_EXPAND_BUTTON = "raceRegistrationListExpandButton";
 	protected final static String RACE_REGISTRATION_LIST_SUBMIT_BUTTON = "raceRegistrationListSubmitButton";
 
 	private WebDriver webDriver;
