@@ -8,10 +8,6 @@ public abstract class AuthBaseTest extends BaseTest {
 		super(webDriver);
 	}
 
-	protected String createID(String fieldId, String postfix) {
-		return fieldId + "_" + postfix;
-	}
-
 	protected void checkSignInPanelControls() {
 		checkText(createID(AUTH_MODE_LABEL, "SI"), "Войти", "Check the label of Auth form for Sign In");
 		checkText(createID(AUTH_SUBMIT_BUTTON, "SI"), "ДАВИ НА ГАЗ!!!",

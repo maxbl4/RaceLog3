@@ -13,6 +13,7 @@ public abstract class BaseTest {
 	
 	protected final static String HEADER_ENTER_BUTTON = "headerEnterButtonID";
 	protected final static String HEADER_ACCOUNT_BUTTON = "headerAccountButtonID";
+	protected final static String HEADER_MENU_BUTTON = "headerMenuButtonID";
 	protected final static String LIST_ITEM_HOME_BUTTON = "listItemHomeButtonID";
 	protected final static String LIST_ITEM_ENTER_BUTTON = "listItemEnterButtonID";
 	protected final static String LIST_ITEM_ACCOUNT_BUTTON = "listItemAccountButtonID";
@@ -74,6 +75,10 @@ public abstract class BaseTest {
 	protected String getTestName() {
 		return getClass().getSimpleName();
 	}
+	
+	protected String createID(String fieldId, String postfix) {
+		return fieldId + "_" + postfix;
+	}
 
 	protected void clickElement(String fieldID) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
@@ -90,6 +95,14 @@ public abstract class BaseTest {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
 		Assert.assertTrue(element.isEnabled());
 		element.sendKeys(value);;
+	}
+	
+	protected void sleep() {
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

@@ -112,7 +112,10 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
                       inputProps={{ "aria-labelledby": labelId }}
                     />
                   </ListItemIcon>
-                  <ListItemText id={labelId} primary={value.name} />
+                  <ListItemText
+                    primary={value.name}
+                    primaryTypographyProps={{ id: labelId + "_label" }}
+                  />
                 </ListItem>
               );
             })}

@@ -50,6 +50,7 @@ public class Main {
 	private void start() {
 		AuthSignInTest.runTest(webDriver);
 		AuthSignUpTest.runTest(webDriver);
+		MainPageTest.runTest(webDriver);
 		webDriver.quit();
 	}
 

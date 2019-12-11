@@ -26,7 +26,8 @@ import {
   HEADER_ACCOUNT_BUTTON,
   LIST_ITEM_HOME_BUTTON,
   LIST_ITEM_ACCOUNT_BUTTON,
-  LIST_ITEM_ENTER_BUTTON
+  LIST_ITEM_ENTER_BUTTON,
+  HEADER_MENU_BUTTON
 } from "../../model/utils/constants";
 
 const useStyles = makeStyles(theme => ({
@@ -82,7 +83,10 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
-          <ListItemText primary={"Домой"} />
+          <ListItemText
+            primary={"Домой"}
+            primaryTypographyProps={{ id: LIST_ITEM_HOME_BUTTON + "_label" }}
+          />
         </ListItem>
         {props.userInfo
           .map(info => (
@@ -95,7 +99,10 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
               <ListItemIcon>
                 <AccountCircle />
               </ListItemIcon>
-              <ListItemText primary={"Профиль"} />
+              <ListItemText
+                primary={"Профиль"}
+                primaryTypographyProps={{ id: LIST_ITEM_ACCOUNT_BUTTON + "_label" }}
+              />
             </ListItem>
           ))
           .orElse(
@@ -108,7 +115,10 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
               <ListItemIcon>
                 <ExitToAppIcon />
               </ListItemIcon>
-              <ListItemText primary={"Войти"} />
+              <ListItemText
+                primary={"Войти"}
+                primaryTypographyProps={{ id: LIST_ITEM_ENTER_BUTTON + "_label" }}
+              />
             </ListItem>
           )}
       </List>
@@ -123,6 +133,7 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
       <AppBar position="static">
         <Toolbar>
           <IconButton
+            id={HEADER_MENU_BUTTON}
             edge="start"
             className={classes.menuButton}
             color="inherit"

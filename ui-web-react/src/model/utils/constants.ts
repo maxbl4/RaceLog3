@@ -56,6 +56,7 @@ export const getLogLevel = (): string => {
 // Components IDs
 export const HEADER_ENTER_BUTTON = "headerEnterButtonID";
 export const HEADER_ACCOUNT_BUTTON = "headerAccountButtonID";
+export const HEADER_MENU_BUTTON = "headerMenuButtonID";
 export const LIST_ITEM_HOME_BUTTON = "listItemHomeButtonID";
 export const LIST_ITEM_ENTER_BUTTON = "listItemEnterButtonID";
 export const LIST_ITEM_ACCOUNT_BUTTON = "listItemAccountButtonID";
