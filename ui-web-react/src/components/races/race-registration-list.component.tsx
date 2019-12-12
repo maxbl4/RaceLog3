@@ -19,7 +19,8 @@ import SpinnerButton from "../common/spinner-button";
 import {
   RACE_REGISTRATION_LIST_SUBMIT_BUTTON,
   RACE_REGISTRATION_LIST_EXPAND_BUTTON,
-  RACE_REGISTRATION_LIST_PROFILE_ITEM
+  RACE_REGISTRATION_LIST_PROFILE_ITEM,
+  RACE_REGISTRATION_LIST_HEADER
 } from "../../model/utils/constants";
 
 const useStyles = makeStyles((theme: Theme) => {
@@ -81,7 +82,7 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
         aria-controls="raceRegistration-content"
         id={RACE_REGISTRATION_LIST_EXPAND_BUTTON}
       >
-        <Typography className={classes.heading}>
+        <Typography id={RACE_REGISTRATION_LIST_HEADER} className={classes.heading}>
           {!props.loggedIn
             ? "Войдите для регистрации"
             : props.allProfiles.isPresent()

@@ -83,6 +83,7 @@ export const RACE_ITEM_INFO_DATE_LOCATION = "raceItemInfoDateLocationa";
 export const RACE_ITEM_INFO_DESCR = "raceItemInfoDescr";
 export const RACE_PARTICIPANTS_LIST_EXPAND_BUTTON = "raceParticipantsListExpandButton";
 export const RACE_REGISTRATION_LIST_PROFILE_ITEM = "raceRegistrationListProfileItem";
+export const RACE_REGISTRATION_LIST_HEADER = "raceRegistrationListHeader";
 export const RACE_REGISTRATION_LIST_EXPAND_BUTTON = "raceRegistrationListExpandButton";
 export const RACE_REGISTRATION_LIST_SUBMIT_BUTTON = "raceRegistrationListSubmitButton";
 export const ALERT_HEADER = "alertHeader";

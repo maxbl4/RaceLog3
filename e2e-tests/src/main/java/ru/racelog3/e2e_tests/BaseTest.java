@@ -40,6 +40,7 @@ public abstract class BaseTest {
 	protected final static String RACE_ITEM_INFO_DESCR = "raceItemInfoDescr";
 	protected final static String RACE_PARTICIPANTS_LIST_EXPAND_BUTTON = "raceParticipantsListExpandButton";
 	protected final static String RACE_REGISTRATION_LIST_PROFILE_ITEM = "raceRegistrationListProfileItem";
+	protected final static String RACE_REGISTRATION_LIST_HEADER = "raceRegistrationListHeader";
 	protected final static String RACE_REGISTRATION_LIST_EXPAND_BUTTON = "raceRegistrationListExpandButton";
 	protected final static String RACE_REGISTRATION_LIST_SUBMIT_BUTTON = "raceRegistrationListSubmitButton";
 	protected final static String ALERT_HEADER = "alertHeader";
@@ -97,10 +98,26 @@ public abstract class BaseTest {
 		Assert.assertEquals(assertText, value, element.getText());
 	}
 	
+	protected void checkEnabled(String fieldID, boolean enabled) {
+		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
+		if (enabled) {
+			Assert.assertTrue(element.isEnabled());
+		} else {
+			Assert.assertFalse(element.isEnabled());
+		}
+	}
+	
 	protected void typeText(String fieldID, String value) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
 		Assert.assertTrue(element.isEnabled());
 		element.sendKeys(value);;
+	}
+	
+	protected void backToHomePage() {
+		clickElement(HEADER_MENU_BUTTON);
+		sleep();
+		clickElement(LIST_ITEM_HOME_BUTTON);
+		sleep();
 	}
 	
 	protected void sleep() {
