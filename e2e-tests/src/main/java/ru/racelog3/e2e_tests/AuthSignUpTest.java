@@ -29,7 +29,7 @@ public class AuthSignUpTest extends AuthBaseTest {
 		checkSignInPanelControls();
 	}
 
-	public static void runTest(WebDriver webDriver) {
+	static void runTest(WebDriver webDriver) {
 		new AuthSignUpTest(webDriver).runTestImpl();
 	}
 

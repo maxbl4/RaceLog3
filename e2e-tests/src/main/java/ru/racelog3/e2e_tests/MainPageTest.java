@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver;
 
 public class MainPageTest extends BaseTest {
 
-	public MainPageTest(WebDriver webDriver) {
+	private MainPageTest(WebDriver webDriver) {
 		super(webDriver);
 		// TODO Auto-generated constructor stub
 	}
@@ -39,7 +39,7 @@ public class MainPageTest extends BaseTest {
 		checkText(createID(LIST_ITEM_ACCOUNT_BUTTON, "label"), "Профиль", "Check Account button");
 	}
 
-	public static void runTest(WebDriver webDriver) {
+	static void runTest(WebDriver webDriver) {
 		new MainPageTest(webDriver).runTestImpl();
 	}
 

@@ -42,6 +42,8 @@ public abstract class BaseTest {
 	protected final static String RACE_REGISTRATION_LIST_PROFILE_ITEM = "raceRegistrationListProfileItem";
 	protected final static String RACE_REGISTRATION_LIST_EXPAND_BUTTON = "raceRegistrationListExpandButton";
 	protected final static String RACE_REGISTRATION_LIST_SUBMIT_BUTTON = "raceRegistrationListSubmitButton";
+	protected final static String ALERT_HEADER = "alertHeader";
+	protected final static String ALERT_CONTENT = "alertContent";
 
 	private WebDriver webDriver;
 	private WebDriverWait wait;
@@ -62,12 +64,12 @@ public abstract class BaseTest {
 	}
 
 	protected void beforeTest() {
-		System.out.println("Start test for " + getTestName());
+		System.out.println("Test: " + getTestName());
 		getDriver().get("localhost:3000");
 	}
 
 	protected void afterTest() {
-		System.out.println("End test for " + getTestName());
+		// TODO
 	}
 
 	protected abstract void testBody();
@@ -78,6 +80,10 @@ public abstract class BaseTest {
 	
 	protected String createID(String fieldId, String postfix) {
 		return fieldId + "_" + postfix;
+	}
+	
+	protected void checkElement(String fieldID) {
+		wait.until(presenceOfElementLocated(By.id(fieldID)));
 	}
 
 	protected void clickElement(String fieldID) {

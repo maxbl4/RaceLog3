@@ -4,7 +4,7 @@ import org.openqa.selenium.WebDriver;
 
 public abstract class AuthBaseTest extends BaseTest {
 
-	public AuthBaseTest(WebDriver webDriver) {
+	protected AuthBaseTest(WebDriver webDriver) {
 		super(webDriver);
 	}
 

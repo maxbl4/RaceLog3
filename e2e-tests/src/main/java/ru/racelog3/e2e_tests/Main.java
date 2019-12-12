@@ -51,6 +51,8 @@ public class Main {
 		AuthSignInTest.runTest(webDriver);
 		AuthSignUpTest.runTest(webDriver);
 		MainPageTest.runTest(webDriver);
+		RaceInfoTest.runTest(webDriver);
+		
 		webDriver.quit();
 	}
 
