@@ -110,7 +110,7 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
                       checked={checkedProfiles.find(curr => curr.uuid === value.uuid) !== undefined}
                       tabIndex={-1}
                       disableRipple
-                      inputProps={{ "aria-labelledby": labelId }}
+                      inputProps={{ id: labelId }}
                     />
                   </ListItemIcon>
                   <ListItemText

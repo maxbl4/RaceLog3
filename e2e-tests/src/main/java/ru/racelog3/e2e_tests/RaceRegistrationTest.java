@@ -4,6 +4,11 @@ import org.openqa.selenium.WebDriver;
 
 public class RaceRegistrationTest extends BaseTest {
 
+	private static final String RACER_1_NAME = "ValeRoss";
+	private static final String RACER_1_BIKE_NUMBER = "46";
+	private static final String RACER_2_NAME = "RossVale";
+	private static final String RACER_2_BIKE_NUMBER = "64";
+
 	private RaceRegistrationTest(WebDriver webDriver) {
 		super(webDriver);
 	}
@@ -11,25 +16,34 @@ public class RaceRegistrationTest extends BaseTest {
 	@Override
 	protected void testBody() {
 		String registrationPanelHeader = "Войдите для регистрации";
-		checkRaceInfoState("Grand Prix of France", registrationPanelHeader);
-		checkRaceInfoState("Grand Prix of Catalunya", registrationPanelHeader);
+		checkRaceInfoState(RACE_1_NAME, registrationPanelHeader);
+		checkRaceInfoState(RACE_2_NAME, registrationPanelHeader);
 		checkRaceInfoState("Grand Prix of Germany", registrationPanelHeader);
 
 		login();
 		backToHomePage();
 
 		registrationPanelHeader = "Создайте профиль для регистрации";
-		checkRaceInfoState("Grand Prix of France", registrationPanelHeader);
-		checkRaceInfoState("Grand Prix of Catalunya", registrationPanelHeader);
-		checkRaceInfoState("Grand Prix of Germany", registrationPanelHeader);
-		
-		// create 2 profiles
-		// register first one in France
-		// register second one in Spain
-		// check correct registration
-		// - France has only first profile
-		// - Spain has only second profile
-		// - Germany does not have registered profiles
+		checkRaceInfoState(RACE_1_NAME, registrationPanelHeader);
+		checkRaceInfoState(RACE_2_NAME, registrationPanelHeader);
+		checkRaceInfoState(RACE_3_NAME, registrationPanelHeader);
+
+		goToProfilePage();
+		clickElement(RACER_PROFILES_LIST_EXPAND_BUTTON);
+		addRacerProfile(RACER_1_NAME, RACER_1_BIKE_NUMBER, "1");
+		addRacerProfile(RACER_2_NAME, RACER_2_BIKE_NUMBER, "2");
+
+		registerRacer(RACE_1_NAME, RACER_1_NAME);
+		registerRacer(RACE_2_NAME, RACER_2_NAME);
+		registerRacer(RACE_3_NAME, RACER_1_NAME);
+		registerRacer(RACE_3_NAME, RACER_2_NAME);
+
+		checkRegistration(RACE_1_NAME, new String[] { RACER_1_NAME }, new String[] { RACER_1_BIKE_NUMBER });
+		checkRegistration(RACE_2_NAME, new String[] { RACER_2_NAME }, new String[] { RACER_2_BIKE_NUMBER });
+		checkRegistration(RACE_3_NAME, new String[] { RACER_1_NAME, RACER_2_NAME },
+				new String[] { RACER_1_BIKE_NUMBER, RACER_2_BIKE_NUMBER });
+		checkRegistration(RACE_4_NAME, new String[] {}, new String[] {});
+
 		// rename first profile and check
 		// - France has renamed profile
 		// - Spain has old registered profile
@@ -42,6 +56,43 @@ public class RaceRegistrationTest extends BaseTest {
 		// - France does not have registered profiles
 		// - Spain does not have registered profiles
 		// - Germany does not have registered profiles
+	}
+
+	private void checkRegistration(String raceName, String[] racerNames, String[] racerBikeNumbers) {
+		backToHomePage();
+		clickElement(createID(RACE_ITEM_CARD_MORE_BUTTON, raceName));
+
+		clickElement(RACE_PARTICIPANTS_LIST_EXPAND_BUTTON);
+		clickElement(RACE_REGISTRATION_LIST_EXPAND_BUTTON);
+
+		// TODO check corresponding checkbox
+		// TODO check racer's table
+	}
+
+	private void registerRacer(String raceName, String racerName) {
+		backToHomePage();
+		clickElement(createID(RACE_ITEM_CARD_MORE_BUTTON, raceName));
+
+		clickElement(RACE_PARTICIPANTS_LIST_EXPAND_BUTTON);
+		clickElement(RACE_REGISTRATION_LIST_EXPAND_BUTTON);
+		sleep();
+
+		clickElement(createID(RACE_REGISTRATION_LIST_PROFILE_ITEM, racerName));
+		clickElement(RACE_REGISTRATION_LIST_SUBMIT_BUTTON);
+
+		checkText(ALERT_HEADER, "Регистрация на гонку", "Check update registration alert header");
+		checkText(ALERT_CONTENT, "Регистрация прошла успешно", "Check update registration alert content");
+	}
+
+	private void addRacerProfile(String name, String bikeNumber, String order) {
+		typeText(createID(RACER_PROFILE_NAME, order), name);
+		typeText(createID(RACER_PROFILE_BIKE_NUMBER, order), bikeNumber);
+		clickElement(createID(RACER_PROFILE_ADD_REMOVE_BUTTON, order));
+
+		clickElement(RACER_PROFILES_LIST_SUBMIT_BUTTON);
+
+		checkText(ALERT_HEADER, "Профили гонщика", "Check update racer profile alert header");
+		checkText(ALERT_CONTENT, "Данные успешно обновлены", "Check update racer profile alert content");
 	}
 
 	private void login() {

@@ -11,14 +11,10 @@ public class MainPageTest extends BaseTest {
 
 	@Override
 	protected void testBody() {
-		checkText(createID(RACE_ITEM_CARD_NAME, "Grand Prix of France"), "Grand Prix of France",
-				"Check the race in France");
-		checkText(createID(RACE_ITEM_CARD_NAME, "Grand Prix of Catalunya"), "Grand Prix of Catalunya",
-				"Check the race in Catalunya");
-		checkText(createID(RACE_ITEM_CARD_NAME, "Grand Prix of Germany"), "Grand Prix of Germany",
-				"Check the race in Germany");
-		checkText(createID(RACE_ITEM_CARD_NAME, "Grand Prix of Great Britain"), "Grand Prix of Great Britain",
-				"Check the race in Great Britain");
+		checkText(createID(RACE_ITEM_CARD_NAME, RACE_1_NAME), RACE_1_NAME, "Check the race in France");
+		checkText(createID(RACE_ITEM_CARD_NAME, RACE_2_NAME), RACE_2_NAME, "Check the race in Catalunya");
+		checkText(createID(RACE_ITEM_CARD_NAME, RACE_3_NAME), RACE_3_NAME, "Check the race in Germany");
+		checkText(createID(RACE_ITEM_CARD_NAME, RACE_4_NAME), RACE_4_NAME, "Check the race in Great Britain");
 
 		checkText(HEADER_ENTER_BUTTON, "ВОЙТИ", "Check Enter button");
 

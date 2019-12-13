@@ -45,6 +45,11 @@ public abstract class BaseTest {
 	protected final static String RACE_REGISTRATION_LIST_SUBMIT_BUTTON = "raceRegistrationListSubmitButton";
 	protected final static String ALERT_HEADER = "alertHeader";
 	protected final static String ALERT_CONTENT = "alertContent";
+	
+	protected final static String RACE_1_NAME = "Grand Prix of France";
+	protected final static String RACE_2_NAME = "Grand Prix of Catalunya";
+	protected final static String RACE_3_NAME = "Grand Prix of Germany";
+	protected final static String RACE_4_NAME = "Grand Prix of Great Britain";
 
 	private WebDriver webDriver;
 	private WebDriverWait wait;
@@ -114,18 +119,30 @@ public abstract class BaseTest {
 	}
 	
 	protected void backToHomePage() {
+		selectHeaderSliderPanelButton(LIST_ITEM_HOME_BUTTON);
+	}
+	
+	protected void goToProfilePage() {
+		selectHeaderSliderPanelButton(LIST_ITEM_ACCOUNT_BUTTON);
+	}
+	
+	private void selectHeaderSliderPanelButton(String buttonID) {
 		clickElement(HEADER_MENU_BUTTON);
 		sleep();
-		clickElement(LIST_ITEM_HOME_BUTTON);
+		clickElement(buttonID);
 		sleep();
 	}
 	
-	protected void sleep() {
+	protected void sleep(long millis) {
 		try {
-			Thread.sleep(100);
+			Thread.sleep(millis);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void sleep() {
+		sleep(100);
 	}
 
 }
