@@ -151,5 +151,13 @@ public abstract class BaseTest {
 			e.printStackTrace();
 		}
 	}
+	
+	protected void step(String descr) {
+		System.out.println("    " + descr);
+	}
+	
+	protected void substep(String descr) {
+		System.out.println("        " + descr);
+	}
 
 }
