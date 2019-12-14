@@ -8,6 +8,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import Tooltip from "@material-ui/core/Tooltip";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -20,6 +21,14 @@ import ListItemText from "@material-ui/core/ListItemText";
 // @ts-ignore
 import { useHistory } from "react-router-dom";
 import { getRoleName } from "../../model/types/roles.model";
+import {
+  HEADER_ENTER_BUTTON,
+  HEADER_ACCOUNT_BUTTON,
+  LIST_ITEM_HOME_BUTTON,
+  LIST_ITEM_ACCOUNT_BUTTON,
+  LIST_ITEM_ENTER_BUTTON,
+  HEADER_MENU_BUTTON
+} from "../../model/utils/constants";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -65,12 +74,53 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
       onKeyDown={toggleDrawer(false)}
     >
       <List>
-        <ListItem button key={"Домой"} onClick={() => reRouteTo(DEFAULT)}>
+        <ListItem
+          id={LIST_ITEM_HOME_BUTTON}
+          button
+          key={"Домой"}
+          onClick={() => reRouteTo(DEFAULT)}
+        >
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
-          <ListItemText primary={"Домой"} />
+          <ListItemText
+            primary={"Домой"}
+            primaryTypographyProps={{ id: LIST_ITEM_HOME_BUTTON + "_label" }}
+          />
         </ListItem>
+        {props.userInfo
+          .map(info => (
+            <ListItem
+              id={LIST_ITEM_ACCOUNT_BUTTON}
+              button
+              key={"Профиль"}
+              onClick={() => reRouteTo(USER_PROFILE)}
+            >
+              <ListItemIcon>
+                <AccountCircle />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Профиль"}
+                primaryTypographyProps={{ id: LIST_ITEM_ACCOUNT_BUTTON + "_label" }}
+              />
+            </ListItem>
+          ))
+          .orElse(
+            <ListItem
+              id={LIST_ITEM_ENTER_BUTTON}
+              button
+              key={"Войти"}
+              onClick={() => reRouteTo(USER_SIGN_IN)}
+            >
+              <ListItemIcon>
+                <ExitToAppIcon />
+              </ListItemIcon>
+              <ListItemText
+                primary={"Войти"}
+                primaryTypographyProps={{ id: LIST_ITEM_ENTER_BUTTON + "_label" }}
+              />
+            </ListItem>
+          )}
       </List>
     </div>
   );
@@ -83,6 +133,7 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
       <AppBar position="static">
         <Toolbar>
           <IconButton
+            id={HEADER_MENU_BUTTON}
             edge="start"
             className={classes.menuButton}
             color="inherit"
@@ -98,6 +149,7 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
             .map(info => (
               <Tooltip title={`${info.name} (${getRoleName(info.role)}, ${info.email})`}>
                 <IconButton
+                  id={HEADER_ACCOUNT_BUTTON}
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
@@ -109,7 +161,11 @@ const HeaderComponent: React.FC<HeaderComponentProps> = (props: HeaderComponentP
               </Tooltip>
             ))
             .orElse(
-              <Button color="inherit" onClick={() => reRouteTo(USER_SIGN_IN)}>
+              <Button
+                id={HEADER_ENTER_BUTTON}
+                color="inherit"
+                onClick={() => reRouteTo(USER_SIGN_IN)}
+              >
                 Войти
               </Button>
             )}

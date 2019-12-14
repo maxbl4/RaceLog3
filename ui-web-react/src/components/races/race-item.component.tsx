@@ -9,6 +9,11 @@ import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 // @ts-ignore
 import { useHistory } from "react-router-dom";
+import {
+  RACE_ITEM_CARD_NAME,
+  RACE_ITEM_CARD_DATE,
+  RACE_ITEM_CARD_MORE_BUTTON
+} from "../../model/utils/constants";
 
 const useStyles = makeStyles({
   card: {
@@ -30,19 +35,31 @@ const RaceItemComponent: React.FC<RaceItemProps> = (props: RaceItemProps) => {
   const classes = useStyles();
   const history = useHistory();
   const reRouteTo = (path: string): void => history.push(path);
+  const createID = (fieldID: string): string => fieldID + "_" + props.item.name;
 
   return (
     <Card className={classes.card}>
       <CardContent>
-        <Typography className={classes.title} color="textSecondary" gutterBottom>
+        <Typography
+          id={createID(RACE_ITEM_CARD_DATE)}
+          className={classes.title}
+          color="textSecondary"
+          gutterBottom
+        >
           {new Date(props.item.date).toLocaleDateString()}
         </Typography>
-        <Typography variant="h5" component="h2" className={classes.pos}>
+        <Typography
+          id={createID(RACE_ITEM_CARD_NAME)}
+          variant="h5"
+          component="h2"
+          className={classes.pos}
+        >
           {props.item.name}
         </Typography>
       </CardContent>
       <CardActions>
         <Button
+          id={createID(RACE_ITEM_CARD_MORE_BUTTON)}
           size="small"
           onClick={() => reRouteTo(RACES + DELIMITER + props.item.id)}
         >

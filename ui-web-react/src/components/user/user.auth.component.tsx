@@ -1,6 +1,6 @@
 import React from "react";
 import { UserInfo, User } from "../../model/types/datatypes";
-import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
+import { INITIAL_USER_INFO } from "../../model/types/datatypes";
 import { Formik, Form, FormikProps, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import Avatar from "@material-ui/core/Avatar";
@@ -11,13 +11,21 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import Container from "@material-ui/core/Container";
 import Grid from "@material-ui/core/Grid";
-import Paper from '@material-ui/core/Paper';
+import Paper from "@material-ui/core/Paper";
 import { makeStyles } from "@material-ui/core/styles";
 import { FetchingComponent } from "../common/fetching.component";
 import { Redirect } from "react-router";
 import { USER_PROFILE, USER_SIGN_UP, USER_SIGN_IN } from "../../model/routing/paths";
 import { Link } from "react-router-dom";
 import { commonStyles } from "../styles/common";
+import {
+  AUTH_EMAIL,
+  AUTH_PASSWORD,
+  AUTH_NAME,
+  AUTH_CHANGE_MODE_LINK,
+  AUTH_SUBMIT_BUTTON,
+  AUTH_MODE_LABEL
+} from "../../model/utils/constants";
 
 const emailSchema = Yup.string()
   .email("Неверный формат почты")
@@ -67,12 +75,11 @@ const useStyles = makeStyles(theme => {
     submit: {
       margin: theme.spacing(3, 0, 2)
     }
-  }
+  };
 });
 
 const isSignInMode = (mode: AuthMode): boolean => mode === AuthMode.SIGN_IN;
-
-const getControlID = (mode: AuthMode, name: string): string => name + "_" + mode;
+const getID = (fieldID: string, mode: AuthMode): string => fieldID + (mode === AuthMode.SIGN_IN ? "_SI" : "_SU");
 
 const getErrorText = (
   formikBag: FormikProps<UserInfoValues>,
@@ -95,7 +102,7 @@ const renderField = (
   fieldName: string,
   fieldType: string,
   label: string,
-  mode: AuthMode
+  fieldId: string
 ): JSX.Element => {
   const hasErrors =
     formikBag.touched.hasOwnProperty(fieldName) && formikBag.errors.hasOwnProperty(fieldName);
@@ -105,7 +112,7 @@ const renderField = (
         <TextField
           fullWidth
           variant="outlined"
-          id={getControlID(mode, fieldName)}
+          id={fieldId}
           label={label}
           name={fieldName}
           error={hasErrors}
@@ -114,6 +121,7 @@ const renderField = (
           autoComplete={fieldName}
           helperText={hasErrors ? getErrorText(formikBag, fieldName) : null}
           type={fieldType}
+          inputProps={{ "data-testid": fieldName + "-testid" }}
         />
       </Grid>
     </>
@@ -142,7 +150,7 @@ const UserAuthComponent: React.FC<UserAuthComponentProps> = (props: UserAuthComp
               <Avatar className={classes.avatar}>
                 <LockOutlinedIcon />
               </Avatar>
-              <Typography component="h1" variant="h5">
+              <Typography id={getID(AUTH_MODE_LABEL, props.mode)} component="h1" variant="h5">
                 {isSignInMode(props.mode) ? "Войти" : "Зарегистрироваться"}
               </Typography>
               <Formik
@@ -167,14 +175,15 @@ const UserAuthComponent: React.FC<UserAuthComponentProps> = (props: UserAuthComp
                 {(formikBag: FormikProps<UserInfoValues>) => (
                   <Form className={classes.form}>
                     <Grid container spacing={2}>
-                      {renderField(formikBag, "email", "email", "Почта", props.mode)}
-                      {renderField(formikBag, "password", "password", "Пароль", props.mode)}
+                      {renderField(formikBag, "email", "email", "Почта", getID(AUTH_EMAIL, props.mode))}
+                      {renderField(formikBag, "password", "password", "Пароль", getID(AUTH_PASSWORD, props.mode))}
 
                       {!isSignInMode(props.mode) &&
-                        renderField(formikBag, "name", "text", "Имя", props.mode)}
+                        renderField(formikBag, "name", "text", "Имя", getID(AUTH_NAME, props.mode))}
                     </Grid>
 
                     <Button
+                      id={getID(AUTH_SUBMIT_BUTTON, props.mode)}
                       type="submit"
                       fullWidth
                       variant="contained"
@@ -186,7 +195,10 @@ const UserAuthComponent: React.FC<UserAuthComponentProps> = (props: UserAuthComp
 
                     <Grid container justify="flex-end">
                       <Grid item>
-                        <Link to={isSignInMode(props.mode) ? USER_SIGN_UP : USER_SIGN_IN}>
+                        <Link
+                          id={getID(AUTH_CHANGE_MODE_LINK, props.mode)}
+                          to={isSignInMode(props.mode) ? USER_SIGN_UP : USER_SIGN_IN}
+                        >
                           {isSignInMode(props.mode)
                             ? "Нет аккаунта? Создать"
                             : "Есть аккаунт? Войти"}

@@ -1,4 +1,4 @@
-import { RacerProfiles, RacerProfile } from "../types/datatypes";
+import { RacerProfiles, RacerProfile, INITIAL_RACER_PROFILES } from "../types/datatypes";
 import Optional from "optional-js";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
@@ -9,11 +9,6 @@ import {
   RACER_PROFILES_REQUEST_FAILED,
   RACER_PROFILES_UPDATE_RECEIVED
 } from "../actions/racerProfiles.actions";
-
-export const INITIAL_RACER_PROFILES: RacerProfiles = {
-  isFetching: false,
-  items: Optional.empty<RacerProfile[]>()
-};
 
 export function racerProfilesReducer(
   state: RacerProfiles = INITIAL_RACER_PROFILES,

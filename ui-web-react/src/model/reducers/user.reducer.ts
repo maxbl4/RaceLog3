@@ -1,4 +1,4 @@
-import { User, UserInfo } from "../types/datatypes";
+import { User, UserInfo, INITIAL_USER } from "../types/datatypes";
 import Optional from "optional-js";
 import { AnyAction } from "redux";
 import {
@@ -10,19 +10,6 @@ import {
   UserInfoAuthorizedAction
 } from "../actions/user.actions";
 import { LoggingService } from "../utils/logging-service";
-
-export const INITIAL_USER: User = {
-  isFetching: false,
-  info: Optional.empty<UserInfo>()
-};
-
-export const INITIAL_USER_INFO: UserInfo = {
-  uuid: "",
-  name: "",
-  email: "",
-  password: "",
-  role: "user"
-};
 
 export function userReducer(state: User = INITIAL_USER, action: AnyAction) {
   LoggingService.getInstance().logReducer(action, state);

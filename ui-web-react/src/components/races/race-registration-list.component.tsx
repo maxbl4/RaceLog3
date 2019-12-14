@@ -16,6 +16,12 @@ import Checkbox from "@material-ui/core/Checkbox";
 import Optional from "optional-js";
 import { RacerProfile } from "../../model/types/datatypes";
 import SpinnerButton from "../common/spinner-button";
+import {
+  RACE_REGISTRATION_LIST_SUBMIT_BUTTON,
+  RACE_REGISTRATION_LIST_EXPAND_BUTTON,
+  RACE_REGISTRATION_LIST_PROFILE_ITEM,
+  RACE_REGISTRATION_LIST_HEADER
+} from "../../model/utils/constants";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -60,8 +66,12 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
   const handleUpdateButtonClick = (): void => {
     const initialRegedProfiles = props.registeredProfiles.orElse([]);
     props.onRegistrationUpdate(
-      checkedProfiles.filter(value => initialRegedProfiles.find(profile => profile.uuid === value.uuid) === undefined),
-      initialRegedProfiles.filter(value => checkedProfiles.find(profile => profile.uuid === value.uuid) === undefined)
+      checkedProfiles.filter(
+        value => initialRegedProfiles.find(profile => profile.uuid === value.uuid) === undefined
+      ),
+      initialRegedProfiles.filter(
+        value => checkedProfiles.find(profile => profile.uuid === value.uuid) === undefined
+      )
     );
   };
 
@@ -70,9 +80,9 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="raceRegistration-content"
-        id="raceRegistration-header"
+        id={RACE_REGISTRATION_LIST_EXPAND_BUTTON}
       >
-        <Typography className={classes.heading}>
+        <Typography id={RACE_REGISTRATION_LIST_HEADER} className={classes.heading}>
           {!props.loggedIn
             ? "Войдите для регистрации"
             : props.allProfiles.isPresent()
@@ -84,7 +94,7 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
         <Container component="main" maxWidth="xs" className={classes.profileContainer}>
           <List>
             {profiles.map((value, index, array) => {
-              const labelId = "checkbox-list-label-" + value.uuid;
+              const labelId = RACE_REGISTRATION_LIST_PROFILE_ITEM + "_" + value.name;
               return (
                 <ListItem
                   key={value.uuid}
@@ -100,15 +110,19 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
                       checked={checkedProfiles.find(curr => curr.uuid === value.uuid) !== undefined}
                       tabIndex={-1}
                       disableRipple
-                      inputProps={{ "aria-labelledby": labelId }}
+                      inputProps={{ id: labelId }}
                     />
                   </ListItemIcon>
-                  <ListItemText id={labelId} primary={value.name} />
+                  <ListItemText
+                    primary={value.name}
+                    primaryTypographyProps={{ id: labelId + "_label" }}
+                  />
                 </ListItem>
               );
             })}
           </List>
           <SpinnerButton
+            id={RACE_REGISTRATION_LIST_SUBMIT_BUTTON}
             label="Обновить"
             showSpinner={props.isUpdating}
             handleClick={handleUpdateButtonClick}

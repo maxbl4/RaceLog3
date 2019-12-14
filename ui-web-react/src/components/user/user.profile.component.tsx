@@ -12,8 +12,14 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import { Theme } from "@material-ui/core";
 import { commonStyles } from "../styles/common";
-import { INITIAL_USER_INFO } from "../../model/reducers/user.reducer";
+import { INITIAL_USER_INFO } from "../../model/types/datatypes";
 import RacerProfilesListComponent from "./racer.profiles-list.component";
+import {
+  PROFILE_NAME,
+  PROFILE_EMAIL,
+  PROFILE_ROLE,
+  PROFILE_LOGOUT_BUTTON
+} from "../../model/utils/constants";
 
 const useStyles = makeStyles((theme: Theme) => {
   const styles = commonStyles(theme);
@@ -72,14 +78,23 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = (
             <Container component="main" maxWidth="xs">
               <CssBaseline />
               <Paper className={classes.paperTop}>
-                <Typography component="h2" variant="h4" color="primary" gutterBottom>
+                <Typography
+                  id={PROFILE_NAME}
+                  component="h2"
+                  variant="h4"
+                  color="primary"
+                  gutterBottom
+                >
                   {info.name}
                 </Typography>
-                <Typography component="p" variant="h6">
+                <Typography id={PROFILE_EMAIL} component="p" variant="h6">
                   {info.email}
                 </Typography>
-                <Typography color="textSecondary">{getRoleName(info.role)}</Typography>
+                <Typography id={PROFILE_ROLE} color="textSecondary">
+                  {getRoleName(info.role)}
+                </Typography>
                 <Button
+                  id={PROFILE_LOGOUT_BUTTON}
                   type="button"
                   fullWidth
                   variant="contained"

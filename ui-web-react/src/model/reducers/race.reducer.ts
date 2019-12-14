@@ -1,4 +1,4 @@
-import { Races, RaceItemExt, RaceItem, RacerProfile } from "../types/datatypes";
+import { Races, RaceItemExt, RacerProfile, INITIAL_RACES, INITIAL_SELECTED_RACE } from "../types/datatypes";
 import Optional from "optional-js";
 import {
   RACES_REQUESTED,
@@ -16,25 +16,6 @@ import {
 } from "../actions/race.actions";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
-import { DEFAULT_DATE, DEFAULT_ID } from "../utils/constants";
-
-export const INITIAL_RACES: Races = {
-  isFetching: false,
-  items: Optional.empty<RaceItem[]>()
-};
-
-export const INITIAL_SELECTED_RACE: RaceItemExt = {
-  isFetching: false,
-  id: DEFAULT_ID,
-  name: "",
-  date: DEFAULT_DATE,
-  location: "",
-  description: "",
-  participants: {
-    isFetching: false,
-    items: Optional.empty<RacerProfile[]>()
-  }
-};
 
 export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
   LoggingService.getInstance().logReducer(action, state);

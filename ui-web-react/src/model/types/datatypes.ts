@@ -1,5 +1,6 @@
 import { Role } from "./roles.model";
 import Optional from "optional-js";
+import { DEFAULT_ID, DEFAULT_DATE } from "../utils/constants";
 
 export type StoredState = {
   user: User;
@@ -92,4 +93,52 @@ export type RacerProfile = {
   userUUID: Optional<string>;
   name: string;
   bikeNumber: number;
+};
+
+// ----------------------------------------------------------------------
+// Initial states
+// ----------------------------------------------------------------------
+export const INITIAL_USER: User = {
+  isFetching: false,
+  info: Optional.empty<UserInfo>()
+};
+
+export const INITIAL_USER_INFO: UserInfo = {
+  uuid: "",
+  name: "",
+  email: "",
+  password: "",
+  role: "user"
+};
+
+export const INITIAL_RACER_PROFILES: RacerProfiles = {
+  isFetching: false,
+  items: Optional.empty<RacerProfile[]>()
+};
+
+export const INITIAL_RACES: Races = {
+  isFetching: false,
+  items: Optional.empty<RaceItem[]>()
+};
+
+export const INITIAL_SELECTED_RACE: RaceItemExt = {
+  isFetching: false,
+  id: DEFAULT_ID,
+  name: "",
+  date: DEFAULT_DATE,
+  location: "",
+  description: "",
+  participants: INITIAL_RACER_PROFILES
+};
+
+export const INITIAL_ALERTS_QUEUE: AlertsQueue = {
+  alerts: []
+};
+
+export const INITIAL_STORED_STATE: StoredState = {
+  user: INITIAL_USER,
+  racerProfiles: INITIAL_RACER_PROFILES,
+  races: INITIAL_RACES,
+  selectedRace: INITIAL_SELECTED_RACE,
+  alertsQueue: INITIAL_ALERTS_QUEUE
 };

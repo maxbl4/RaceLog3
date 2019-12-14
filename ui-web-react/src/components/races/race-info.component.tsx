@@ -1,7 +1,17 @@
 import React, { useEffect } from "react";
 import { RouteComponentProps } from "react-router-dom";
-import { RaceItemExt, RacerProfiles, RacerProfile, UserInfo } from "../../model/types/datatypes";
-import { DEFAULT_ID } from "../../model/utils/constants";
+import {
+  RaceItemExt,
+  RacerProfile,
+  UserInfo,
+  INITIAL_USER_INFO
+} from "../../model/types/datatypes";
+import {
+  DEFAULT_ID,
+  RACE_ITEM_INFO_NAME,
+  RACE_ITEM_INFO_DATE_LOCATION,
+  RACE_ITEM_INFO_DESCR
+} from "../../model/utils/constants";
 import { FetchingComponent } from "../common/fetching.component";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -13,7 +23,6 @@ import { commonStyles } from "../styles/common";
 import RaceParticipantListComponent from "./race-participant-list.component";
 import RaceRegistrationListComponent from "./race-registration-list.component";
 import Optional from "optional-js";
-import { DEFAULT_USER_INFO } from "../../model/utils/test.utils";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -28,7 +37,10 @@ const useStyles = makeStyles((theme: Theme) => {
       margin: theme.spacing(3, 0, 2)
     },
     heading: common.heading,
-    profileContainer: common.profileContainer
+    profileContainer: common.profileContainer,
+    justifyText: {
+      textAlign: "justify"
+    }
   };
 });
 
@@ -57,7 +69,7 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
   }, [props.match.params.id]);
   const registrationUpdateHandler = (added: RacerProfile[], removed: RacerProfile[]): void => {
     props.onRegistrationUpdate(
-      props.user.orElse(DEFAULT_USER_INFO).uuid,
+      props.user.orElse(INITIAL_USER_INFO).uuid,
       props.raceItemExt.id,
       added,
       removed
@@ -71,15 +83,27 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Paper className={classes.paperTop}>
-          <Typography component="h2" variant="h4" color="primary" gutterBottom>
+          <Typography
+            id={RACE_ITEM_INFO_NAME}
+            component="h2"
+            variant="h4"
+            color="primary"
+            gutterBottom
+          >
             {props.raceItemExt.name}
           </Typography>
-          <Typography component="p" variant="h6">
+          <Typography id={RACE_ITEM_INFO_DATE_LOCATION} component="p" variant="h6">
             {`${props.raceItemExt.location}, ${new Date(
               props.raceItemExt.date
             ).toLocaleDateString()}`}
           </Typography>
-          <Typography color="textSecondary">{props.raceItemExt.description}</Typography>
+          <Typography
+            id={RACE_ITEM_INFO_DESCR}
+            color="textSecondary"
+            className={classes.justifyText}
+          >
+            {props.raceItemExt.description}
+          </Typography>
         </Paper>
         <RaceParticipantListComponent participants={props.raceItemExt.participants.items} />
         <RaceRegistrationListComponent
