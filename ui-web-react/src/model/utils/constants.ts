@@ -81,6 +81,7 @@ export const RACE_ITEM_CARD_MORE_BUTTON = "raceItemCardMoreButton";
 export const RACE_ITEM_INFO_NAME = "raceItemInfoName";
 export const RACE_ITEM_INFO_DATE_LOCATION = "raceItemInfoDateLocationa";
 export const RACE_ITEM_INFO_DESCR = "raceItemInfoDescr";
+export const RACE_PARTICIPANTS_LIST_TABLE = "raceParticipantsListTable";
 export const RACE_PARTICIPANTS_LIST_EXPAND_BUTTON = "raceParticipantsListExpandButton";
 export const RACE_REGISTRATION_LIST_PROFILE_ITEM = "raceRegistrationListProfileItem";
 export const RACE_REGISTRATION_LIST_HEADER = "raceRegistrationListHeader";

@@ -11,6 +11,11 @@ public class RaceRegistrationTest extends BaseTest {
 	private static final String RACER_1_NAME_CHANGED = "ValeRoss53";
 	private static final String RACER_1_BIKE_NUMBER_CHANGED = "53";
 
+	private static final String PARTICIPANTS_TABLE_XPATH_HEADER_NAME = "./thead/tr/th[1]";
+	private static final String PARTICIPANTS_TABLE_XPATH_HEADER_BIKE_NUMBER = "./thead/tr/th[2]";
+	private static final String PARTICIPANTS_TABLE_XPATH_NAME = "./tbody/tr[%d]/th";
+	private static final String PARTICIPANTS_TABLE_XPATH_BIKE_NUMBER = "./tbody/tr[%d]/td";
+
 	private RaceRegistrationTest(WebDriver webDriver) {
 		super(webDriver);
 	}
@@ -94,8 +99,33 @@ public class RaceRegistrationTest extends BaseTest {
 		clickElement(RACE_PARTICIPANTS_LIST_EXPAND_BUTTON);
 		clickElement(RACE_REGISTRATION_LIST_EXPAND_BUTTON);
 
-		// TODO check corresponding checkbox
-		// TODO check racer's table
+		substep("Check participants table");
+		substep("Check header FIO");
+		checkNestedElementTextByXPath(RACE_PARTICIPANTS_LIST_TABLE, PARTICIPANTS_TABLE_XPATH_HEADER_NAME, "ФИО",
+				"Check table header 'FIO'");
+		substep("Check header Bike number");
+		checkNestedElementTextByXPath(RACE_PARTICIPANTS_LIST_TABLE, PARTICIPANTS_TABLE_XPATH_HEADER_BIKE_NUMBER,
+				"Номер байка", "Check table header 'Bike number'");
+
+		if (racerNames.length == 0) {
+			nestedElementDoesNotExist(RACE_PARTICIPANTS_LIST_TABLE, String.format(PARTICIPANTS_TABLE_XPATH_NAME, "1"));
+		} else {
+			for (int i = 0; i < racerNames.length; i++) {
+				substep(String.format("Check racer '%s', '%s'", racerNames[i], racerBikeNumbers[i]));
+				checkNestedElementTextByXPath(RACE_PARTICIPANTS_LIST_TABLE,
+						String.format(PARTICIPANTS_TABLE_XPATH_NAME, "" + (i + 1)), racerNames[i],
+						String.format("Check racer with name='%s'", racerNames[i]));
+				checkNestedElementTextByXPath(RACE_PARTICIPANTS_LIST_TABLE,
+						String.format(PARTICIPANTS_TABLE_XPATH_BIKE_NUMBER, "" + (i + 1)), racerBikeNumbers[i],
+						String.format("Check racer with bike number='%s'", racerBikeNumbers[i]));
+			}
+		}
+		
+		if (racerNames.length != 0) {
+			for (String name : racerNames) {
+				// TODO check corresponding checkbox
+			}
+		}
 	}
 
 	private void registerRacer(String raceName, String racerName) {

@@ -2,6 +2,9 @@ package ru.racelog3.e2e_tests;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfNestedElementLocatedBy;
+
+import java.util.List;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -40,6 +43,7 @@ public abstract class BaseTest {
 	protected final static String RACE_ITEM_INFO_NAME = "raceItemInfoName";
 	protected final static String RACE_ITEM_INFO_DATE_LOCATION = "raceItemInfoDateLocationa";
 	protected final static String RACE_ITEM_INFO_DESCR = "raceItemInfoDescr";
+	protected final static String RACE_PARTICIPANTS_LIST_TABLE = "raceParticipantsListTable";
 	protected final static String RACE_PARTICIPANTS_LIST_EXPAND_BUTTON = "raceParticipantsListExpandButton";
 	protected final static String RACE_REGISTRATION_LIST_PROFILE_ITEM = "raceRegistrationListProfileItem";
 	protected final static String RACE_REGISTRATION_LIST_HEADER = "raceRegistrationListHeader";
@@ -93,6 +97,20 @@ public abstract class BaseTest {
 	protected void checkElement(String fieldID) {
 		wait.until(presenceOfElementLocated(By.id(fieldID)));
 	}
+	
+	protected void elementDoesNotExist(String fieldID) {
+		List<WebElement> deleteLinks = getDriver().findElements(By.id(fieldID));
+		Assert.assertTrue(deleteLinks.isEmpty());
+	}
+	
+	protected void nestedElementDoesNotExist(String parentFieldID, String childXPath) {
+		WebElement parentElement = wait.until(presenceOfElementLocated(By.id(parentFieldID)));
+		WebElement childElement = null;
+		try {
+			childElement = wait.until(presenceOfNestedElementLocatedBy(parentElement, By.xpath(childXPath)));
+		} catch (Exception e) {}
+		Assert.assertTrue(childElement == null);
+	}
 
 	protected void clickElement(String fieldID, boolean waitClickable) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
@@ -111,6 +129,12 @@ public abstract class BaseTest {
 	protected void checkText(String fieldID, String value, String assertText) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
 		Assert.assertEquals(assertText, value, element.getText());
+	}
+	
+	protected void checkNestedElementTextByXPath(String parentFieldID, String childXPath, String value, String assertText) {
+		WebElement parentElement = wait.until(presenceOfElementLocated(By.id(parentFieldID)));
+		WebElement childElement = wait.until(presenceOfNestedElementLocatedBy(parentElement, By.xpath(childXPath)));
+		Assert.assertEquals(assertText, value, childElement.getText());
 	}
 	
 	protected void checkEnabled(String fieldID, boolean enabled) {

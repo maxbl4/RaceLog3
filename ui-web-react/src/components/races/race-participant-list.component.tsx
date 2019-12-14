@@ -15,7 +15,10 @@ import TableRow from "@material-ui/core/TableRow";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 import { commonStyles } from "../styles/common";
-import { RACE_PARTICIPANTS_LIST_EXPAND_BUTTON } from "../../model/utils/constants";
+import {
+  RACE_PARTICIPANTS_LIST_EXPAND_BUTTON,
+  RACE_PARTICIPANTS_LIST_TABLE
+} from "../../model/utils/constants";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -44,7 +47,7 @@ const RaceParticipantListComponent: React.FC<RaceParticipantListProps> = (
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
         <Container component="main" maxWidth="xs" className={classes.profileContainer}>
-          <Table aria-label="simple table">
+          <Table id={RACE_PARTICIPANTS_LIST_TABLE}>
             <TableHead>
               <TableRow>
                 <TableCell>ФИО</TableCell>
