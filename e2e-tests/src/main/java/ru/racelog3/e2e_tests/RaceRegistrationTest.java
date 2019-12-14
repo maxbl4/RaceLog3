@@ -79,25 +79,29 @@ public class RaceRegistrationTest extends BaseTest {
 		step("Delete one racer profile and check registration");
 		goToProfilePageAndExpandProfiles();
 		deleteRacerProfile(RACER_2_NAME, RACER_2_BIKE_NUMBER);
-		checkRegistration(RACE_1_NAME, new String[] {}, new String[] {});
-		checkRegistration(RACE_2_NAME, new String[] {}, new String[] {});
-		checkRegistration(RACE_3_NAME, new String[] {}, new String[] {});
-		checkRegistration(RACE_4_NAME, new String[] {}, new String[] {});
+		checkRegistration(RACE_1_NAME, new String[] {}, new String[] {}, false);
+		checkRegistration(RACE_2_NAME, new String[] {}, new String[] {}, false);
+		checkRegistration(RACE_3_NAME, new String[] {}, new String[] {}, false);
+		checkRegistration(RACE_4_NAME, new String[] {}, new String[] {}, false);
 	}
 
 	private void goToProfilePageAndExpandProfiles() {
 		goToProfilePage();
 		clickElement(RACER_PROFILES_LIST_EXPAND_BUTTON);
 	}
-
+	
 	private void checkRegistration(String raceName, String[] racerNames, String[] racerBikeNumbers) {
-		substep(String.format("Checking registration: race='%s', racer profiles='%s', racer bike numbers='%s'",
-				raceName, racerNames.toString(), racerBikeNumbers.toString()));
+		checkRegistration(raceName, racerNames, racerBikeNumbers, true);
+	}
+
+	private void checkRegistration(String raceName, String[] racerNames, String[] racerBikeNumbers, boolean profilesExist) {
 		backToHomePage();
 		clickElement(createID(RACE_ITEM_CARD_MORE_BUTTON, raceName));
 
 		clickElement(RACE_PARTICIPANTS_LIST_EXPAND_BUTTON);
-		clickElement(RACE_REGISTRATION_LIST_EXPAND_BUTTON);
+		if (profilesExist) {
+			clickElement(RACE_REGISTRATION_LIST_EXPAND_BUTTON);
+		}
 
 		substep("Check participants table");
 		substep("Check header FIO");
@@ -108,22 +112,23 @@ public class RaceRegistrationTest extends BaseTest {
 				"Номер байка", "Check table header 'Bike number'");
 
 		if (racerNames.length == 0) {
-			nestedElementDoesNotExist(RACE_PARTICIPANTS_LIST_TABLE, String.format(PARTICIPANTS_TABLE_XPATH_NAME, "1"));
+			substep("Check the emptyness of the participants' table");
+			nestedElementDoesNotExist(RACE_PARTICIPANTS_LIST_TABLE, String.format(PARTICIPANTS_TABLE_XPATH_NAME, 1));
 		} else {
 			for (int i = 0; i < racerNames.length; i++) {
 				substep(String.format("Check racer '%s', '%s'", racerNames[i], racerBikeNumbers[i]));
 				checkNestedElementTextByXPath(RACE_PARTICIPANTS_LIST_TABLE,
-						String.format(PARTICIPANTS_TABLE_XPATH_NAME, "" + (i + 1)), racerNames[i],
+						String.format(PARTICIPANTS_TABLE_XPATH_NAME, (i + 1)), racerNames[i],
 						String.format("Check racer with name='%s'", racerNames[i]));
 				checkNestedElementTextByXPath(RACE_PARTICIPANTS_LIST_TABLE,
-						String.format(PARTICIPANTS_TABLE_XPATH_BIKE_NUMBER, "" + (i + 1)), racerBikeNumbers[i],
+						String.format(PARTICIPANTS_TABLE_XPATH_BIKE_NUMBER, (i + 1)), racerBikeNumbers[i],
 						String.format("Check racer with bike number='%s'", racerBikeNumbers[i]));
 			}
 		}
 		
 		if (racerNames.length != 0) {
 			for (String name : racerNames) {
-				// TODO check corresponding checkbox
+				checkSelected(createID(RACE_REGISTRATION_LIST_PROFILE_ITEM, name), true);
 			}
 		}
 	}
@@ -139,8 +144,8 @@ public class RaceRegistrationTest extends BaseTest {
 		clickElement(createID(RACE_REGISTRATION_LIST_PROFILE_ITEM, racerName), false);
 		clickElement(RACE_REGISTRATION_LIST_SUBMIT_BUTTON);
 
-		checkText(ALERT_HEADER, "Регистрация на гонку", "Check update registration alert header");
-		checkText(ALERT_CONTENT, "Регистрация прошла успешно", "Check update registration alert content");
+//		checkText(ALERT_HEADER, "Регистрация на гонку", "Check update registration alert header");
+//		checkText(ALERT_CONTENT, "Регистрация прошла успешно", "Check update registration alert content");
 	}
 
 	private void addRacerProfile(String name, String bikeNumber, String order) {

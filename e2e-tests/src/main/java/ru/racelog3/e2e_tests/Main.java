@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Date;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -48,6 +49,9 @@ public class Main {
 	}
 
 	private void start() {
+		long start = System.currentTimeMillis();
+		System.out.println("Started at: " + new Date(start).toString());
+		
 		AuthSignInTest.runTest(webDriver);
 		AuthSignUpTest.runTest(webDriver);
 		MainPageTest.runTest(webDriver);
@@ -55,6 +59,19 @@ public class Main {
 		RaceRegistrationTest.runTest(webDriver);
 		
 		webDriver.quit();
+		
+		long end = System.currentTimeMillis();
+		System.out.println("Ended at: " + new Date(end).toString());
+		System.out.println("Execution time: " + getExecutionTime(start, end));
+	}
+	
+	private String getExecutionTime(long start, long end) {
+		long milliseconds = end - start;
+
+		long minutes = (milliseconds / 1000) / 60;
+		long seconds = (milliseconds / 1000) % 60;
+
+		return String.format("%d min %d sec", minutes, seconds);
 	}
 
 	public static void main(String[] args) throws URISyntaxException {

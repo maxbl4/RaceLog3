@@ -3,11 +3,13 @@ package ru.racelog3.e2e_tests;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfNestedElementLocatedBy;
+import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
 import java.util.List;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -15,7 +17,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public abstract class BaseTest {
 
 	private final static int EXCEPTION_TIMEOUT = 5; // in seconds
-	
+
 	protected final static String HEADER_ENTER_BUTTON = "headerEnterButtonID";
 	protected final static String HEADER_ACCOUNT_BUTTON = "headerAccountButtonID";
 	protected final static String HEADER_MENU_BUTTON = "headerMenuButtonID";
@@ -51,7 +53,7 @@ public abstract class BaseTest {
 	protected final static String RACE_REGISTRATION_LIST_SUBMIT_BUTTON = "raceRegistrationListSubmitButton";
 	protected final static String ALERT_HEADER = "alertHeader";
 	protected final static String ALERT_CONTENT = "alertContent";
-	
+
 	protected final static String RACE_1_NAME = "Grand Prix of France";
 	protected final static String RACE_2_NAME = "Grand Prix of Catalunya";
 	protected final static String RACE_3_NAME = "Grand Prix of Germany";
@@ -85,30 +87,31 @@ public abstract class BaseTest {
 	}
 
 	protected abstract void testBody();
-	
+
 	protected String getTestName() {
 		return getClass().getSimpleName();
 	}
-	
+
 	protected String createID(String fieldId, String postfix) {
 		return fieldId + "_" + postfix;
 	}
-	
+
 	protected void checkElement(String fieldID) {
 		wait.until(presenceOfElementLocated(By.id(fieldID)));
 	}
-	
+
 	protected void elementDoesNotExist(String fieldID) {
 		List<WebElement> deleteLinks = getDriver().findElements(By.id(fieldID));
 		Assert.assertTrue(deleteLinks.isEmpty());
 	}
-	
+
 	protected void nestedElementDoesNotExist(String parentFieldID, String childXPath) {
 		WebElement parentElement = wait.until(presenceOfElementLocated(By.id(parentFieldID)));
 		WebElement childElement = null;
 		try {
 			childElement = wait.until(presenceOfNestedElementLocatedBy(parentElement, By.xpath(childXPath)));
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 		Assert.assertTrue(childElement == null);
 	}
 
@@ -121,22 +124,25 @@ public abstract class BaseTest {
 		sleep();
 		element.click();
 	}
-	
+
 	protected void clickElement(String fieldID) {
 		clickElement(fieldID, true);
 	}
 
 	protected void checkText(String fieldID, String value, String assertText) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
+		element = wait.until(visibilityOf(element));
 		Assert.assertEquals(assertText, value, element.getText());
 	}
-	
-	protected void checkNestedElementTextByXPath(String parentFieldID, String childXPath, String value, String assertText) {
+
+	protected void checkNestedElementTextByXPath(String parentFieldID, String childXPath, String value,
+			String assertText) {
 		WebElement parentElement = wait.until(presenceOfElementLocated(By.id(parentFieldID)));
 		WebElement childElement = wait.until(presenceOfNestedElementLocatedBy(parentElement, By.xpath(childXPath)));
+		childElement = wait.until(visibilityOf(childElement));
 		Assert.assertEquals(assertText, value, childElement.getText());
 	}
-	
+
 	protected void checkEnabled(String fieldID, boolean enabled) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
 		if (enabled) {
@@ -145,29 +151,37 @@ public abstract class BaseTest {
 			Assert.assertFalse(element.isEnabled());
 		}
 	}
-	
+
 	protected void typeText(String fieldID, String value) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
 		element = wait.until(elementToBeClickable(element));
 		Assert.assertTrue(element.isEnabled());
-		element.sendKeys(value);;
+		element.clear();
+		element.sendKeys(Keys.CONTROL + "a");
+		element.sendKeys(Keys.DELETE);
+		element.sendKeys(value);
 	}
-	
+
+	protected void checkSelected(String fieldID, boolean selected) {
+		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
+		Assert.assertTrue(selected ? element.isSelected() : !element.isSelected());
+	}
+
 	protected void backToHomePage() {
 		selectHeaderSliderPanelButton(LIST_ITEM_HOME_BUTTON);
 	}
-	
+
 	protected void goToProfilePage() {
 		selectHeaderSliderPanelButton(LIST_ITEM_ACCOUNT_BUTTON);
 	}
-	
+
 	private void selectHeaderSliderPanelButton(String buttonID) {
 		clickElement(HEADER_MENU_BUTTON);
 		sleep();
 		clickElement(buttonID);
 		sleep();
 	}
-	
+
 	protected void sleep() {
 		try {
 			Thread.sleep(100);
@@ -175,11 +189,11 @@ public abstract class BaseTest {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected void step(String descr) {
 		System.out.println("    " + descr);
 	}
-	
+
 	protected void substep(String descr) {
 		System.out.println("        " + descr);
 	}
