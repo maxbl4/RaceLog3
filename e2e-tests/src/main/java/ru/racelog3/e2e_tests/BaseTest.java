@@ -1,11 +1,13 @@
 package ru.racelog3.e2e_tests;
 
+import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
+import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
+
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 
 public abstract class BaseTest {
 
@@ -92,10 +94,18 @@ public abstract class BaseTest {
 		wait.until(presenceOfElementLocated(By.id(fieldID)));
 	}
 
-	protected void clickElement(String fieldID) {
+	protected void clickElement(String fieldID, boolean waitClickable) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
+		if (waitClickable) {
+			element = wait.until(elementToBeClickable(element));
+		}
 		Assert.assertTrue(element.isEnabled());
+		sleep();
 		element.click();
+	}
+	
+	protected void clickElement(String fieldID) {
+		clickElement(fieldID, true);
 	}
 
 	protected void checkText(String fieldID, String value, String assertText) {
@@ -114,6 +124,7 @@ public abstract class BaseTest {
 	
 	protected void typeText(String fieldID, String value) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
+		element = wait.until(elementToBeClickable(element));
 		Assert.assertTrue(element.isEnabled());
 		element.sendKeys(value);;
 	}
@@ -133,16 +144,12 @@ public abstract class BaseTest {
 		sleep();
 	}
 	
-	protected void sleep(long millis) {
+	protected void sleep() {
 		try {
-			Thread.sleep(millis);
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	protected void sleep() {
-		sleep(100);
 	}
 
 }
