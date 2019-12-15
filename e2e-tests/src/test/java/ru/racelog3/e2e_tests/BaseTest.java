@@ -1,5 +1,7 @@
 package ru.racelog3.e2e_tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfNestedElementLocatedBy;
@@ -12,7 +14,6 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -162,7 +163,7 @@ public abstract class BaseTest {
 
 	protected void elementDoesNotExist(String fieldID) {
 		List<WebElement> deleteLinks = getDriver().findElements(By.id(fieldID));
-		Assertions.assertTrue(deleteLinks.isEmpty());
+		assertTrue(deleteLinks.isEmpty());
 	}
 
 	protected void nestedElementDoesNotExist(String parentFieldID, String childXPath) {
@@ -172,7 +173,7 @@ public abstract class BaseTest {
 			childElement = wait.until(presenceOfNestedElementLocatedBy(parentElement, By.xpath(childXPath)));
 		} catch (Exception e) {
 		}
-		Assertions.assertTrue(childElement == null);
+		assertTrue(childElement == null);
 	}
 
 	protected void clickElement(String fieldID, boolean waitClickable) {
@@ -180,7 +181,7 @@ public abstract class BaseTest {
 		if (waitClickable) {
 			element = wait.until(elementToBeClickable(element));
 		}
-		Assertions.assertTrue(element.isEnabled());
+		assertTrue(element.isEnabled());
 		sleep();
 		element.click();
 	}
@@ -192,7 +193,7 @@ public abstract class BaseTest {
 	protected void checkText(String fieldID, String value, String assertText) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
 		element = wait.until(visibilityOf(element));
-		Assertions.assertEquals(value, element.getText(), assertText);
+		assertEquals(value, element.getText(), assertText);
 	}
 
 	protected void checkNestedElementTextByXPath(String parentFieldID, String childXPath, String value,
@@ -200,18 +201,18 @@ public abstract class BaseTest {
 		WebElement parentElement = wait.until(presenceOfElementLocated(By.id(parentFieldID)));
 		WebElement childElement = wait.until(presenceOfNestedElementLocatedBy(parentElement, By.xpath(childXPath)));
 		childElement = wait.until(visibilityOf(childElement));
-		Assertions.assertEquals(value, childElement.getText(), assertText);
+		assertEquals(value, childElement.getText(), assertText);
 	}
 
 	protected void checkEnabled(String fieldID, boolean enabled) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
-		Assertions.assertTrue(enabled ? element.isEnabled() : !element.isEnabled());
+		assertTrue(enabled ? element.isEnabled() : !element.isEnabled());
 	}
 
 	protected void typeText(String fieldID, String value) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
 		element = wait.until(elementToBeClickable(element));
-		Assertions.assertTrue(element.isEnabled());
+		assertTrue(element.isEnabled());
 		element.clear();
 		element.sendKeys(Keys.CONTROL + "a");
 		element.sendKeys(Keys.DELETE);
@@ -220,7 +221,7 @@ public abstract class BaseTest {
 
 	protected void checkSelected(String fieldID, boolean selected) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
-		Assertions.assertTrue(selected ? element.isSelected() : !element.isSelected());
+		assertTrue(selected ? element.isSelected() : !element.isSelected());
 	}
 
 	protected void backToHomePage() {
