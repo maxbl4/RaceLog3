@@ -1,11 +1,6 @@
 package ru.racelog3.e2e_tests;
 
-import org.openqa.selenium.WebDriver;
-
 public class AuthSignInTest extends AuthBaseTest {
-	private AuthSignInTest(WebDriver webDriver) {
-		super(webDriver);
-	}
 
 	@Override
 	protected void testBody() {
@@ -33,7 +28,4 @@ public class AuthSignInTest extends AuthBaseTest {
 		checkSignInPanelControls();
 	}
 
-	static void runTest(WebDriver webDriver) {
-		new AuthSignInTest(webDriver).runTestImpl();
-	}
 }

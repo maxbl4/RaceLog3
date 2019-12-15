@@ -40,6 +40,9 @@ const useStyles = makeStyles((theme: Theme) => {
     profileContainer: common.profileContainer,
     justifyText: {
       textAlign: "justify"
+    },
+    centerText: {
+      textAlign: "center"
     }
   };
 });
@@ -88,11 +91,17 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
             component="h2"
             variant="h4"
             color="primary"
+            className={classes.centerText}
             gutterBottom
           >
             {props.raceItemExt.name}
           </Typography>
-          <Typography id={RACE_ITEM_INFO_DATE_LOCATION} component="p" variant="h6">
+          <Typography
+            id={RACE_ITEM_INFO_DATE_LOCATION}
+            component="p"
+            variant="h6"
+            className={classes.centerText}
+          >
             {`${props.raceItemExt.location}, ${new Date(
               props.raceItemExt.date
             ).toLocaleDateString()}`}

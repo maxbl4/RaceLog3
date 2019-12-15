@@ -1,20 +1,35 @@
 package ru.racelog3.e2e_tests;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfNestedElementLocatedBy;
 import static org.openqa.selenium.support.ui.ExpectedConditions.visibilityOf;
 
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 
-import org.junit.Assert;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public abstract class BaseTest {
+
+	enum Browser {
+		CHROME, FIREFOX, IE
+	}
 
 	private final static int EXCEPTION_TIMEOUT = 5; // in seconds
 
@@ -62,23 +77,73 @@ public abstract class BaseTest {
 	private WebDriver webDriver;
 	private WebDriverWait wait;
 
-	protected BaseTest(WebDriver webDriver) {
-		this.webDriver = webDriver;
-		wait = new WebDriverWait(webDriver, EXCEPTION_TIMEOUT);
-	}
-
 	protected WebDriver getDriver() {
 		return webDriver;
 	}
 
-	protected void runTestImpl() {
+	@BeforeEach
+	void initSelenium() throws URISyntaxException {
+		setProperties();
+		Browser browser = resolveBrowser();
+
+		switch (browser) {
+		case CHROME:
+			webDriver = new ChromeDriver();
+			break;
+		case FIREFOX:
+			webDriver = new FirefoxDriver();
+			break;
+		case IE:
+			webDriver = new InternetExplorerDriver();
+			break;
+		}
+
+		wait = new WebDriverWait(webDriver, EXCEPTION_TIMEOUT);
+	}
+
+	@AfterEach
+	void closeSelenium() {
+		webDriver.quit();
+
+		webDriver = null;
+		wait = null;
+	}
+
+	private static Browser resolveBrowser() {
+		String browser = System.getProperty("racelog3.browser", "CHROME");
+		switch (browser) {
+		case "CHROME":
+			return Browser.CHROME;
+		case "FIREFOX":
+			return Browser.FIREFOX;
+		case "IE":
+			return Browser.IE;
+		}
+		return Browser.CHROME;
+	}
+
+	private void setProperties() throws URISyntaxException {
+		URL chromeURL = getClass().getClassLoader().getResource("drivers" + File.separator + "chrome" + File.separator
+				+ "78.0.3904.105-win32" + File.separator + "chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", Paths.get(chromeURL.toURI()).toFile().getAbsolutePath());
+
+		URL firefoxURL = getClass().getClassLoader().getResource("drivers" + File.separator + "mozilla" + File.separator
+				+ "0.26.0-win64" + File.separator + "geckodriver.exe");
+		System.setProperty("webdriver.gecko.driver", Paths.get(firefoxURL.toURI()).toFile().getAbsolutePath());
+
+		URL ieURL = getClass().getClassLoader()
+				.getResource("drivers" + File.separator + "ie" + File.separator + "IEDriverServer.exe");
+		System.setProperty("webdriver.ie.driver", Paths.get(ieURL.toURI()).toFile().getAbsolutePath());
+	}
+
+	@Test
+	public void runTestImpl() {
 		beforeTest();
 		testBody();
 		afterTest();
 	}
 
 	protected void beforeTest() {
-		System.out.println("Test: " + getTestName());
 		getDriver().get("localhost:3000");
 	}
 
@@ -87,10 +152,6 @@ public abstract class BaseTest {
 	}
 
 	protected abstract void testBody();
-
-	protected String getTestName() {
-		return getClass().getSimpleName();
-	}
 
 	protected String createID(String fieldId, String postfix) {
 		return fieldId + "_" + postfix;
@@ -102,7 +163,7 @@ public abstract class BaseTest {
 
 	protected void elementDoesNotExist(String fieldID) {
 		List<WebElement> deleteLinks = getDriver().findElements(By.id(fieldID));
-		Assert.assertTrue(deleteLinks.isEmpty());
+		assertTrue(deleteLinks.isEmpty());
 	}
 
 	protected void nestedElementDoesNotExist(String parentFieldID, String childXPath) {
@@ -112,7 +173,7 @@ public abstract class BaseTest {
 			childElement = wait.until(presenceOfNestedElementLocatedBy(parentElement, By.xpath(childXPath)));
 		} catch (Exception e) {
 		}
-		Assert.assertTrue(childElement == null);
+		assertTrue(childElement == null);
 	}
 
 	protected void clickElement(String fieldID, boolean waitClickable) {
@@ -120,7 +181,7 @@ public abstract class BaseTest {
 		if (waitClickable) {
 			element = wait.until(elementToBeClickable(element));
 		}
-		Assert.assertTrue(element.isEnabled());
+		assertTrue(element.isEnabled());
 		sleep();
 		element.click();
 	}
@@ -132,7 +193,7 @@ public abstract class BaseTest {
 	protected void checkText(String fieldID, String value, String assertText) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
 		element = wait.until(visibilityOf(element));
-		Assert.assertEquals(assertText, value, element.getText());
+		assertEquals(value, element.getText(), assertText);
 	}
 
 	protected void checkNestedElementTextByXPath(String parentFieldID, String childXPath, String value,
@@ -140,22 +201,18 @@ public abstract class BaseTest {
 		WebElement parentElement = wait.until(presenceOfElementLocated(By.id(parentFieldID)));
 		WebElement childElement = wait.until(presenceOfNestedElementLocatedBy(parentElement, By.xpath(childXPath)));
 		childElement = wait.until(visibilityOf(childElement));
-		Assert.assertEquals(assertText, value, childElement.getText());
+		assertEquals(value, childElement.getText(), assertText);
 	}
 
 	protected void checkEnabled(String fieldID, boolean enabled) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
-		if (enabled) {
-			Assert.assertTrue(element.isEnabled());
-		} else {
-			Assert.assertFalse(element.isEnabled());
-		}
+		assertTrue(enabled ? element.isEnabled() : !element.isEnabled());
 	}
 
 	protected void typeText(String fieldID, String value) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
 		element = wait.until(elementToBeClickable(element));
-		Assert.assertTrue(element.isEnabled());
+		assertTrue(element.isEnabled());
 		element.clear();
 		element.sendKeys(Keys.CONTROL + "a");
 		element.sendKeys(Keys.DELETE);
@@ -164,7 +221,7 @@ public abstract class BaseTest {
 
 	protected void checkSelected(String fieldID, boolean selected) {
 		WebElement element = wait.until(presenceOfElementLocated(By.id(fieldID)));
-		Assert.assertTrue(selected ? element.isSelected() : !element.isSelected());
+		assertTrue(selected ? element.isSelected() : !element.isSelected());
 	}
 
 	protected void backToHomePage() {
