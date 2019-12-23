@@ -1,4 +1,4 @@
-import { getRoleName } from "./roles.model";
+import { getRoleName } from "../../../model/types/roles.model";
 
 describe("roles.model", () => {
   it("should return correct human readable names", () => {
