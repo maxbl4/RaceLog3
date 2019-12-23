@@ -44,22 +44,7 @@ export const racesLoaded = (items: RaceItem[]): RacesLoadedAction => ({
   type: RACES_LOADED,
   items: Optional.of(items)
 });
-export const raceParticipantsUpdateRequested = (
-  userUUID: string,
-  raceID: number,
-  added: RacerProfile[],
-  removed: RacerProfile[]
-): RaceParticipantsAction =>
-  raceParticipants(RACE_PARTICIPANTS_UPDATE_REQUESTED, userUUID, raceID, added, removed);
-export const raceParticipantsUpdated = (
-  userUUID: string,
-  raceID: number,
-  added: RacerProfile[],
-  removed: RacerProfile[]
-): RaceParticipantsAction =>
-  raceParticipants(RACE_PARTICIPANTS_UPDATED, userUUID, raceID, added, removed);
-const raceParticipants = (
-  type: string,
+const raceParticipantsFactory = (type: string) => (
   userUUID: string,
   raceID: number,
   added: RacerProfile[],
@@ -71,6 +56,10 @@ const raceParticipants = (
   itemsAdded: Optional.of(added),
   itemsRemoved: Optional.of(removed)
 });
+export const raceParticipantsUpdateRequested = raceParticipantsFactory(
+  RACE_PARTICIPANTS_UPDATE_REQUESTED
+);
+export const raceParticipantsUpdated = raceParticipantsFactory(RACE_PARTICIPANTS_UPDATED);
 export const raceParticipantsUpdateFailed = (
   raceID: number
 ): RaceParticipantsUpdateFailedAction => ({
