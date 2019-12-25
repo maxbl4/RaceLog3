@@ -22,6 +22,7 @@ import {
   RACE_REGISTRATION_LIST_PROFILE_ITEM,
   RACE_REGISTRATION_LIST_HEADER
 } from "../../model/utils/constants";
+import { RaceState } from "../../model/types/races.model";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -32,6 +33,7 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 type RaceRegistrationListProps = {
+  raceState: RaceState;
   loggedIn: boolean;
   isUpdating: boolean;
   allProfiles: Optional<RacerProfile[]>;
@@ -76,14 +78,21 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
   };
 
   return (
-    <ExpansionPanel className="mt-3" disabled={!props.loggedIn || profiles.length === 0}>
+    <ExpansionPanel
+      className="mt-3"
+      disabled={
+        !props.loggedIn || profiles.length === 0 || props.raceState !== RaceState.NOT_STARTED
+      }
+    >
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="raceRegistration-content"
         id={RACE_REGISTRATION_LIST_EXPAND_BUTTON}
       >
         <Typography id={RACE_REGISTRATION_LIST_HEADER} className={classes.heading}>
-          {!props.loggedIn
+          {props.raceState !== RaceState.NOT_STARTED
+            ? "Регистрация закончена"
+            : !props.loggedIn
             ? "Войдите для регистрации"
             : props.allProfiles.isPresent()
             ? "Регистрация"

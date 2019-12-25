@@ -23,6 +23,7 @@ import { commonStyles } from "../styles/common";
 import RaceParticipantListComponent from "./race-participant-list.component";
 import RaceRegistrationListComponent from "./race-registration-list.component";
 import Optional from "optional-js";
+import RaceResultsComponent from "./race-results.component";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -116,11 +117,17 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
         </Paper>
         <RaceParticipantListComponent participants={props.raceItemExt.participants.items} />
         <RaceRegistrationListComponent
+          raceState={props.raceItemExt.state}
           loggedIn={props.user.isPresent()}
           isUpdating={props.raceItemExt.participants.isFetching}
           allProfiles={props.racerProfiles}
           registeredProfiles={props.raceItemExt.participants.items}
           onRegistrationUpdate={registrationUpdateHandler}
+        />
+        <RaceResultsComponent
+          state={props.raceItemExt.state}
+          participants={props.raceItemExt.participants.items}
+          results={props.raceItemExt.results.items}
         />
       </Container>
     );

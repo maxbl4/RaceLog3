@@ -87,5 +87,7 @@ export const RACE_REGISTRATION_LIST_PROFILE_ITEM = "raceRegistrationListProfileI
 export const RACE_REGISTRATION_LIST_HEADER = "raceRegistrationListHeader";
 export const RACE_REGISTRATION_LIST_EXPAND_BUTTON = "raceRegistrationListExpandButton";
 export const RACE_REGISTRATION_LIST_SUBMIT_BUTTON = "raceRegistrationListSubmitButton";
+export const RACE_RESULTS_TABLE = "raceResultsTable";
+export const RACE_RESULTS_EXPAND_BUTTON = "raceResultsExpandButton";
 export const ALERT_HEADER = "alertHeader";
 export const ALERT_CONTENT = "alertContent";
