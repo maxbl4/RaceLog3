@@ -24,6 +24,7 @@ import RaceParticipantListComponent from "./race-participant-list.component";
 import RaceRegistrationListComponent from "./race-registration-list.component";
 import Optional from "optional-js";
 import RaceResultsComponent from "./race-results.component";
+import { RaceState } from "../../model/types/races.model";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -79,6 +80,17 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
       removed
     );
   };
+  const getDisableRegistrationReason = (): Optional<string> => {
+    return Optional.ofNullable(
+      props.raceItemExt.state !== RaceState.NOT_STARTED
+        ? "Регистрация закончена"
+        : !props.user.isPresent()
+        ? "Войдите для регистрации"
+        : props.racerProfiles.isPresent()
+        ? null
+        : "Создайте профиль для регистрации"
+    );
+  };
 
   if (props.raceItemExt.isFetching) {
     return <FetchingComponent />;
@@ -117,8 +129,12 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
         </Paper>
         <RaceParticipantListComponent participants={props.raceItemExt.participants.items} />
         <RaceRegistrationListComponent
-          raceState={props.raceItemExt.state}
-          loggedIn={props.user.isPresent()}
+          disabled={
+            !props.user.isPresent() ||
+            props.raceItemExt.state !== RaceState.NOT_STARTED ||
+            !props.racerProfiles.isPresent()
+          }
+          disableReason={getDisableRegistrationReason()}
           isUpdating={props.raceItemExt.participants.isFetching}
           allProfiles={props.racerProfiles}
           registeredProfiles={props.raceItemExt.participants.items}
