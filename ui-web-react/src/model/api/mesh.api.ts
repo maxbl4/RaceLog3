@@ -7,7 +7,8 @@ import {
 } from "../utils/constants";
 import { LoggingService } from "../utils/logging-service";
 import Optional from "optional-js";
-import { UserInfo, RacerProfile, RaceItem, RaceItemExt } from "../types/datatypes";
+import { Observable } from "rxjs";
+import { UserInfo, RacerProfile, RaceItem, RaceItemExt, RaceResults } from "../types/datatypes";
 import { ITransport } from "./transport";
 import * as Cookies from "js-cookie";
 import { COOKIE_MESH_TOKEN } from "../utils/constants";
@@ -188,6 +189,14 @@ export class MeshApi implements ITransport {
     added: RacerProfile[],
     removed: RacerProfile[]
   ): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
+
+  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>> {
+    throw new Error("Method not implemented.");
+  }
+
+  async unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
     throw new Error("Method not implemented.");
   }
 }

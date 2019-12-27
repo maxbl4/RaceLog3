@@ -1,6 +1,14 @@
 import { ITransport } from "./transport";
 import Optional from "optional-js";
-import { UserInfo, RacerProfile, RaceItem, RaceItemExt, StoredState } from "../types/datatypes";
+import { Observable } from "rxjs";
+import {
+  UserInfo,
+  RacerProfile,
+  RaceItem,
+  RaceItemExt,
+  StoredState,
+  RaceResults
+} from "../types/datatypes";
 import {
   DEFAULT_NON_AUTHORIZED_STORED_STATE,
   DEFAULT_RACE_ITEM_EXT_1,
@@ -120,5 +128,12 @@ export class FakeApi implements ITransport {
       )
     );
     return new Promise<any>(resolve => resolve());
+  }
+  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>> {
+    throw new Error("Method not implemented.");
+  }
+
+  async unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
+    throw new Error("Method not implemented.");
   }
 }

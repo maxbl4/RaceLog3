@@ -1,6 +1,7 @@
 import { AnyAction } from "redux";
 import { RaceItem, RaceItemExt, RacerProfile } from "../types/datatypes";
 import Optional from "optional-js";
+import { RaceState } from "../types/races.model";
 
 export const RACES_REQUESTED = "RACES_REQUESTED";
 export const RACES_REQUEST_FAILED = "RACES_REQUEST_FAILED";
@@ -9,9 +10,13 @@ export const RACES_LOADED = "RACES_LOADED";
 export const SELECTED_RACE_REQUESTED = "SELECTED_RACE_REQUESTED";
 export const SELECTED_RACE_REQUEST_FAILED = "SELECTED_RACE_REQUEST_FAILED";
 export const SELECTED_RACE_LOADED = "SELECTED_RACE_LOADED";
+
 export const RACE_PARTICIPANTS_UPDATE_REQUESTED = "RACE_PARTICIPANTS_UPDATE_REQUESTED";
 export const RACE_PARTICIPANTS_UPDATED = "RACE_PARTICIPANTS_UPDATED";
 export const RACE_PARTICIPANTS_UPDATE_FAILED = "RACE_PARTICIPANTS_UPDATE_FAILED";
+
+export const RACE_RESULTS_SUBSCRIPTION_STARTED = "RACE_RESULTS_SUBSCRIPTION_STARTED";
+export const RACE_RESULTS_SUBSCRIPTION_STOPPED = "RACE_RESULTS_SUBSCRIPTION_STOPPED";
 
 export type RacesRequestedAction = AnyAction;
 export type RacesLoadedAction = AnyAction & {
@@ -32,6 +37,10 @@ export type RaceParticipantsAction = AnyAction & {
 };
 export type RaceParticipantsUpdateFailedAction = AnyAction & {
   raceID: number;
+};
+
+export type RaceResultsSubscriptionAction = AnyAction & {
+  raceUUID: string;
 };
 
 export const racesRequested = (): RacesRequestedAction => ({
@@ -79,3 +88,20 @@ export const selectedRaceLoaded = (raceItemExt: RaceItemExt): SelectedRaceLoaded
   type: SELECTED_RACE_LOADED,
   raceItemExt: raceItemExt
 });
+
+export const raceResultsSubscriptionStarted = (
+  raceUUID: string
+): RaceResultsSubscriptionAction => ({
+  type: RACE_RESULTS_SUBSCRIPTION_STARTED,
+  raceUUID
+});
+
+export const raceResultsSubscriptionStopped = (
+  raceUUID: string
+): RaceResultsSubscriptionAction => ({
+  type: RACE_RESULTS_SUBSCRIPTION_STOPPED,
+  raceUUID
+});
+
+export const needToSubscribeToRaceResults = (state: RaceState): boolean =>
+  state === RaceState.STARTED || state === RaceState.STOPED;

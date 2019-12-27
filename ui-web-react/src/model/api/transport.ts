@@ -1,5 +1,6 @@
 import Optional from "optional-js";
-import { UserInfo, RacerProfile, RaceItem, RaceItemExt } from "../types/datatypes";
+import { Observable } from "rxjs";
+import { UserInfo, RacerProfile, RaceItem, RaceItemExt, RaceResults } from "../types/datatypes";
 import { timeout } from "promise-timeout";
 import { DEFAULT_TIMEOUT } from "../utils/constants";
 
@@ -23,6 +24,8 @@ export interface ITransport {
     added: RacerProfile[],
     removed: RacerProfile[]
   ): Promise<any>;
+  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>>;
+  unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any>;
 }
 
 export class TimeoutTransport implements ITransport {
@@ -74,6 +77,12 @@ export class TimeoutTransport implements ITransport {
       this.transport.updateRaceParticipants(userUUID, raceID, added, removed),
       DEFAULT_TIMEOUT
     );
+  }
+  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>> {
+    return this.transport.subscribeToRaceResults(userUUID, raceID);
+  }
+  unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
+    return timeout(this.transport.unsubscribeFromRaceResults(userUUID, raceID), DEFAULT_TIMEOUT);
   }
 }
 
@@ -139,6 +148,12 @@ export class TransportService implements ITransport {
   ): Promise<any> {
     return this.transport.updateRaceParticipants(userUUID, raceID, added, removed);
   }
+  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>> {
+    return this.transport.subscribeToRaceResults(userUUID, raceID);
+  }
+  unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
+    return this.transport.unsubscribeFromRaceResults(userUUID, raceID);
+  }
 }
 
 export async function loginApiRequest(userName: string, userPassword: string) {
@@ -195,4 +210,12 @@ export async function updateRaceParticipantsApiRequest(
     added,
     removed
   );
+}
+
+export function subscribeToRaceResultsApiRequest(userUUID: string, raceID: number) {
+  return TransportService.getInstance().subscribeToRaceResults(userUUID, raceID);
+}
+
+export async function unsubscribeFromRaceResults(userUUID: string, raceID: number) {
+  return await TransportService.getInstance().unsubscribeFromRaceResults(userUUID, raceID);
 }
