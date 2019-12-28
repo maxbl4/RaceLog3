@@ -7,12 +7,12 @@ import {
 } from "../utils/constants";
 import { LoggingService } from "../utils/logging-service";
 import Optional from "optional-js";
-import { Observable } from "rxjs";
-import { UserInfo, RacerProfile, RaceItem, RaceItemExt, RaceResults } from "../types/datatypes";
+import { UserInfo, RacerProfile, RaceItem, RaceItemExt, RacerResults } from "../types/datatypes";
 import { ITransport } from "./transport";
 import * as Cookies from "js-cookie";
 import { COOKIE_MESH_TOKEN } from "../utils/constants";
 import { INITIAL_USER_INFO } from "../types/datatypes";
+import { EventChannel } from "redux-saga";
 
 type CMSResponse = {
   success: boolean;
@@ -192,7 +192,7 @@ export class MeshApi implements ITransport {
     throw new Error("Method not implemented.");
   }
 
-  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>> {
+  subscribeToRaceResults(userUUID: string, raceID: number): EventChannel<Optional<RacerResults[]>> {
     throw new Error("Method not implemented.");
   }
 

@@ -1,8 +1,8 @@
 import Optional from "optional-js";
-import { Observable } from "rxjs";
-import { UserInfo, RacerProfile, RaceItem, RaceItemExt, RaceResults } from "../types/datatypes";
+import { UserInfo, RacerProfile, RaceItem, RaceItemExt, RacerResults } from "../types/datatypes";
 import { timeout } from "promise-timeout";
 import { DEFAULT_TIMEOUT } from "../utils/constants";
+import { EventChannel } from "redux-saga";
 
 export interface ITransport {
   login(userName: string, userPassword: string): Promise<any>;
@@ -24,7 +24,7 @@ export interface ITransport {
     added: RacerProfile[],
     removed: RacerProfile[]
   ): Promise<any>;
-  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>>;
+  subscribeToRaceResults(userUUID: string, raceID: number): EventChannel<Optional<RacerResults[]>>;
   unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any>;
 }
 
@@ -78,7 +78,7 @@ export class TimeoutTransport implements ITransport {
       DEFAULT_TIMEOUT
     );
   }
-  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>> {
+  subscribeToRaceResults(userUUID: string, raceID: number): EventChannel<Optional<RacerResults[]>> {
     return this.transport.subscribeToRaceResults(userUUID, raceID);
   }
   unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
@@ -148,7 +148,7 @@ export class TransportService implements ITransport {
   ): Promise<any> {
     return this.transport.updateRaceParticipants(userUUID, raceID, added, removed);
   }
-  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>> {
+  subscribeToRaceResults(userUUID: string, raceID: number): EventChannel<Optional<RacerResults[]>> {
     return this.transport.subscribeToRaceResults(userUUID, raceID);
   }
   unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {

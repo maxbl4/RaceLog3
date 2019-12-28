@@ -1,5 +1,5 @@
 import { AnyAction } from "redux";
-import { RaceItem, RaceItemExt, RacerProfile } from "../types/datatypes";
+import { RaceItem, RaceItemExt, RacerProfile, RacerResults } from "../types/datatypes";
 import Optional from "optional-js";
 import { RaceState } from "../types/races.model";
 
@@ -17,6 +17,7 @@ export const RACE_PARTICIPANTS_UPDATE_FAILED = "RACE_PARTICIPANTS_UPDATE_FAILED"
 
 export const RACE_RESULTS_SUBSCRIPTION_STARTED = "RACE_RESULTS_SUBSCRIPTION_STARTED";
 export const RACE_RESULTS_SUBSCRIPTION_STOPPED = "RACE_RESULTS_SUBSCRIPTION_STOPPED";
+export const RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED = "RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED";
 
 export type RacesRequestedAction = AnyAction;
 export type RacesLoadedAction = AnyAction & {
@@ -40,7 +41,11 @@ export type RaceParticipantsUpdateFailedAction = AnyAction & {
 };
 
 export type RaceResultsSubscriptionAction = AnyAction & {
-  raceUUID: string;
+  userUUID: string;
+  raceID: number;
+};
+export type RaceResultsSubscriptionDataAction = AnyAction & {
+  data: Optional<RacerResults[]>;
 };
 
 export const racesRequested = (): RacesRequestedAction => ({
@@ -89,18 +94,22 @@ export const selectedRaceLoaded = (raceItemExt: RaceItemExt): SelectedRaceLoaded
   raceItemExt: raceItemExt
 });
 
-export const raceResultsSubscriptionStarted = (
-  raceUUID: string
+const raceResultsSubscriptionFactory = (type: string) => (
+  userUUID: string,
+  raceID: number
 ): RaceResultsSubscriptionAction => ({
-  type: RACE_RESULTS_SUBSCRIPTION_STARTED,
-  raceUUID
+  type,
+  userUUID,
+  raceID
 });
+export const raceResultsSubscriptionStarted = raceResultsSubscriptionFactory(RACE_RESULTS_SUBSCRIPTION_STARTED);
+export const raceResultsSubscriptionStopped = raceResultsSubscriptionFactory(RACE_RESULTS_SUBSCRIPTION_STOPPED);
 
-export const raceResultsSubscriptionStopped = (
-  raceUUID: string
-): RaceResultsSubscriptionAction => ({
-  type: RACE_RESULTS_SUBSCRIPTION_STOPPED,
-  raceUUID
+export const raceResultsSubscriptionDataReceived = (
+  data: Optional<RacerResults[]>
+): RaceResultsSubscriptionDataAction => ({
+  type: RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED,
+  data
 });
 
 export const needToSubscribeToRaceResults = (state: RaceState): boolean =>

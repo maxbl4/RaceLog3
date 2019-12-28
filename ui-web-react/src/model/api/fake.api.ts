@@ -1,13 +1,12 @@
 import { ITransport } from "./transport";
 import Optional from "optional-js";
-import { Observable } from "rxjs";
 import {
   UserInfo,
   RacerProfile,
   RaceItem,
   RaceItemExt,
   StoredState,
-  RaceResults
+  RacerResults
 } from "../types/datatypes";
 import {
   DEFAULT_NON_AUTHORIZED_STORED_STATE,
@@ -17,10 +16,12 @@ import {
   DEFAULT_RACE_ITEM_EXT_4,
   DEFAULT_USER_INFO
 } from "../../tests/test.utils";
+import { eventChannel, EventChannel } from "redux-saga";
 
 export class FakeApi implements ITransport {
   private fakeStoredState: StoredState;
   private racesInfo: Map<number, RaceItemExt>;
+  private channel: EventChannel<Optional<RacerResults[]>>;
 
   constructor() {
     this.fakeStoredState = {
@@ -32,6 +33,12 @@ export class FakeApi implements ITransport {
     this.racesInfo.set(DEFAULT_RACE_ITEM_EXT_2.id, DEFAULT_RACE_ITEM_EXT_2);
     this.racesInfo.set(DEFAULT_RACE_ITEM_EXT_3.id, DEFAULT_RACE_ITEM_EXT_3);
     this.racesInfo.set(DEFAULT_RACE_ITEM_EXT_4.id, DEFAULT_RACE_ITEM_EXT_4);
+
+    this.channel = {
+      take: () => {},
+      flush: () => {},
+      close: () => {}
+    };
   }
 
   private processRacerProfiles = (
@@ -48,6 +55,23 @@ export class FakeApi implements ITransport {
       .concat(added);
   };
 
+  private createRaceResults = (raceID: number): Optional<RacerResults[]> => {
+    return Optional.ofNullable(this.racesInfo.get(raceID)).flatMap(race => {
+      race.results.items = race.participants.items.map(racers => racers.map(racer => {
+        return {
+          racerUUID: racer.uuid,
+          position: Optional.of(this.randomInt(racers.length)),
+          time: Optional.of(1577148082495),
+          laps: Optional.of(this.randomInt(racers.length * 20)),
+          points: Optional.of(this.randomInt(racers.length * 10)),
+        }
+      }));
+      return race.results.items;
+    });
+  };
+
+  private randomInt = (max: number): number => Math.floor(Math.random() * max);
+
   login(userName: string, userPassword: string): Promise<any> {
     this.fakeStoredState.user.info = Optional.of({
       ...DEFAULT_USER_INFO,
@@ -56,21 +80,26 @@ export class FakeApi implements ITransport {
     });
     return new Promise<any>(resolve => resolve());
   }
+
   logout(): Promise<any> {
     return new Promise<any>(resolve => resolve());
   }
+
   aboutMe(): Promise<Optional<UserInfo>> {
     return new Promise<Optional<UserInfo>>(resolve => resolve(this.fakeStoredState.user.info));
   }
+
   register(userInfo: UserInfo): Promise<Optional<UserInfo>> {
     this.fakeStoredState.user.info = Optional.of(userInfo);
     return new Promise<Optional<UserInfo>>(resolve => resolve(this.fakeStoredState.user.info));
   }
+
   requestRacerProfiles(userUUID: string): Promise<Optional<RacerProfile[]>> {
     return new Promise<Optional<RacerProfile[]>>(resolve =>
       resolve(this.fakeStoredState.racerProfiles.items)
     );
   }
+
   updateRacerProfiles(
     userUUID: string,
     added: RacerProfile[],
@@ -102,9 +131,11 @@ export class FakeApi implements ITransport {
 
     return new Promise<any>(resolve => resolve());
   }
+
   requestRaces(): Promise<Optional<RaceItem[]>> {
     return new Promise<Optional<RaceItem[]>>(resolve => resolve(this.fakeStoredState.races.items));
   }
+
   requestSelectedRace(raceID: number): Promise<Optional<RaceItemExt>> {
     Optional.ofNullable(this.racesInfo.get(raceID)).ifPresent(
       raceInfo => (this.fakeStoredState.selectedRace = raceInfo)
@@ -113,6 +144,7 @@ export class FakeApi implements ITransport {
       resolve(Optional.of(this.fakeStoredState.selectedRace))
     );
   }
+
   updateRaceParticipants(
     userUUID: string,
     raceID: number,
@@ -129,11 +161,22 @@ export class FakeApi implements ITransport {
     );
     return new Promise<any>(resolve => resolve());
   }
-  subscribeToRaceResults(userUUID: string, raceID: number): Observable<Optional<RaceResults[]>> {
-    throw new Error("Method not implemented.");
+
+  subscribeToRaceResults(userUUID: string, raceID: number): EventChannel<Optional<RacerResults[]>> {
+    this.channel = eventChannel(emitter => {
+      const iv = setInterval(() => {
+        emitter(this.createRaceResults(raceID));
+      }, 1000);
+      return () => {
+        clearInterval(iv);
+      };
+    });
+
+    return this.channel;
   }
 
   async unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
-    throw new Error("Method not implemented.");
+    this.channel.close();
+    return new Promise<any>(resolve => resolve());
   }
 }
