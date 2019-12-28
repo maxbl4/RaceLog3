@@ -64,6 +64,8 @@ interface RaceInfoComponentProps extends RouteComponentProps<RaceInfoParams> {
     added: RacerProfile[],
     removed: RacerProfile[]
   ) => void;
+  onSubscribeToResults: (userUUID: string, raceID: number) => void;
+  onUnsubscribeFromResults: (userUUID: string, raceID: number) => void;
 }
 
 const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComponentProps) => {
@@ -90,6 +92,17 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
         ? null
         : "Создайте профиль для регистрации"
     );
+  };
+  const getDesabledResultsReason = (): Optional<string> => {
+    return Optional.ofNullable(
+      props.raceItemExt.state === RaceState.NOT_STARTED ? "Гонка не началась" : null
+    );
+  };
+  const subscribeToResults = (): void => {
+    props.onSubscribeToResults(props.user.orElse(INITIAL_USER_INFO).uuid, props.raceItemExt.id);
+  };
+  const unsubscribeFromResults = (): void => {
+    props.onUnsubscribeFromResults(props.user.orElse(INITIAL_USER_INFO).uuid, props.raceItemExt.id);
   };
 
   if (props.raceItemExt.isFetching) {
@@ -141,9 +154,12 @@ const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComp
           onRegistrationUpdate={registrationUpdateHandler}
         />
         <RaceResultsComponent
-          state={props.raceItemExt.state}
+          disabled={props.raceItemExt.state === RaceState.NOT_STARTED}
+          disableReason={getDesabledResultsReason()}
           participants={props.raceItemExt.participants.items}
           results={props.raceItemExt.results.items}
+          subscribeToResults={subscribeToResults}
+          unsubscribeFromResults={unsubscribeFromResults}
         />
       </Container>
     );

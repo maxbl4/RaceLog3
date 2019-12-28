@@ -12,35 +12,44 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 import { commonStyles } from "../styles/common";
 import { RACE_RESULTS_EXPAND_BUTTON, RACE_RESULTS_TABLE } from "../../model/utils/constants";
-import { RaceState } from "../../model/types/races.model";
 import NullableComponent from "../common/nullable.component";
 
-const useStyles = makeStyles((theme: Theme) => {
+const styles = (theme: Theme) => {
   const common = commonStyles(theme);
   return {
     heading: common.heading,
     profileContainer: common.profileContainer
   };
-});
+};
 
 type ResultsTableRow = RacerProfile & RacerResults;
 
 type RaceResultsProps = {
-  state: RaceState;
+  disabled: boolean;
+  disableReason: Optional<string>;
   participants: Optional<RacerProfile[]>;
   results: Optional<RacerResults[]>;
+  subscribeToResults: () => void;
+  unsubscribeFromResults: () => void;
 };
 
-const RaceResultsComponent: React.FC<RaceResultsProps> = (props: RaceResultsProps) => {
-  const classes = useStyles();
-  const getTableContent = (): ResultsTableRow[] => {
+class RaceResultsComponent extends React.Component<RaceResultsProps> {
+  componentDidMount() {
+    this.props.subscribeToResults();
+  }
+
+  componentWillUnmount() {
+    this.props.unsubscribeFromResults();
+  }
+
+  getTableContent = (): ResultsTableRow[] => {
     const rows: ResultsTableRow[] = [];
-    const racers = props.participants.orElse([]);
-    props.results.ifPresent(results => {
+    const racers = this.props.participants.orElse([]);
+    this.props.results.ifPresent(results => {
       results.forEach(result => {
         Optional.ofNullable(racers.find(profile => profile.uuid === result.racerUUID)).ifPresent(
           racer => {
@@ -61,65 +70,72 @@ const RaceResultsComponent: React.FC<RaceResultsProps> = (props: RaceResultsProp
     });
     return rows;
   };
-  return (
-    <ExpansionPanel className="mt-3" disabled={props.state === RaceState.NOT_STARTED}>
-      <ExpansionPanelSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="raceResults-content"
-        id={RACE_RESULTS_EXPAND_BUTTON}
-      >
-        <Typography className={classes.heading}>
-          {"Результаты" +
-            (props.state === RaceState.NOT_STARTED ? " недоступны. Гонка не началась" : "")}
-        </Typography>
-      </ExpansionPanelSummary>
-      <ExpansionPanelDetails>
-        <Container component="main" maxWidth="xs" className={classes.profileContainer}>
-          <Table id={RACE_RESULTS_TABLE}>
-            <TableHead>
-              <TableRow>
-                <TableCell>#</TableCell>
-                <TableCell>ФИО</TableCell>
-                <TableCell>Номер</TableCell>
-                <TableCell>Время</TableCell>
-                <TableCell>Круги</TableCell>
-                <TableCell>Очки</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {getTableContent().map(row => (
-                <TableRow key={row.racerUUID}>
-                  <TableCell component="th" scope="row">
-                    <NullableComponent value={row.position} />
-                  </TableCell>
-                  <TableCell align="right">
-                    <NullableComponent value={Optional.of(row.name)} />
-                  </TableCell>
-                  <TableCell align="right">
-                    <NullableComponent value={Optional.of(row.bikeNumber)} />
-                  </TableCell>
-                  <TableCell align="right">
-                    <NullableComponent
-                      value={row.time.map(value => {
-                        const date = new Date(value);
-                        return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
-                      })}
-                    />
-                  </TableCell>
-                  <TableCell align="right">
-                    <NullableComponent value={row.laps} />
-                  </TableCell>
-                  <TableCell align="right">
-                    <NullableComponent value={row.points} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Container>
-      </ExpansionPanelDetails>
-    </ExpansionPanel>
-  );
-};
 
-export default RaceResultsComponent;
+  render() {
+    // @ts-ignore
+    const { classes } = this.props;
+
+    return (
+      <ExpansionPanel className="mt-3" disabled={this.props.disabled}>
+        <ExpansionPanelSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="raceResults-content"
+          id={RACE_RESULTS_EXPAND_BUTTON}
+        >
+          <Typography className={classes.heading}>
+            {this.props.disableReason
+              .map(reason => `Результаты недоступны. ${reason}`)
+              .orElse("Результаты")}
+          </Typography>
+        </ExpansionPanelSummary>
+        <ExpansionPanelDetails>
+          <Container component="main" maxWidth="xs" className={classes.profileContainer}>
+            <Table id={RACE_RESULTS_TABLE}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>#</TableCell>
+                  <TableCell>ФИО</TableCell>
+                  <TableCell>Номер</TableCell>
+                  <TableCell>Время</TableCell>
+                  <TableCell>Круги</TableCell>
+                  <TableCell>Очки</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {this.getTableContent().map(row => (
+                  <TableRow key={row.racerUUID}>
+                    <TableCell component="th" scope="row">
+                      <NullableComponent value={row.position} />
+                    </TableCell>
+                    <TableCell align="right">
+                      <NullableComponent value={Optional.of(row.name)} />
+                    </TableCell>
+                    <TableCell align="right">
+                      <NullableComponent value={Optional.of(row.bikeNumber)} />
+                    </TableCell>
+                    <TableCell align="right">
+                      <NullableComponent
+                        value={row.time.map(value => {
+                          const date = new Date(value);
+                          return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
+                        })}
+                      />
+                    </TableCell>
+                    <TableCell align="right">
+                      <NullableComponent value={row.laps} />
+                    </TableCell>
+                    <TableCell align="right">
+                      <NullableComponent value={row.points} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Container>
+        </ExpansionPanelDetails>
+      </ExpansionPanel>
+    );
+  }
+}
+
+export default withStyles(styles, { withTheme: true })(RaceResultsComponent);
