@@ -13,6 +13,7 @@ import * as Cookies from "js-cookie";
 import { COOKIE_MESH_TOKEN } from "../utils/constants";
 import { INITIAL_USER_INFO } from "../types/datatypes";
 import { EventChannel } from "redux-saga";
+import { RaceState } from "../types/races.model";
 
 type CMSResponse = {
   success: boolean;
@@ -197,6 +198,10 @@ export class MeshApi implements ITransport {
   }
 
   async unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
+
+  async changeRaceState(raceID: number, state: RaceState): Promise<any> {
     throw new Error("Method not implemented.");
   }
 }

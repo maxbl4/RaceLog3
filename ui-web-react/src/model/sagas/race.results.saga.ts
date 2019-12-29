@@ -3,9 +3,11 @@ import {
   RACE_RESULTS_SUBSCRIPTION_STARTED,
   RACE_RESULTS_SUBSCRIPTION_STOPPED,
   raceResultsSubscriptionDataReceived,
-  RaceResultsSubscriptionAction
+  RaceResultsSubscriptionAction,
+  raceResultsSubscriptionStopped,
+  raceResultsSubscriptionFailed
 } from "../actions/race.actions";
-import { subscribeToRaceResultsApiRequest, unsubscribeFromRaceResults } from "../api/transport";
+import { subscribeToRaceResultsApiRequest, unsubscribeFromRaceResultsApiRequest } from "../api/transport";
 import { LoggingService } from "../utils/logging-service";
 
 function* subscribeToResults(action: RaceResultsSubscriptionAction) {
@@ -20,9 +22,11 @@ function* subscribeToResults(action: RaceResultsSubscriptionAction) {
     }
   } catch (e) {
     LoggingService.getInstance().logSagaError(e, action);
+    yield put(raceResultsSubscriptionFailed());
   } finally {
     if (yield cancelled()) {
-      yield unsubscribeFromRaceResults(action.userUUID, action.raceUUID);
+      yield unsubscribeFromRaceResultsApiRequest(action.userUUID, action.raceUUID);
+      yield put(raceResultsSubscriptionStopped(action.userUUID, action.raceUUID));
       LoggingService.getInstance().info(
         `Unsubscribed from results of raceID=${action.raceUUID}, userUUID=${action.userUUID}.`
       );

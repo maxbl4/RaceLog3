@@ -1,5 +1,5 @@
 import { all, call } from "redux-saga/effects";
-import { racesSaga, selectedRaceSaga, raceParticipantsUpdateRequestSaga } from "./race.saga";
+import { racesSaga, selectedRaceSaga } from "./race.saga";
 import {
   userLoginSaga,
   userRegistrationSaga,
@@ -9,6 +9,8 @@ import {
 import { alertsHideSaga } from "./alerts.saga";
 import { racerProfilesRequestAll, racerProfilesUpdate } from "./racerProfiles.saga";
 import { raceResultsSaga } from "./race.results.saga";
+import { raceParticipantsUpdateRequestSaga } from "./race.participants.saga";
+import { raceChangeStateSaga } from "./race.state.saga";
 
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
@@ -24,7 +26,8 @@ function* raceLogSaga() {
     call(racerProfilesRequestAll),
     call(racerProfilesUpdate),
     call(raceParticipantsUpdateRequestSaga),
-    call(raceResultsSaga)
+    call(raceResultsSaga),
+    call(raceChangeStateSaga)
   ]);
 }
 

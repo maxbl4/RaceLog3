@@ -18,6 +18,11 @@ export const RACE_PARTICIPANTS_UPDATE_FAILED = "RACE_PARTICIPANTS_UPDATE_FAILED"
 export const RACE_RESULTS_SUBSCRIPTION_STARTED = "RACE_RESULTS_SUBSCRIPTION_STARTED";
 export const RACE_RESULTS_SUBSCRIPTION_STOPPED = "RACE_RESULTS_SUBSCRIPTION_STOPPED";
 export const RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED = "RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED";
+export const RACE_RESULTS_SUBSCRIPTION_FAILED = "RACE_RESULTS_SUBSCRIPTION_FAILED";
+
+export const RACE_CHANGE_STATE_REQUESTED = "RACE_CHANGE_STATE_REQUESTED";
+export const RACE_CHANGE_STATE_SUCCESS = "RACE_CHANGE_STATE_SUCCESS";
+export const RACE_CHANGE_STATE_FAILED = "RACE_CHANGE_STATE_FAILED";
 
 export type RacesRequestedAction = AnyAction;
 export type RacesLoadedAction = AnyAction & {
@@ -46,6 +51,11 @@ export type RaceResultsSubscriptionAction = AnyAction & {
 };
 export type RaceResultsSubscriptionDataAction = AnyAction & {
   data: Optional<RacerResults[]>;
+};
+
+export type RaceChangeStateAction = AnyAction & {
+  raceID: number;
+  state: RaceState;
 };
 
 export const racesRequested = (): RacesRequestedAction => ({
@@ -102,8 +112,15 @@ const raceResultsSubscriptionFactory = (type: string) => (
   userUUID,
   raceID
 });
-export const raceResultsSubscriptionStarted = raceResultsSubscriptionFactory(RACE_RESULTS_SUBSCRIPTION_STARTED);
-export const raceResultsSubscriptionStopped = raceResultsSubscriptionFactory(RACE_RESULTS_SUBSCRIPTION_STOPPED);
+export const raceResultsSubscriptionStarted = raceResultsSubscriptionFactory(
+  RACE_RESULTS_SUBSCRIPTION_STARTED
+);
+export const raceResultsSubscriptionStopped = raceResultsSubscriptionFactory(
+  RACE_RESULTS_SUBSCRIPTION_STOPPED
+);
+export const raceResultsSubscriptionFailed = (): AnyAction => ({
+  type: RACE_RESULTS_SUBSCRIPTION_FAILED
+});
 
 export const raceResultsSubscriptionDataReceived = (
   data: Optional<RacerResults[]>
@@ -114,3 +131,17 @@ export const raceResultsSubscriptionDataReceived = (
 
 export const needToSubscribeToRaceResults = (state: RaceState): boolean =>
   state === RaceState.STARTED || state === RaceState.STOPPED;
+
+const raceChangeStateFactory = (type: string) => (
+  raceID: number,
+  state: RaceState
+): RaceChangeStateAction => ({
+  type,
+  raceID,
+  state
+});
+export const raceChangeStateRequested = raceChangeStateFactory(RACE_CHANGE_STATE_REQUESTED);
+export const raceChangeStateSuccess = raceChangeStateFactory(RACE_CHANGE_STATE_SUCCESS);
+export const raceChangeStateFailed = (): AnyAction => ({
+  type: RACE_CHANGE_STATE_FAILED
+});

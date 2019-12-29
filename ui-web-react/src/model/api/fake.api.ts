@@ -17,6 +17,7 @@ import {
   DEFAULT_USER_INFO
 } from "../../tests/test.utils";
 import { eventChannel, EventChannel } from "redux-saga";
+import { RaceState } from "../types/races.model";
 
 export class FakeApi implements ITransport {
   private fakeStoredState: StoredState;
@@ -57,15 +58,17 @@ export class FakeApi implements ITransport {
 
   private createRaceResults = (raceID: number): Optional<RacerResults[]> => {
     return Optional.ofNullable(this.racesInfo.get(raceID)).flatMap(race => {
-      race.results.items = race.participants.items.map(racers => racers.map(racer => {
-        return {
-          racerUUID: racer.uuid,
-          position: Optional.of(this.randomInt(racers.length)),
-          time: Optional.of(1577148082495),
-          laps: Optional.of(this.randomInt(racers.length * 20)),
-          points: Optional.of(this.randomInt(racers.length * 10)),
-        }
-      }));
+      race.results.items = race.participants.items.map(racers =>
+        racers.map(racer => {
+          return {
+            racerUUID: racer.uuid,
+            position: Optional.of(this.randomInt(racers.length)),
+            time: Optional.of(1577148082495),
+            laps: Optional.of(this.randomInt(racers.length * 20)),
+            points: Optional.of(this.randomInt(racers.length * 10))
+          };
+        })
+      );
       return race.results.items;
     });
   };
@@ -177,6 +180,11 @@ export class FakeApi implements ITransport {
 
   async unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
     this.channel.close();
+    return new Promise<any>(resolve => resolve());
+  }
+
+  async changeRaceState(raceID: number, state: RaceState): Promise<any> {
+    Optional.ofNullable(this.racesInfo.get(raceID)).ifPresent(race => (race.state = state));
     return new Promise<any>(resolve => resolve());
   }
 }

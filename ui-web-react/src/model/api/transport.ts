@@ -3,6 +3,7 @@ import { UserInfo, RacerProfile, RaceItem, RaceItemExt, RacerResults } from "../
 import { timeout } from "promise-timeout";
 import { DEFAULT_TIMEOUT } from "../utils/constants";
 import { EventChannel } from "redux-saga";
+import { RaceState } from "../types/races.model";
 
 export interface ITransport {
   login(userName: string, userPassword: string): Promise<any>;
@@ -26,6 +27,7 @@ export interface ITransport {
   ): Promise<any>;
   subscribeToRaceResults(userUUID: string, raceID: number): EventChannel<Optional<RacerResults[]>>;
   unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any>;
+  changeRaceState(raceID: number, state: RaceState): Promise<any>;
 }
 
 export class TimeoutTransport implements ITransport {
@@ -83,6 +85,9 @@ export class TimeoutTransport implements ITransport {
   }
   unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
     return timeout(this.transport.unsubscribeFromRaceResults(userUUID, raceID), DEFAULT_TIMEOUT);
+  }
+  changeRaceState(raceID: number, state: RaceState): Promise<any> {
+    return timeout(this.transport.changeRaceState(raceID, state), DEFAULT_TIMEOUT);
   }
 }
 
@@ -154,6 +159,9 @@ export class TransportService implements ITransport {
   unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
     return this.transport.unsubscribeFromRaceResults(userUUID, raceID);
   }
+  changeRaceState(raceID: number, state: RaceState): Promise<any> {
+    return this.transport.changeRaceState(raceID, state);
+  }
 }
 
 export async function loginApiRequest(userName: string, userPassword: string) {
@@ -216,6 +224,10 @@ export function subscribeToRaceResultsApiRequest(userUUID: string, raceID: numbe
   return TransportService.getInstance().subscribeToRaceResults(userUUID, raceID);
 }
 
-export async function unsubscribeFromRaceResults(userUUID: string, raceID: number) {
+export async function unsubscribeFromRaceResultsApiRequest(userUUID: string, raceID: number) {
   return await TransportService.getInstance().unsubscribeFromRaceResults(userUUID, raceID);
+}
+
+export async function changeRaceStateApiRequest(raceID: number, state: RaceState) {
+  return await TransportService.getInstance().changeRaceState(raceID, state);
 }
