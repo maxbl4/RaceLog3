@@ -113,4 +113,4 @@ export const raceResultsSubscriptionDataReceived = (
 });
 
 export const needToSubscribeToRaceResults = (state: RaceState): boolean =>
-  state === RaceState.STARTED || state === RaceState.STOPED;
+  state === RaceState.STARTED || state === RaceState.STOPPED;

@@ -27,6 +27,7 @@ import {
 } from "../model/types/datatypes";
 import Optional from "optional-js";
 import { RaceState } from "../model/types/races.model";
+import { Role } from "../model/types/roles.model";
 
 // const {history, location, match} = routerTestProps(RACES_INFO, {id: "1"})
 // const {findByText} = renderWithReduxAndRouter(<RaceInfoContainer history={history} location={location} match={match}/>, DEFAULT_STORED_STATE)
@@ -234,7 +235,7 @@ export const DEFAULT_RACE_ITEM_EXT_3: RaceItemExt = {
   isFetching: false,
   description: "Description for Grand Prix of Germany.",
   participants: { ...INITIAL_RACER_PROFILES },
-  state: RaceState.STOPED,
+  state: RaceState.STOPPED,
   results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACE_ITEM_EXT_4: RaceItemExt = {
@@ -322,7 +323,7 @@ export const DEFAULT_USER_INFO: UserInfo = {
   name: "Valentino Rossi",
   email: "valentino.rossi@yamaha.jp",
   password: "rossiGp46",
-  role: "user"
+  role: Role.ADMIN
 };
 export const DEFAULT_ALERT_1: Alert = {
   id: 1,

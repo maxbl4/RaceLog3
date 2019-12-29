@@ -123,7 +123,7 @@ export const INITIAL_USER_INFO: UserInfo = {
   name: "",
   email: "",
   password: "",
-  role: "user"
+  role: Role.USER
 };
 
 export const INITIAL_RACER_PROFILES: RacerProfiles = {

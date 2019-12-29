@@ -1,9 +1,9 @@
-import { getRoleName } from "../../../model/types/roles.model";
+import { getRoleName, Role } from "../../../model/types/roles.model";
 
 describe("roles.model", () => {
   it("should return correct human readable names", () => {
-    expect(getRoleName("admin")).toEqual("Администратор");
-    expect(getRoleName("supporter")).toEqual("Тех поддержка");
-    expect(getRoleName("user")).toEqual("Пользователь");
+    expect(getRoleName(Role.ADMIN)).toEqual("Администратор");
+    expect(getRoleName(Role.SUPPORT)).toEqual("Тех поддержка");
+    expect(getRoleName(Role.USER)).toEqual("Пользователь");
   });
 });
