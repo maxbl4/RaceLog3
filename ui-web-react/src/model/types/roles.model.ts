@@ -16,3 +16,7 @@ export function getRoleName(role: Role): string {
       return "Неизвестная роль";
   }
 }
+
+export function canSeeSpecialContent(role: Role): boolean {
+  return role === Role.ADMIN || role === Role.SUPPORT;
+}

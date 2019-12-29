@@ -1,6 +1,6 @@
 import React from "react";
 import { UserInfo, User, RacerProfile, RacerProfiles } from "../../model/types/datatypes";
-import { getRoleName } from "../../model/types/roles.model";
+import { getRoleName, canSeeSpecialContent } from "../../model/types/roles.model";
 import { FetchingComponent } from "../common/fetching.component";
 import { Redirect } from "react-router";
 import { USER_SIGN_IN } from "../../model/routing/paths";
@@ -20,6 +20,7 @@ import {
   PROFILE_ROLE,
   PROFILE_LOGOUT_BUTTON
 } from "../../model/utils/constants";
+import AdminRaceInfoContainer from "./admin.race-info.container";
 
 const useStyles = makeStyles((theme: Theme) => {
   const styles = commonStyles(theme);
@@ -111,6 +112,7 @@ const UserProfileComponent: React.FC<UserProfileComponentProps> = (
                 userUUID={props.user.info.orElse(INITIAL_USER_INFO).uuid}
                 initialProfiles={props.racerProfiles.items.orElse([])}
               />
+              {canSeeSpecialContent(info.role) && <AdminRaceInfoContainer />}
             </Container>
           </React.Fragment>
         );
