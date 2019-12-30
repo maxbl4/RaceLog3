@@ -8,6 +8,6 @@ test("loads and displays profile", async () => {
   const { getByText } = renderWithReduxAndRouter(<UserProfileContainer />, DEFAULT_STORED_STATE);
   fireEvent.click(getByText("Valentino Rossi"));
   fireEvent.click(getByText("valentino.rossi@yamaha.jp"));
-  fireEvent.click(getByText("Пользователь"));
+  fireEvent.click(getByText("Администратор"));
   // debug();
 });

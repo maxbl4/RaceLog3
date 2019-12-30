@@ -5,7 +5,7 @@ import {
   RaceParticipantsAction,
   raceParticipantsUpdated,
   raceParticipantsUpdateFailed
-} from "../actions/race.actions";
+} from "../actions/race.participants.actions";
 import { LoggingService } from "../utils/logging-service";
 import { AlertType, Alert } from "../types/datatypes";
 import { getNextAlertID } from "../utils/constants";

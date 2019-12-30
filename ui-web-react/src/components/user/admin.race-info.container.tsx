@@ -12,11 +12,13 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
+import IconButton from "@material-ui/core/IconButton";
+import RefreshIcon from "@material-ui/icons/Refresh";
 import { StoredState, RaceItem } from "../../model/types/datatypes";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import SpinnerButton from "../common/spinner-button";
 import Optional from "optional-js";
 import {
   ADMIN_RACE_INFO_EXPAND_BUTTON,
@@ -25,8 +27,8 @@ import {
   ADMIN_RACE_INFO_NAME_COMBO,
   ADMIN_RACE_INFO_STATE_COMBO
 } from "../../model/utils/constants";
-import { raceChangeStateRequested } from "../../model/actions/race.actions";
 import { RaceState, getRaceStateName } from "../../model/types/races.model";
+import { raceChangeStateRequested } from "../../model/actions/race.state.actions";
 
 const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
@@ -55,7 +57,7 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
     props.onRaceStateSubmit(raceID, raceState);
   };
   const getStateOption = (state: RaceState): JSX.Element => {
-    return <option value={state}>{getRaceStateName(state)}</option>;
+    return <MenuItem value={state}>{getRaceStateName(state)}</MenuItem>;
   };
 
   return (
@@ -70,15 +72,15 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
         </Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="xs" className={classes.profileContainer}>
           <CssBaseline />
           <form className="mt-2">
             <Grid container spacing={1}>
-              <Grid item xs={5}>
+              <Grid item xs={7}>
                 <FormControl variant="outlined">
-                  <InputLabel htmlFor={ADMIN_RACE_INFO_NAME_COMBO}>Гонка</InputLabel>
+                  <InputLabel id={ADMIN_RACE_INFO_NAME_COMBO + "-label"}>Гонка</InputLabel>
                   <Select
-                    native
+                    labelId={ADMIN_RACE_INFO_NAME_COMBO + "-label"}
                     value={raceID}
                     onChange={handleRaceIDChange}
                     inputProps={{
@@ -86,16 +88,16 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
                     }}
                   >
                     {props.races.orElse([]).map(race => (
-                      <option value={race.id}>{race.name}</option>
+                      <MenuItem value={race.id}>{race.name}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
                 <FormControl variant="outlined">
-                  <InputLabel htmlFor={ADMIN_RACE_INFO_STATE_COMBO}>Состояние</InputLabel>
+                  <InputLabel id={ADMIN_RACE_INFO_STATE_COMBO + "-label"}>Состояние</InputLabel>
                   <Select
-                    native
+                    labelId={ADMIN_RACE_INFO_STATE_COMBO + "-label"}
                     value={raceState}
                     onChange={handleRaceStateChange}
                     inputProps={{
@@ -109,13 +111,14 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={3}>
-                <SpinnerButton
+              <Grid item xs={1}>
+                <IconButton
                   id={ADMIN_RACE_INFO_SUBMIT_BUTTON}
-                  label="Обновить"
-                  showSpinner={false}
-                  handleClick={handleRaceStateSubmit}
-                />
+                  color="primary"
+                  onClick={handleRaceStateSubmit}
+                >
+                  <RefreshIcon />
+                </IconButton>
               </Grid>
             </Grid>
           </form>

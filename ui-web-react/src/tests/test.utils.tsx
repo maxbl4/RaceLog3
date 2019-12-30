@@ -227,7 +227,7 @@ export const DEFAULT_RACE_ITEM_EXT_2: RaceItemExt = {
   isFetching: false,
   description: "Description for Grand Prix of Catalunya.",
   participants: { ...INITIAL_RACER_PROFILES },
-  state: RaceState.STARTED,
+  state: RaceState.NOT_STARTED,
   results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACE_ITEM_EXT_3: RaceItemExt = {
@@ -235,7 +235,7 @@ export const DEFAULT_RACE_ITEM_EXT_3: RaceItemExt = {
   isFetching: false,
   description: "Description for Grand Prix of Germany.",
   participants: { ...INITIAL_RACER_PROFILES },
-  state: RaceState.STOPPED,
+  state: RaceState.NOT_STARTED,
   results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACE_ITEM_EXT_4: RaceItemExt = {
@@ -243,7 +243,7 @@ export const DEFAULT_RACE_ITEM_EXT_4: RaceItemExt = {
   isFetching: false,
   description: "Description for Grand Prix of Great Britain.",
   participants: { ...INITIAL_RACER_PROFILES },
-  state: RaceState.FINISHED,
+  state: RaceState.NOT_STARTED,
   results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACER_PROFILE_1: RacerProfile = {

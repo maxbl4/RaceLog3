@@ -6,7 +6,7 @@ import {
   RaceResultsSubscriptionAction,
   raceResultsSubscriptionStopped,
   raceResultsSubscriptionFailed
-} from "../actions/race.actions";
+} from "../actions/race.results.actions";
 import { subscribeToRaceResultsApiRequest, unsubscribeFromRaceResultsApiRequest } from "../api/transport";
 import { LoggingService } from "../utils/logging-service";
 

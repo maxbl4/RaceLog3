@@ -1,13 +1,13 @@
 import { StoredState, RacerProfile } from "../../model/types/datatypes";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
+import { selectedRaceRequested } from "../../model/actions/race.actions";
+import RaceInfoComponent from "./race-info.component";
+import { raceParticipantsUpdateRequested } from "../../model/actions/race.participants.actions";
 import {
-  selectedRaceRequested,
-  raceParticipantsUpdateRequested,
   raceResultsSubscriptionStarted,
   raceResultsSubscriptionStopped
-} from "../../model/actions/race.actions";
-import RaceInfoComponent from "./race-info.component";
+} from "../../model/actions/race.results.actions";
 
 const mapStateToProps = (state: StoredState) => {
   return {

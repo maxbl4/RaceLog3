@@ -1,4 +1,10 @@
-import { Races, RaceItemExt, RacerProfile, INITIAL_RACES, INITIAL_SELECTED_RACE } from "../types/datatypes";
+import {
+  Races,
+  RaceItemExt,
+  RacerProfile,
+  INITIAL_RACES,
+  INITIAL_SELECTED_RACE
+} from "../types/datatypes";
 import Optional from "optional-js";
 import {
   RACES_REQUESTED,
@@ -7,15 +13,18 @@ import {
   SELECTED_RACE_REQUESTED,
   SELECTED_RACE_LOADED,
   SelectedRaceLoadedAction,
-  RACE_PARTICIPANTS_UPDATE_REQUESTED,
-  RACE_PARTICIPANTS_UPDATED,
-  RaceParticipantsAction,
-  RACE_PARTICIPANTS_UPDATE_FAILED,
   RACES_REQUEST_FAILED,
   SELECTED_RACE_REQUEST_FAILED
 } from "../actions/race.actions";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
+import {
+  RACE_PARTICIPANTS_UPDATE_REQUESTED,
+  RACE_PARTICIPANTS_UPDATED,
+  RaceParticipantsAction,
+  RACE_PARTICIPANTS_UPDATE_FAILED
+} from "../actions/race.participants.actions";
+import { RACE_CHANGE_STATE_SUCCESS, RaceChangeStateAction } from "../actions/race.state.actions";
 
 export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
   LoggingService.getInstance().logReducer(action, state);
@@ -81,6 +90,11 @@ export function selectedRaceReducer(state: RaceItemExt = INITIAL_SELECTED_RACE, 
           ...state.participants,
           isFetching: false
         }
+      };
+    case RACE_CHANGE_STATE_SUCCESS:
+      return {
+        ...state,
+        state: (action as RaceChangeStateAction).state
       };
     default:
       return state;

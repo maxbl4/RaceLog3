@@ -16,14 +16,18 @@ import {
   RACES_LOADED,
   SELECTED_RACE_REQUESTED,
   SELECTED_RACE_LOADED,
-  RACE_PARTICIPANTS_UPDATE_REQUESTED,
-  RACE_PARTICIPANTS_UPDATE_FAILED,
-  RACE_PARTICIPANTS_UPDATED,
   RACES_REQUEST_FAILED,
   SELECTED_RACE_REQUEST_FAILED
 } from "../../../model/actions/race.actions";
 import Optional from "optional-js";
 import { INITIAL_SELECTED_RACE } from "../../../model/types/datatypes";
+import {
+  RACE_PARTICIPANTS_UPDATE_REQUESTED,
+  RACE_PARTICIPANTS_UPDATED,
+  RACE_PARTICIPANTS_UPDATE_FAILED
+} from "../../../model/actions/race.participants.actions";
+import { RACE_CHANGE_STATE_REQUESTED, RACE_CHANGE_STATE_FAILED, RACE_CHANGE_STATE_SUCCESS } from "../../../model/actions/race.state.actions";
+import { RaceState } from "../../../model/types/races.model";
 
 describe("race.reducer - racesReducer", () => {
   it("should return default state for unknown action", () => {
@@ -71,7 +75,9 @@ describe("race.reducer - selectedRaceReducer", () => {
   });
 
   it("should return the same state and isFetching='false' for SELECTED_RACE_REQUEST_FAILED action", () => {
-    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, { type: SELECTED_RACE_REQUEST_FAILED });
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
+      type: SELECTED_RACE_REQUEST_FAILED
+    });
     expect(raceState.isFetching).toBeFalsy();
     compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
   });
@@ -123,5 +129,40 @@ describe("race.reducer - selectedRaceReducer", () => {
     expect(!!raceState.participants).toBeTruthy();
     expect(raceState.participants.isFetching).toBeFalsy();
     compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
+  });
+
+  it("should return the same race state for RACE_CHANGE_STATE_REQUESTED action", () => {
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
+      type: RACE_CHANGE_STATE_REQUESTED,
+      raceID: 1,
+      state: RaceState.NOT_STARTED
+    });
+    expect(!!raceState.participants).toBeTruthy();
+    expect(raceState.participants.isFetching).toBeFalsy();
+    compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
+  });
+
+  it("should return the same race state for RACE_CHANGE_STATE_FAILED action", () => {
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
+      type: RACE_CHANGE_STATE_FAILED
+    });
+    expect(!!raceState.participants).toBeTruthy();
+    expect(raceState.participants.isFetching).toBeFalsy();
+    compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
+  });
+
+  it("should return new race state for RACE_CHANGE_STATE_SUCCESS action", () => {
+    const state = RaceState.STARTED;
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
+      type: RACE_CHANGE_STATE_SUCCESS,
+      raceID: 1,
+      state
+    });
+    expect(!!raceState.participants).toBeTruthy();
+    expect(raceState.participants.isFetching).toBeFalsy();
+    compareRaceItems(raceState, {
+      ...DEFAULT_RACE_ITEM_EXT,
+      state
+    });
   });
 });

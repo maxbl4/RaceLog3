@@ -1,16 +1,16 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import {
-  RACE_CHANGE_STATE_REQUESTED,
-  RaceChangeStateAction,
-  raceChangeStateSuccess,
-  raceChangeStateFailed
-} from "../actions/race.actions";
 import { changeRaceStateApiRequest } from "../api/transport";
 import { LoggingService } from "../utils/logging-service";
 import { getNextAlertID } from "../utils/constants";
 import { AlertType, Alert } from "../types/datatypes";
 import { alertsShow } from "../actions/alerts.actions";
 import { getRaceStateName } from "../types/races.model";
+import {
+  RaceChangeStateAction,
+  raceChangeStateSuccess,
+  raceChangeStateFailed,
+  RACE_CHANGE_STATE_REQUESTED
+} from "../actions/race.state.actions";
 
 function* tryChangeRaceState(action: RaceChangeStateAction) {
   try {
