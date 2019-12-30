@@ -25,7 +25,8 @@ import {
   ADMIN_RACE_INFO_HEADER,
   ADMIN_RACE_INFO_SUBMIT_BUTTON,
   ADMIN_RACE_INFO_NAME_COMBO,
-  ADMIN_RACE_INFO_STATE_COMBO
+  ADMIN_RACE_INFO_STATE_COMBO,
+  DEFAULT_ID
 } from "../../model/utils/constants";
 import { RaceState, getRaceStateName } from "../../model/types/races.model";
 import { raceChangeStateRequested } from "../../model/actions/race.state.actions";
@@ -45,7 +46,7 @@ type AdminRaceInfo = {
 
 const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) => {
   const classes = useStyles();
-  const [raceID, setRaceID] = useState(-1);
+  const [raceID, setRaceID] = useState<number>(props.races.map(list => list[0].id).orElse(DEFAULT_ID));
   const [raceState, setRaceState] = useState(RaceState.NOT_STARTED);
   const handleRaceIDChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setRaceID(parseInt(event.target.value as string));
@@ -81,7 +82,7 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
                   <InputLabel id={ADMIN_RACE_INFO_NAME_COMBO + "-label"}>Гонка</InputLabel>
                   <Select
                     labelId={ADMIN_RACE_INFO_NAME_COMBO + "-label"}
-                    value={raceID}
+                    value={raceID === DEFAULT_ID ? undefined : raceID}
                     onChange={handleRaceIDChange}
                     inputProps={{
                       id: ADMIN_RACE_INFO_NAME_COMBO
