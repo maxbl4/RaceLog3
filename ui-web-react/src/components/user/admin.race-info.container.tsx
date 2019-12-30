@@ -49,10 +49,10 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
   const [raceID, setRaceID] = useState<number>(props.races.map(list => list[0].id).orElse(DEFAULT_ID));
   const [raceState, setRaceState] = useState(RaceState.NOT_STARTED);
   const handleRaceIDChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setRaceID(parseInt(event.target.value as string));
+    setRaceID(event.target.value as number);
   };
   const handleRaceStateChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setRaceState(parseInt(event.target.value as string));
+    setRaceState(event.target.value as number);
   };
   const handleRaceStateSubmit = (): void => {
     props.onRaceStateSubmit(raceID, raceState);

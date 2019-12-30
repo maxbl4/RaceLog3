@@ -6,12 +6,12 @@ type NullableProps = {
 };
 
 const NullableComponent: React.FC<NullableProps> = (props: NullableProps) => {
-  const value = props.value.isPresent() ? props.value.get() : null;
+  const value = props.value.isPresent() ? props.value.get() + "" : null;
   return (
-    <div>
-      {!!value && { value }}
-      {!value && "&#8212;"}
-    </div>
+    <React.Fragment>
+      {!!value && <span>{value}</span>}
+      {!value && <span>&#8212;</span>}
+    </React.Fragment>
   );
 };
 

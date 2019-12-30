@@ -12,7 +12,7 @@ import { LoggingService } from "../utils/logging-service";
 
 function* subscribeToResults(action: RaceResultsSubscriptionAction) {
   try {
-    const socketChannel = subscribeToRaceResultsApiRequest(action.userUUID, action.raceUUID);
+    const socketChannel = subscribeToRaceResultsApiRequest(action.userUUID, action.raceID);
     LoggingService.getInstance().info(
       `Subscribed to results of raceID=${action.raceUUID}, userUUID=${action.userUUID}.`
     );
@@ -25,10 +25,10 @@ function* subscribeToResults(action: RaceResultsSubscriptionAction) {
     yield put(raceResultsSubscriptionFailed());
   } finally {
     if (yield cancelled()) {
-      yield unsubscribeFromRaceResultsApiRequest(action.userUUID, action.raceUUID);
-      yield put(raceResultsSubscriptionStopped(action.userUUID, action.raceUUID));
+      yield unsubscribeFromRaceResultsApiRequest(action.userUUID, action.raceID);
+      yield put(raceResultsSubscriptionStopped(action.userUUID, action.raceID));
       LoggingService.getInstance().info(
-        `Unsubscribed from results of raceID=${action.raceUUID}, userUUID=${action.userUUID}.`
+        `Unsubscribed from results of raceID=${action.raceID}, userUUID=${action.userUUID}.`
       );
     }
   }

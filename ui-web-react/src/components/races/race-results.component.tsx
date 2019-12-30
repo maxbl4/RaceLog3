@@ -17,12 +17,17 @@ import { Theme } from "@material-ui/core";
 import { commonStyles } from "../styles/common";
 import { RACE_RESULTS_EXPAND_BUTTON, RACE_RESULTS_TABLE } from "../../model/utils/constants";
 import NullableComponent from "../common/nullable.component";
+import { CSSProperties } from "@material-ui/core/styles/withStyles";
 
 const styles = (theme: Theme) => {
   const common = commonStyles(theme);
   return {
     heading: common.heading,
-    profileContainer: common.profileContainer
+    profileContainer: {
+      ...common.profileContainer,
+      overflow: "auto",
+      overflowY: "hidden"
+    } as CSSProperties
   };
 };
 
@@ -38,13 +43,6 @@ type RaceResultsProps = {
 };
 
 class RaceResultsComponent extends React.Component<RaceResultsProps> {
-  componentDidMount() {
-    this.props.subscribeToResults();
-  }
-
-  componentWillUnmount() {
-    this.props.unsubscribeFromResults();
-  }
 
   getTableContent = (): ResultsTableRow[] => {
     const rows: ResultsTableRow[] = [];
