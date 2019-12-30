@@ -88,7 +88,7 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
                     }}
                   >
                     {props.races.orElse([]).map(race => (
-                      <MenuItem value={race.id}>{race.name}</MenuItem>
+                      <MenuItem key={race.id} value={race.id}>{race.name}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>

@@ -3,7 +3,8 @@ import {
   RaceItemExt,
   RacerProfile,
   INITIAL_RACES,
-  INITIAL_SELECTED_RACE
+  INITIAL_SELECTED_RACE,
+  RacerResults
 } from "../types/datatypes";
 import Optional from "optional-js";
 import {
@@ -25,6 +26,13 @@ import {
   RACE_PARTICIPANTS_UPDATE_FAILED
 } from "../actions/race.participants.actions";
 import { RACE_CHANGE_STATE_SUCCESS, RaceChangeStateAction } from "../actions/race.state.actions";
+import {
+  RACE_RESULTS_SUBSCRIPTION_STARTED,
+  RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED,
+  RACE_RESULTS_SUBSCRIPTION_STOPPED,
+  RACE_RESULTS_SUBSCRIPTION_FAILED,
+  RaceResultsSubscriptionDataAction
+} from "../actions/race.results.actions";
 
 export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
   LoggingService.getInstance().logReducer(action, state);
@@ -95,6 +103,31 @@ export function selectedRaceReducer(state: RaceItemExt = INITIAL_SELECTED_RACE, 
       return {
         ...state,
         state: (action as RaceChangeStateAction).state
+      };
+    case RACE_RESULTS_SUBSCRIPTION_STARTED:
+    case RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED:
+      return {
+        ...state,
+        results: {
+          isFetching: true,
+          items:
+            action.type === RACE_RESULTS_SUBSCRIPTION_STARTED
+              ? Optional.empty<RacerResults[]>()
+              : (action as RaceResultsSubscriptionDataAction).data
+        }
+      };
+    case RACE_RESULTS_SUBSCRIPTION_STOPPED:
+    case RACE_RESULTS_SUBSCRIPTION_FAILED:
+      return {
+        ...state,
+        results: {
+          ...state.results,
+          isFetching: false,
+          items:
+            action.type === RACE_RESULTS_SUBSCRIPTION_FAILED
+              ? Optional.empty<RacerResults[]>()
+              : state.results.items
+        }
       };
     default:
       return state;

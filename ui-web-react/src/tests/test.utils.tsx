@@ -14,7 +14,9 @@ import {
   INITIAL_USER,
   INITIAL_SELECTED_RACE,
   INITIAL_RACE_RESULTS,
-  RacerResults
+  RacerResults,
+  RaceResults,
+  RaceParticipants
 } from "../model/types/datatypes";
 import {
   RaceItem,
@@ -97,34 +99,69 @@ export const inputText = (text: string) => {
   };
 };
 
-export const compareOptional = (item1: Optional<any>, item2: Optional<any>): boolean => {
+export function compareOptionalSimple<T>(item1: Optional<T>, item2: Optional<T>): boolean {
+  return compareOptional(item1, item2, (v1: T, v2: T) => v1 === v2);
+}
+
+export function compareOptional<T>(
+  item1: Optional<T>,
+  item2: Optional<T>,
+  compFn: (v1: T, v2: T) => boolean
+): boolean {
+  expect(item1.isPresent()).toEqual(item2.isPresent());
   if (item1.isPresent() && item2.isPresent()) {
     item1.ifPresent(value1 => {
       item2.ifPresent(value2 => {
-        return value1 === value2;
-      })
-    })
+        return compFn(value1, value2);
+      });
+    });
     return true;
   } else {
     return false;
   }
-};
+}
+
+export function compareOptionalList<T>(
+  item1: Optional<T[]>,
+  item2: Optional<T[]>,
+  compFn: (v1: T, v2: T) => void
+): void {
+  expect(item1.isPresent()).toEqual(item2.isPresent());
+  item1.ifPresent(list1 => {
+    item2.ifPresent(list2 => {
+      expect(list1.length).toEqual(list2.length);
+      for (let i = 0; i < list1.length; i++) {
+        compFn(list1[i], list2[i]);
+      }
+    });
+  });
+}
 
 export const compareProfiles = (rp1: RacerProfile, rp2: RacerProfile): void => {
   expect(rp1.uuid).toEqual(rp2.uuid);
   expect(rp1.userUUID).toEqual(rp2.userUUID);
   expect(rp1.name).toEqual(rp2.name);
   expect(rp1.bikeNumber).toEqual(rp2.bikeNumber);
-  expect(compareOptional(rp1.userUUID, rp2.userUUID)).toBeTruthy();
+  expect(compareOptionalSimple(rp1.userUUID, rp2.userUUID)).toBeTruthy();
 };
 
 export const compareRacerResults = (rr1: RacerResults, rr2: RacerResults): void => {
   expect(rr1.racerUUID).toEqual(rr2.racerUUID);
-  expect(compareOptional(rr1.position, rr2.position)).toBeTruthy();
-  expect(compareOptional(rr1.time, rr2.time)).toBeTruthy();
-  expect(compareOptional(rr1.points, rr2.points)).toBeTruthy();
-  expect(compareOptional(rr1.laps, rr2.laps)).toBeTruthy();
-}
+  expect(compareOptionalSimple(rr1.position, rr2.position)).toBeTruthy();
+  expect(compareOptionalSimple(rr1.time, rr2.time)).toBeTruthy();
+  expect(compareOptionalSimple(rr1.points, rr2.points)).toBeTruthy();
+  expect(compareOptionalSimple(rr1.laps, rr2.laps)).toBeTruthy();
+};
+
+export const compareRaceResults = (res1: RaceResults, res2: RaceResults): void => {
+  expect(res1.isFetching).toEqual(res2.isFetching);
+  compareOptionalList(res1.items, res2.items, compareRacerResults);
+};
+
+export const compareRaceParticipants = (part1: RaceParticipants, part2: RaceParticipants): void => {
+  expect(part1.isFetching).toEqual(part2.isFetching);
+  compareOptionalList(part1.items, part2.items, compareProfiles);
+};
 
 export const compareRaceItems = (ri1: RaceItemExt, ri2: RaceItemExt): void => {
   expect(ri1.id).toEqual(ri2.id);
@@ -133,24 +170,8 @@ export const compareRaceItems = (ri1: RaceItemExt, ri2: RaceItemExt): void => {
   expect(ri1.location).toEqual(ri2.location);
   expect(ri1.description).toEqual(ri2.description);
   expect(ri1.state).toEqual(ri2.state);
-  if (!!ri1.participants) {
-    expect(!!ri2.participants).toBeTruthy();
-
-    const partItems1 = ri1.participants.items;
-    const partItems2 = ri2.participants.items;
-    if (partItems1.isPresent()) {
-      const items1 = partItems1.orElse([]);
-      const items2 = partItems2.orElse([]);
-      expect(items1.length).toEqual(items2.length);
-      for (let i = 0; i < items1.length; i++) {
-        compareProfiles(items1[i], items2[i]);
-      }
-    } else {
-      expect(partItems2.isPresent()).toBeFalsy();
-    }
-  } else {
-    expect(!!ri2.participants).toBeFalsy();
-  }
+  compareRaceParticipants(ri1.participants, ri2.participants);
+  compareRaceResults(ri1.results, ri2.results);
 };
 
 export const compareRaceItemsSimple = (ri1: RaceItem, ri2: RaceItem): void => {
