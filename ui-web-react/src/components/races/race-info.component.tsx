@@ -194,8 +194,6 @@ class RaceInfoComponent extends React.Component<RaceInfoProps> {
             disableReason={this.getDesabledResultsReason()}
             participants={this.props.raceItemExt.participants.items}
             results={this.props.raceItemExt.results.items}
-            subscribeToResults={this.subscribeToResults}
-            unsubscribeFromResults={this.unsubscribeFromResults}
           />
         </Container>
       );

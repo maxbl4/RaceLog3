@@ -38,8 +38,6 @@ type RaceResultsProps = {
   disableReason: Optional<string>;
   participants: Optional<RacerProfile[]>;
   results: Optional<RacerResults[]>;
-  subscribeToResults: () => void;
-  unsubscribeFromResults: () => void;
 };
 
 class RaceResultsComponent extends React.Component<RaceResultsProps> {
