@@ -58,7 +58,8 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
   );
   const [raceState, setRaceState] = useState(RaceState.NOT_STARTED);
   const handleRaceIDChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setRaceID(event.target.value as number);
+    const selectedRaceID = event.target.value as number;
+    setRaceID(selectedRaceID);
   };
   const handleRaceStateChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setRaceState(event.target.value as number);
@@ -82,6 +83,8 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
     setRaceStateLabelWidth(raceStateInputLabel.current!.offsetWidth);
   }, []);
 
+  const createLabelID = (controlID: string): string => controlID + "-lable";
+
   return (
     <ExpansionPanel className="mt-3">
       <ExpansionPanelSummary
@@ -100,11 +103,15 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
             <Grid container spacing={1}>
               <Grid item xs={7}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id={ADMIN_RACE_INFO_NAME_COMBO + "-label"}>Гонка</InputLabel>
-                  <Select
+                  <InputLabel
+                    id={createLabelID(ADMIN_RACE_INFO_NAME_COMBO)}
                     ref={raceNameInputLabel}
+                  >
+                    Гонка
+                  </InputLabel>
+                  <Select
                     labelWidth={raceNameLabelWidth}
-                    labelId={ADMIN_RACE_INFO_NAME_COMBO + "-label"}
+                    labelId={createLabelID(ADMIN_RACE_INFO_NAME_COMBO)}
                     value={raceID === DEFAULT_ID ? undefined : raceID}
                     onChange={handleRaceIDChange}
                     inputProps={{
@@ -121,11 +128,15 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
               </Grid>
               <Grid item xs={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel id={ADMIN_RACE_INFO_STATE_COMBO + "-label"}>Состояние</InputLabel>
-                  <Select
+                  <InputLabel
+                    id={createLabelID(ADMIN_RACE_INFO_STATE_COMBO)}
                     ref={raceStateInputLabel}
+                  >
+                    Состояние
+                  </InputLabel>
+                  <Select
                     labelWidth={raceStateLabelWidth}
-                    labelId={ADMIN_RACE_INFO_STATE_COMBO + "-label"}
+                    labelId={createLabelID(ADMIN_RACE_INFO_STATE_COMBO)}
                     value={raceState}
                     onChange={handleRaceStateChange}
                     inputProps={{
