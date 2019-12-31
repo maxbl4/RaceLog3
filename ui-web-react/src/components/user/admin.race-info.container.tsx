@@ -69,7 +69,7 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
         id={ADMIN_RACE_INFO_EXPAND_BUTTON}
       >
         <Typography id={ADMIN_RACE_INFO_HEADER} className={classes.heading}>
-          Информация о гонках
+          Управление гонками
         </Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>
