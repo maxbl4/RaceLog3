@@ -15,7 +15,11 @@ import TableRow from "@material-ui/core/TableRow";
 import { withStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 import { commonStyles } from "../styles/common";
-import { RACE_RESULTS_EXPAND_BUTTON, RACE_RESULTS_TABLE } from "../../model/utils/constants";
+import {
+  RACE_RESULTS_EXPAND_BUTTON,
+  RACE_RESULTS_TABLE,
+  RACE_RESULTS_HEADER
+} from "../../model/utils/constants";
 import NullableComponent from "../common/nullable.component";
 import { CSSProperties } from "@material-ui/core/styles/withStyles";
 
@@ -41,7 +45,6 @@ type RaceResultsProps = {
 };
 
 class RaceResultsComponent extends React.Component<RaceResultsProps> {
-
   getTableContent = (): ResultsTableRow[] => {
     const rows: ResultsTableRow[] = [];
     const racers = this.props.participants.orElse([]);
@@ -78,7 +81,7 @@ class RaceResultsComponent extends React.Component<RaceResultsProps> {
           aria-controls="raceResults-content"
           id={RACE_RESULTS_EXPAND_BUTTON}
         >
-          <Typography className={classes.heading}>
+          <Typography id={RACE_RESULTS_HEADER} className={classes.heading}>
             {this.props.disableReason
               .map(reason => `Результаты недоступны. ${reason}`)
               .orElse("Результаты")}

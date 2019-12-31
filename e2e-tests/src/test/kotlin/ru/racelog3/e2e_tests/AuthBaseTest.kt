@@ -27,6 +27,7 @@ abstract class AuthBaseTest : BaseTest() {
         checkText(createID(RACER_PROFILE_NAME, "1"), "", "Check the name of new racer profile")
         checkText(createID(RACER_PROFILE_BIKE_NUMBER, "1"), "", "Check the bike number of new racer profile")
 
+        checkText(ADMIN_RACE_INFO_HEADER, "Управление гонками", "Check the name of Race Management section")
         clickElement(ADMIN_RACE_INFO_EXPAND_BUTTON)
     }
 }
