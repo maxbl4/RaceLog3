@@ -35,7 +35,14 @@ const useStyles = makeStyles((theme: Theme) => {
   const common = commonStyles(theme);
   return {
     heading: common.heading,
-    profileContainer: common.profileContainer
+    profileContainer: common.profileContainer,
+    formControl: {
+      width: "100%"
+    },
+    buttonControl: {
+      margin: "auto",
+      width: "50%"
+    }
   };
 });
 
@@ -46,7 +53,9 @@ type AdminRaceInfo = {
 
 const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) => {
   const classes = useStyles();
-  const [raceID, setRaceID] = useState<number>(props.races.map(list => list[0].id).orElse(DEFAULT_ID));
+  const [raceID, setRaceID] = useState<number>(
+    props.races.map(list => list[0].id).orElse(DEFAULT_ID)
+  );
   const [raceState, setRaceState] = useState(RaceState.NOT_STARTED);
   const handleRaceIDChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setRaceID(event.target.value as number);
@@ -60,6 +69,18 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
   const getStateOption = (state: RaceState): JSX.Element => {
     return <MenuItem value={state}>{getRaceStateName(state)}</MenuItem>;
   };
+
+  const raceNameInputLabel = React.useRef<HTMLLabelElement>(null);
+  const [raceNameLabelWidth, setRaceNameLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+    setRaceNameLabelWidth(raceNameInputLabel.current!.offsetWidth);
+  }, []);
+
+  const raceStateInputLabel = React.useRef<HTMLLabelElement>(null);
+  const [raceStateLabelWidth, setRaceStateLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+    setRaceStateLabelWidth(raceStateInputLabel.current!.offsetWidth);
+  }, []);
 
   return (
     <ExpansionPanel className="mt-3">
@@ -78,9 +99,11 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
           <form className="mt-2">
             <Grid container spacing={1}>
               <Grid item xs={7}>
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id={ADMIN_RACE_INFO_NAME_COMBO + "-label"}>Гонка</InputLabel>
                   <Select
+                    ref={raceNameInputLabel}
+                    labelWidth={raceNameLabelWidth}
                     labelId={ADMIN_RACE_INFO_NAME_COMBO + "-label"}
                     value={raceID === DEFAULT_ID ? undefined : raceID}
                     onChange={handleRaceIDChange}
@@ -89,15 +112,19 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
                     }}
                   >
                     {props.races.orElse([]).map(race => (
-                      <MenuItem key={race.id} value={race.id}>{race.name}</MenuItem>
+                      <MenuItem key={race.id} value={race.id}>
+                        {race.name}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id={ADMIN_RACE_INFO_STATE_COMBO + "-label"}>Состояние</InputLabel>
                   <Select
+                    ref={raceStateInputLabel}
+                    labelWidth={raceStateLabelWidth}
                     labelId={ADMIN_RACE_INFO_STATE_COMBO + "-label"}
                     value={raceState}
                     onChange={handleRaceStateChange}
@@ -117,6 +144,7 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
                   id={ADMIN_RACE_INFO_SUBMIT_BUTTON}
                   color="primary"
                   onClick={handleRaceStateSubmit}
+                  className={classes.buttonControl}
                 >
                   <RefreshIcon />
                 </IconButton>
