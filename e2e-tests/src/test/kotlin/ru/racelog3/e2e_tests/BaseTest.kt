@@ -52,6 +52,13 @@ const val RACE_REGISTRATION_LIST_PROFILE_ITEM = "raceRegistrationListProfileItem
 const val RACE_REGISTRATION_LIST_HEADER = "raceRegistrationListHeader"
 const val RACE_REGISTRATION_LIST_EXPAND_BUTTON = "raceRegistrationListExpandButton"
 const val RACE_REGISTRATION_LIST_SUBMIT_BUTTON = "raceRegistrationListSubmitButton"
+const val RACE_RESULTS_TABLE = "raceResultsTable";
+const val RACE_RESULTS_EXPAND_BUTTON = "raceResultsExpandButton";
+const val ADMIN_RACE_INFO_EXPAND_BUTTON = "adminRaceInfoExpandButton";
+const val ADMIN_RACE_INFO_HEADER = "adminRaceInfoHeader";
+const val ADMIN_RACE_INFO_NAME_COMBO = "adminRaceInfoNameCombo";
+const val ADMIN_RACE_INFO_STATE_COMBO = "adminRaceInfoStateCombo";
+const val ADMIN_RACE_INFO_SUBMIT_BUTTON = "adminRaceInfoSubminButton";
 const val ALERT_HEADER = "alertHeader"
 const val ALERT_CONTENT = "alertContent"
 
