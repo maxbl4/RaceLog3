@@ -12,7 +12,6 @@ import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import IconButton from "@material-ui/core/IconButton";
 import RefreshIcon from "@material-ui/icons/Refresh";
@@ -58,17 +57,16 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
   );
   const [raceState, setRaceState] = useState(RaceState.NOT_STARTED);
   const handleRaceIDChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const selectedRaceID = event.target.value as number;
-    setRaceID(selectedRaceID);
+    setRaceID(parseInt(event.target.value as string));
   };
   const handleRaceStateChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setRaceState(event.target.value as number);
+    setRaceState(parseInt(event.target.value as string));
   };
   const handleRaceStateSubmit = (): void => {
     props.onRaceStateSubmit(raceID, raceState);
   };
   const getStateOption = (state: RaceState): JSX.Element => {
-    return <MenuItem value={state}>{getRaceStateName(state)}</MenuItem>;
+    return <option value={state}>{getRaceStateName(state)}</option>;
   };
 
   const raceNameInputLabel = React.useRef<HTMLLabelElement>(null);
@@ -82,8 +80,6 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
   React.useEffect(() => {
     setRaceStateLabelWidth(raceStateInputLabel.current!.offsetWidth);
   }, []);
-
-  const createLabelID = (controlID: string): string => controlID + "-lable";
 
   return (
     <ExpansionPanel className="mt-3">
@@ -103,15 +99,12 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
             <Grid container spacing={1}>
               <Grid item xs={7}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id={createLabelID(ADMIN_RACE_INFO_NAME_COMBO)}
-                    ref={raceNameInputLabel}
-                  >
+                  <InputLabel htmlFor={ADMIN_RACE_INFO_NAME_COMBO} ref={raceNameInputLabel}>
                     Гонка
                   </InputLabel>
                   <Select
+                    native
                     labelWidth={raceNameLabelWidth}
-                    labelId={createLabelID(ADMIN_RACE_INFO_NAME_COMBO)}
                     value={raceID === DEFAULT_ID ? undefined : raceID}
                     onChange={handleRaceIDChange}
                     inputProps={{
@@ -119,24 +112,21 @@ const AdminRaceInfoComponent: React.FC<AdminRaceInfo> = (props: AdminRaceInfo) =
                     }}
                   >
                     {props.races.orElse([]).map(race => (
-                      <MenuItem key={race.id} value={race.id}>
+                      <option key={race.id} value={race.id}>
                         {race.name}
-                      </MenuItem>
+                      </option>
                     ))}
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={4}>
                 <FormControl variant="outlined" className={classes.formControl}>
-                  <InputLabel
-                    id={createLabelID(ADMIN_RACE_INFO_STATE_COMBO)}
-                    ref={raceStateInputLabel}
-                  >
+                  <InputLabel htmlFor={ADMIN_RACE_INFO_STATE_COMBO} ref={raceStateInputLabel}>
                     Состояние
                   </InputLabel>
                   <Select
+                    native
                     labelWidth={raceStateLabelWidth}
-                    labelId={createLabelID(ADMIN_RACE_INFO_STATE_COMBO)}
                     value={raceState}
                     onChange={handleRaceStateChange}
                     inputProps={{

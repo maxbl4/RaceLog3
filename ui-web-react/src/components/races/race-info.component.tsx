@@ -74,22 +74,36 @@ class RaceInfoComponent extends React.Component<RaceInfoProps> {
   componentDidMount() {
     const raceID = this.props.match.params.id;
     this.props.onDataReload(raceID ? parseInt(raceID) : DEFAULT_ID);
-    this.subscribeToResults();
+    this.subscribeToResults(this.props.raceItemExt.id, this.props.raceItemExt.state);
   }
 
   componentWillUnmount() {
-    this.unsubscribeFromResults();
+    this.unsubscribeFromResults(this.props.raceItemExt.id);
   }
 
   componentDidUpdate(prevProps: RaceInfoProps) {
     if (this.props.raceItemExt.id !== prevProps.raceItemExt.id) {
+      this.unsubscribeFromResults(prevProps.raceItemExt.id);
+
       if (this.props.raceItemExt.id !== DEFAULT_ID) {
-        this.subscribeToResults();
-      } else {
-        this.unsubscribeFromResults();
+        this.subscribeToResults(this.props.raceItemExt.id, this.props.raceItemExt.state);
       }
     }
   }
+
+  subscribeToResults = (raceID: number, state: RaceState): void => {
+    if (raceID && raceID !== DEFAULT_ID && needToSubscribeToRaceResults(state)) {
+      this.props.user.ifPresent(info => {
+        this.props.onSubscribeToResults(info.uuid, raceID);
+      });
+    }
+  };
+
+  unsubscribeFromResults = (raceID: number): void => {
+    this.props.user.ifPresent(info => {
+      this.props.onUnsubscribeFromResults(info.uuid, raceID);
+    });
+  };
 
   registrationUpdateHandler = (added: RacerProfile[], removed: RacerProfile[]): void => {
     this.props.onRegistrationUpdate(
@@ -116,25 +130,6 @@ class RaceInfoComponent extends React.Component<RaceInfoProps> {
     return Optional.ofNullable(
       this.props.raceItemExt.state === RaceState.NOT_STARTED ? "Гонка не началась" : null
     );
-  };
-
-  subUnsubResults = (resultsFn: (userUUID: string, raceID: number) => void): void => {
-    this.props.user.ifPresent(info => {
-      if (
-        this.props.raceItemExt.id !== DEFAULT_ID &&
-        needToSubscribeToRaceResults(this.props.raceItemExt.state)
-      ) {
-        resultsFn(info.uuid, this.props.raceItemExt.id);
-      }
-    });
-  };
-
-  subscribeToResults = (): void => {
-    this.subUnsubResults(this.props.onSubscribeToResults);
-  };
-
-  unsubscribeFromResults = (): void => {
-    this.subUnsubResults(this.props.onUnsubscribeFromResults);
   };
 
   render() {

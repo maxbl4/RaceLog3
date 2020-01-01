@@ -29,8 +29,7 @@ class RaceStatesTest : RaceBaseTest() {
         registerRacer(RACE_1_NAME, RACER_2_NAME)
 
         step("Check registration")
-        checkRegistration(RACE_1_NAME, arrayOf(RACER_1_NAME), arrayOf(RACER_1_BIKE_NUMBER))
-        checkRegistration(RACE_1_NAME, arrayOf(RACER_2_NAME), arrayOf(RACER_2_BIKE_NUMBER))
+        checkRegistration(RACE_1_NAME, arrayOf(RACER_1_NAME, RACER_2_NAME), arrayOf(RACER_1_BIKE_NUMBER, RACER_2_BIKE_NUMBER))
         checkRegistration(RACE_2_NAME, arrayOf(), arrayOf(), false)
 
         step("Start the race and check the results")
@@ -71,10 +70,8 @@ class RaceStatesTest : RaceBaseTest() {
         clickElement(createID(RACE_ITEM_CARD_MORE_BUTTON, raceName))
 
         if (raceStarted) {
-            checkText(RACE_REGISTRATION_LIST_HEADER, "Регистрация закончена",
-                    "Check unregistered text in racer profile section")
-            checkText(RACE_RESULTS_HEADER, "Результаты",
-                    "Check disabled text for results section")
+            checkText(RACE_REGISTRATION_LIST_HEADER, "Регистрация закончена", "Check unregistered text in racer profile section")
+            checkText(RACE_RESULTS_HEADER, "Результаты", "Check disabled text for results section")
 
             clickElement(RACE_RESULTS_EXPAND_BUTTON)
 
@@ -87,10 +84,8 @@ class RaceStatesTest : RaceBaseTest() {
             nestedElementExists(RACE_RESULTS_TABLE, String.format(RESULTS_TABLE_XPATH_ROW, 1))
             nestedElementExists(RACE_RESULTS_TABLE, String.format(RESULTS_TABLE_XPATH_ROW, 2))
         } else {
-            checkText(RACE_REGISTRATION_LIST_HEADER, "Регистрация",
-                    "Check unregistered text in racer profile section")
-            checkText(RACE_RESULTS_HEADER, "Результаты недоступны. Гонка не началась",
-                    "Check disabled text for results section")
+            checkText(RACE_REGISTRATION_LIST_HEADER, "Регистрация", "Check unregistered text in racer profile section")
+            checkText(RACE_RESULTS_HEADER, "Результаты недоступны. Гонка не началась", "Check disabled text for results section")
         }
     }
 

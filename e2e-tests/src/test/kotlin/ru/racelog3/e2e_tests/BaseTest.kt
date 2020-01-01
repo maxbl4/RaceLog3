@@ -19,6 +19,7 @@ import java.net.URISyntaxException
 import java.nio.file.Paths
 
 private const val EXCEPTION_TIMEOUT = 5 // in seconds
+private const val LONG_SLEEP_TIMEOUT: Long = 5000;
 
 const val HEADER_ENTER_BUTTON = "headerEnterButtonID"
 const val HEADER_ACCOUNT_BUTTON = "headerAccountButtonID"
@@ -232,8 +233,16 @@ abstract class BaseTest {
     }
 
     protected fun sleep() {
+        sleepImpl(100)
+    }
+
+    protected fun longSleep() {
+        sleepImpl(LONG_SLEEP_TIMEOUT)
+    }
+
+    private fun sleepImpl(timeout: Long) {
         try {
-            Thread.sleep(100)
+            Thread.sleep(timeout)
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }

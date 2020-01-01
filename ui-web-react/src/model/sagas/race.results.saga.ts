@@ -14,7 +14,7 @@ function* subscribeToResults(action: RaceResultsSubscriptionAction) {
   try {
     const socketChannel = subscribeToRaceResultsApiRequest(action.userUUID, action.raceID);
     LoggingService.getInstance().info(
-      `Subscribed to results of raceID=${action.raceUUID}, userUUID=${action.userUUID}.`
+      `Subscribed to results of raceID=${action.raceID}, userUUID=${action.userUUID}.`
     );
     while (true) {
       const payload = yield take(socketChannel);
