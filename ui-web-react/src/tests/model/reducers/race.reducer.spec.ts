@@ -1,4 +1,7 @@
-import { racesReducer, selectedRaceReducer } from "../../../model/reducers/race.reducer";
+import {
+  racesReducer,
+  selectedRaceReducer
+} from "../../../model/reducers/race.reducer";
 import {
   UNKNOWN_ACTION_TYPE,
   DEFAULT_RACE_ITEM_1,
@@ -14,7 +17,9 @@ import {
   DEFAULT_RACER_RESULTS_1,
   DEFAULT_RACER_RESULTS_2,
   compareRaceResults,
-  compareRaceParticipants
+  compareRaceParticipants,
+  DEFAULT_RACE_ITEM_3,
+  DEFAULT_RACE_ITEM_4
 } from "../../test.utils";
 import {
   RACES_REQUESTED,
@@ -25,7 +30,11 @@ import {
   SELECTED_RACE_REQUEST_FAILED
 } from "../../../model/actions/race.actions";
 import Optional from "optional-js";
-import { INITIAL_SELECTED_RACE, RaceItemExt, RacerResults } from "../../../model/types/datatypes";
+import {
+  INITIAL_SELECTED_RACE,
+  RaceItemExt,
+  RacerResults
+} from "../../../model/types/datatypes";
 import {
   RACE_PARTICIPANTS_UPDATE_REQUESTED,
   RACE_PARTICIPANTS_UPDATED,
@@ -58,7 +67,9 @@ describe("race.reducer - racesReducer", () => {
   });
 
   it("should return the same state for RACES_REQUEST_FAILED and isFetching='false' action", () => {
-    const raceState = racesReducer(DEFAULT_RACES, { type: RACES_REQUEST_FAILED });
+    const raceState = racesReducer(DEFAULT_RACES, {
+      type: RACES_REQUEST_FAILED
+    });
     expect(raceState.isFetching).toBeFalsy();
     expect(raceState.items.isPresent()).toBeTruthy();
     compareRaces(raceState, DEFAULT_RACES);
@@ -66,7 +77,10 @@ describe("race.reducer - racesReducer", () => {
 
   it("should return fetched non-emtpy state for RACES_LOADED action", () => {
     let items = [DEFAULT_RACE_ITEM_1, DEFAULT_RACE_ITEM_2];
-    const raceState = racesReducer(undefined, { type: RACES_LOADED, items: Optional.of(items) });
+    const raceState = racesReducer(undefined, {
+      type: RACES_LOADED,
+      items: Optional.of(items)
+    });
     expect(raceState.isFetching).toBeFalsy();
     expect(raceState.items.isPresent()).toBeTruthy();
     items = raceState.items.orElse([]);
@@ -74,17 +88,58 @@ describe("race.reducer - racesReducer", () => {
     expect(items[0]).toEqual(DEFAULT_RACE_ITEM_1);
     expect(items[1]).toEqual(DEFAULT_RACE_ITEM_2);
   });
+
+  it("should return the same race state for RACE_CHANGE_STATE_REQUESTED action", () => {
+    const raceState = racesReducer(DEFAULT_RACES, {
+      type: RACE_CHANGE_STATE_REQUESTED,
+      raceID: 5,
+      state: RaceState.STARTED
+    });
+    compareRaces(raceState, DEFAULT_RACES);
+  });
+
+  it("should return the same race state for RACE_CHANGE_STATE_FAILED action", () => {
+    const raceState = racesReducer(DEFAULT_RACES, {
+      type: RACE_CHANGE_STATE_FAILED
+    });
+    compareRaces(raceState, DEFAULT_RACES);
+  });
+
+  it("should return new race state for RACE_CHANGE_STATE_SUCCESS action", () => {
+    const state = RaceState.STARTED;
+    const raceState = racesReducer(DEFAULT_RACES, {
+      type: RACE_CHANGE_STATE_SUCCESS,
+      raceID: 5,
+      state
+    });
+    compareRaces(raceState, {
+      isFetching: false,
+      items: Optional.of([
+        {
+          ...DEFAULT_RACE_ITEM_1,
+          state
+        },
+        DEFAULT_RACE_ITEM_2,
+        DEFAULT_RACE_ITEM_3,
+        DEFAULT_RACE_ITEM_4
+      ])
+    });
+  });
 });
 
 describe("race.reducer - selectedRaceReducer", () => {
   it("should return default state for unknown action", () => {
-    const raceState = selectedRaceReducer(undefined, { type: UNKNOWN_ACTION_TYPE });
+    const raceState = selectedRaceReducer(undefined, {
+      type: UNKNOWN_ACTION_TYPE
+    });
     expect(raceState.isFetching).toBeFalsy();
     compareRaceItems(raceState, INITIAL_SELECTED_RACE);
   });
 
   it("should return fetching empty state for SELECTED_RACE_REQUESTED action", () => {
-    const raceState = selectedRaceReducer(undefined, { type: SELECTED_RACE_REQUESTED });
+    const raceState = selectedRaceReducer(undefined, {
+      type: SELECTED_RACE_REQUESTED
+    });
     expect(raceState.isFetching).toBeTruthy();
     compareRaceItems(raceState, INITIAL_SELECTED_RACE);
   });
@@ -109,7 +164,7 @@ describe("race.reducer - selectedRaceReducer", () => {
   it("should return the same state with isFetching = 'true' for RACE_PARTICIPANTS_UPDATE_REQUESTED action", () => {
     const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
       type: RACE_PARTICIPANTS_UPDATE_REQUESTED,
-      raceID: 1,
+      raceID: 5,
       itemsAdded: Optional.of([DEFAULT_RACER_PROFILE_3]),
       itemsRemoved: Optional.of([DEFAULT_RACER_PROFILE_1])
     });
@@ -124,7 +179,7 @@ describe("race.reducer - selectedRaceReducer", () => {
   it("should update participants list for RACE_PARTICIPANTS_UPDATED action", () => {
     const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
       type: RACE_PARTICIPANTS_UPDATED,
-      raceID: 1,
+      raceID: 5,
       itemsAdded: Optional.of([DEFAULT_RACER_PROFILE_3]),
       itemsRemoved: Optional.of([DEFAULT_RACER_PROFILE_1])
     });
@@ -142,34 +197,34 @@ describe("race.reducer - selectedRaceReducer", () => {
   it("should return the same state with isFetching = 'false' for RACE_PARTICIPANTS_UPDATE_FAILED action", () => {
     const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
       type: RACE_PARTICIPANTS_UPDATE_FAILED,
-      raceID: 1
+      raceID: 5
     });
     expect(!!raceState.participants).toBeTruthy();
     expect(raceState.participants.isFetching).toBeFalsy();
     compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
   });
 
-  it("should return the same race state for RACE_CHANGE_STATE_REQUESTED action", () => {
+  it("should return the same race state for RACE_CHANGE_STATE_REQUESTED action, raceID equals to id of selectedRace", () => {
     const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
       type: RACE_CHANGE_STATE_REQUESTED,
-      raceID: 1,
+      raceID: 5,
       state: RaceState.NOT_STARTED
     });
     compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
   });
 
-  it("should return the same race state for RACE_CHANGE_STATE_FAILED action", () => {
+  it("should return the same race state for RACE_CHANGE_STATE_FAILED action, raceID equals to id of selectedRace", () => {
     const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
       type: RACE_CHANGE_STATE_FAILED
     });
     compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
   });
 
-  it("should return new race state for RACE_CHANGE_STATE_SUCCESS action", () => {
+  it("should return new race state for RACE_CHANGE_STATE_SUCCESS action, raceID equals to id of selectedRace", () => {
     const state = RaceState.STARTED;
     const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
       type: RACE_CHANGE_STATE_SUCCESS,
-      raceID: 1,
+      raceID: 5,
       state
     });
     compareRaceItems(raceState, {
@@ -178,18 +233,40 @@ describe("race.reducer - selectedRaceReducer", () => {
     });
   });
 
+  it("should return the same race state for RACE_CHANGE_STATE_REQUESTED action, raceID does not equal to id of selectedRace", () => {
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
+      type: RACE_CHANGE_STATE_REQUESTED,
+      raceID: 1,
+      state: RaceState.STARTED
+    });
+    compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
+  });
+
+  it("should return new race state for RACE_CHANGE_STATE_SUCCESS action, raceID does not equal to id of selectedRace", () => {
+    const state = RaceState.STARTED;
+    const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
+      type: RACE_CHANGE_STATE_SUCCESS,
+      raceID: 1,
+      state
+    });
+    compareRaceItems(raceState, DEFAULT_RACE_ITEM_EXT);
+  });
+
   it("should return fitching (true) state with emtpy results for RACE_RESULTS_SUBSCRIPTION_STARTED action", () => {
     const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
       type: RACE_RESULTS_SUBSCRIPTION_STARTED,
       userUUID: DEFAULT_USER_INFO.uuid,
-      raceID: 1
+      raceID: 5
     });
     expect(raceState.results.isFetching).toBeTruthy();
     expect(raceState.results.items.isPresent()).toBeFalsy();
   });
 
   it("should return fitching (true) state with some results for RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED action", () => {
-    const reduceAndCheck = (state: RaceItemExt, data: Optional<RacerResults[]>): RaceItemExt => {
+    const reduceAndCheck = (
+      state: RaceItemExt,
+      data: Optional<RacerResults[]>
+    ): RaceItemExt => {
       const raceState = selectedRaceReducer(state, {
         type: RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED,
         data
@@ -246,7 +323,7 @@ describe("race.reducer - selectedRaceReducer", () => {
     const raceState = selectedRaceReducer(DEFAULT_RACE_ITEM_EXT, {
       type: RACE_RESULTS_SUBSCRIPTION_STOPPED,
       userUUID: DEFAULT_USER_INFO.uuid,
-      raceID: 1
+      raceID: 5
     });
     expect(raceState.results.isFetching).toBeFalsy();
     compareRaceResults(raceState.results, {

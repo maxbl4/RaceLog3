@@ -47,6 +47,7 @@ export type UserInfo = {
 export type RaceItem = {
   id: number;
   name: string;
+  state: RaceState;
   date: number;
   location: string;
 };
@@ -57,7 +58,6 @@ export type RaceItem = {
 export type RaceItemExt = RaceItem &
   Fetchable & {
     description: string;
-    state: RaceState;
     participants: RaceParticipants;
     results: RaceResults;
   };

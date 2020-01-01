@@ -179,6 +179,7 @@ export const compareRaceItemsSimple = (ri1: RaceItem, ri2: RaceItem): void => {
   expect(ri1.date).toEqual(ri2.date);
   expect(ri1.location).toEqual(ri2.location);
   expect(ri1.name).toEqual(ri2.name);
+  expect(ri1.state).toEqual(ri2.state);
 };
 
 export const compareRaces = (r1: Races, r2: Races): void => {
@@ -214,24 +215,28 @@ export const UNKNOWN_ACTION_TYPE = "UNKNOWN_ACTION_TYPE";
 export const DEFAULT_RACE_ITEM_1: RaceItem = {
   id: 1,
   name: "Grand Prix of France",
+  state: RaceState.NOT_STARTED,
   date: 1558040400000,
   location: "Le Mans, France"
 };
 export const DEFAULT_RACE_ITEM_2: RaceItem = {
   id: 2,
   name: "Grand Prix of Catalunya",
+  state: RaceState.NOT_STARTED,
   date: 1559854800000,
   location: "Barcelona, Spain"
 };
 export const DEFAULT_RACE_ITEM_3: RaceItem = {
   id: 3,
   name: "Grand Prix of Germany",
+  state: RaceState.NOT_STARTED,
   date: 1561064400000,
   location: "Sachsenring, Germany"
 };
 export const DEFAULT_RACE_ITEM_4: RaceItem = {
   id: 4,
   name: "Grand Prix of Great Britain",
+  state: RaceState.NOT_STARTED,
   date: 1567112400000,
   location: "Silverstone, Great Britain"
 };
@@ -240,7 +245,6 @@ export const DEFAULT_RACE_ITEM_EXT_1: RaceItemExt = {
   isFetching: false,
   description: "Description for Grand Prix of France.",
   participants: { ...INITIAL_RACER_PROFILES },
-  state: RaceState.NOT_STARTED,
   results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACE_ITEM_EXT_2: RaceItemExt = {
@@ -248,7 +252,6 @@ export const DEFAULT_RACE_ITEM_EXT_2: RaceItemExt = {
   isFetching: false,
   description: "Description for Grand Prix of Catalunya.",
   participants: { ...INITIAL_RACER_PROFILES },
-  state: RaceState.NOT_STARTED,
   results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACE_ITEM_EXT_3: RaceItemExt = {
@@ -256,7 +259,6 @@ export const DEFAULT_RACE_ITEM_EXT_3: RaceItemExt = {
   isFetching: false,
   description: "Description for Grand Prix of Germany.",
   participants: { ...INITIAL_RACER_PROFILES },
-  state: RaceState.NOT_STARTED,
   results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACE_ITEM_EXT_4: RaceItemExt = {
@@ -264,7 +266,6 @@ export const DEFAULT_RACE_ITEM_EXT_4: RaceItemExt = {
   isFetching: false,
   description: "Description for Grand Prix of Great Britain.",
   participants: { ...INITIAL_RACER_PROFILES },
-  state: RaceState.NOT_STARTED,
   results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACER_PROFILE_1: RacerProfile = {
