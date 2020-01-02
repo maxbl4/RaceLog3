@@ -194,6 +194,9 @@ export class MeshApi implements ITransport {
   }
 
   subscribeToRaceResults(userUUID: string, raceID: number): EventChannel<Optional<RacerResults[]>> {
+    // Exmaples could be find here:
+    // https://medium.com/javascript-in-plain-english/real-time-data-with-redux-saga-event-channels-and-socket-io-ad6e64dbefd9?
+    // https://github.com/slava-lu/saga-socket-example
     throw new Error("Method not implemented.");
   }
 
