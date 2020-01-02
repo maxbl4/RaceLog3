@@ -22,22 +22,7 @@ export const racerProfilesRequestedAll = (userUUID: string): RacerProfilesReques
   type: RACER_PROFILES_REQUESTED_ALL,
   userUUID
 });
-export const racerProfilesUpdateRequested = (
-  userUUID: string,
-  added: RacerProfile[],
-  removed: RacerProfile[],
-  updated: RacerProfile[]
-): RacerProfilesDataAction =>
-  racerProfilesUpdate(RACER_PROFILES_UPDATE_REQUESTED, userUUID, added, removed, updated);
-export const racerProfilesUpdateReceived = (
-  userUUID: string,
-  added: RacerProfile[],
-  removed: RacerProfile[],
-  updated: RacerProfile[]
-): RacerProfilesDataAction =>
-  racerProfilesUpdate(RACER_PROFILES_UPDATE_RECEIVED, userUUID, added, removed, updated);
-const racerProfilesUpdate = (
-  type: string,
+const racerProfilesUpdateFactory = (type: string) => (
   userUUID: string,
   added: RacerProfile[],
   removed: RacerProfile[],
@@ -49,6 +34,12 @@ const racerProfilesUpdate = (
   itemsRemoved: Optional.of(removed),
   itemsUpdated: Optional.of(updated)
 });
+export const racerProfilesUpdateRequested = racerProfilesUpdateFactory(
+  RACER_PROFILES_UPDATE_REQUESTED
+);
+export const racerProfilesUpdateReceived = racerProfilesUpdateFactory(
+  RACER_PROFILES_UPDATE_RECEIVED
+);
 export const racerProfilesRequestFailed = (): RacerProfilesRequestFailedAction => ({
   type: RACER_PROFILES_REQUEST_FAILED
 });

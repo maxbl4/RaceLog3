@@ -32,7 +32,8 @@ const useStyles = makeStyles((theme: Theme) => {
 });
 
 type RaceRegistrationListProps = {
-  loggedIn: boolean;
+  disabled: boolean;
+  disableReason: Optional<string>;
   isUpdating: boolean;
   allProfiles: Optional<RacerProfile[]>;
   registeredProfiles: Optional<RacerProfile[]>;
@@ -76,18 +77,14 @@ const RaceRegistrationListComponent: React.FC<RaceRegistrationListProps> = (
   };
 
   return (
-    <ExpansionPanel className="mt-3" disabled={!props.loggedIn || profiles.length === 0}>
+    <ExpansionPanel className="mt-3" disabled={props.disabled}>
       <ExpansionPanelSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="raceRegistration-content"
         id={RACE_REGISTRATION_LIST_EXPAND_BUTTON}
       >
         <Typography id={RACE_REGISTRATION_LIST_HEADER} className={classes.heading}>
-          {!props.loggedIn
-            ? "Войдите для регистрации"
-            : props.allProfiles.isPresent()
-            ? "Регистрация"
-            : "Создайте профиль для регистрации"}
+          {props.disableReason.orElse("Регистрация")}
         </Typography>
       </ExpansionPanelSummary>
       <ExpansionPanelDetails>

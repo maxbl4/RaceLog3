@@ -7,11 +7,13 @@ import {
 } from "../utils/constants";
 import { LoggingService } from "../utils/logging-service";
 import Optional from "optional-js";
-import { UserInfo, RacerProfile, RaceItem, RaceItemExt } from "../types/datatypes";
+import { UserInfo, RacerProfile, RaceItem, RaceItemExt, RacerResults } from "../types/datatypes";
 import { ITransport } from "./transport";
 import * as Cookies from "js-cookie";
 import { COOKIE_MESH_TOKEN } from "../utils/constants";
 import { INITIAL_USER_INFO } from "../types/datatypes";
+import { EventChannel } from "redux-saga";
+import { RaceState } from "../types/races.model";
 
 type CMSResponse = {
   success: boolean;
@@ -188,6 +190,21 @@ export class MeshApi implements ITransport {
     added: RacerProfile[],
     removed: RacerProfile[]
   ): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
+
+  subscribeToRaceResults(userUUID: string, raceID: number): EventChannel<Optional<RacerResults[]>> {
+    // Exmaples could be find here:
+    // https://medium.com/javascript-in-plain-english/real-time-data-with-redux-saga-event-channels-and-socket-io-ad6e64dbefd9?
+    // https://github.com/slava-lu/saga-socket-example
+    throw new Error("Method not implemented.");
+  }
+
+  async unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
+    throw new Error("Method not implemented.");
+  }
+
+  async changeRaceState(raceID: number, state: RaceState): Promise<any> {
     throw new Error("Method not implemented.");
   }
 }

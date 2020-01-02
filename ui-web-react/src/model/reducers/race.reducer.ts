@@ -1,4 +1,11 @@
-import { Races, RaceItemExt, RacerProfile, INITIAL_RACES, INITIAL_SELECTED_RACE } from "../types/datatypes";
+import {
+  Races,
+  RaceItemExt,
+  RacerProfile,
+  INITIAL_RACES,
+  INITIAL_SELECTED_RACE,
+  RacerResults
+} from "../types/datatypes";
 import Optional from "optional-js";
 import {
   RACES_REQUESTED,
@@ -7,15 +14,28 @@ import {
   SELECTED_RACE_REQUESTED,
   SELECTED_RACE_LOADED,
   SelectedRaceLoadedAction,
-  RACE_PARTICIPANTS_UPDATE_REQUESTED,
-  RACE_PARTICIPANTS_UPDATED,
-  RaceParticipantsAction,
-  RACE_PARTICIPANTS_UPDATE_FAILED,
   RACES_REQUEST_FAILED,
   SELECTED_RACE_REQUEST_FAILED
 } from "../actions/race.actions";
 import { AnyAction } from "redux";
 import { LoggingService } from "../utils/logging-service";
+import {
+  RACE_PARTICIPANTS_UPDATE_REQUESTED,
+  RACE_PARTICIPANTS_UPDATED,
+  RaceParticipantsAction,
+  RACE_PARTICIPANTS_UPDATE_FAILED
+} from "../actions/race.participants.actions";
+import {
+  RACE_CHANGE_STATE_SUCCESS,
+  RaceChangeStateAction
+} from "../actions/race.state.actions";
+import {
+  RACE_RESULTS_SUBSCRIPTION_STARTED,
+  RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED,
+  RACE_RESULTS_SUBSCRIPTION_STOPPED,
+  RACE_RESULTS_SUBSCRIPTION_FAILED,
+  RaceResultsSubscriptionDataAction
+} from "../actions/race.results.actions";
 
 export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
   LoggingService.getInstance().logReducer(action, state);
@@ -35,12 +55,26 @@ export function racesReducer(state: Races = INITIAL_RACES, action: AnyAction) {
         ...state,
         isFetching: false
       };
+    case RACE_CHANGE_STATE_SUCCESS:
+      state.items.ifPresent(races => {
+        const raceAction = action as RaceChangeStateAction;
+        for (let race of races) {
+          if (race.id === raceAction.raceID) {
+            race.state = raceAction.state;
+            return state;
+          }
+        }
+      });
+      return state;
     default:
       return state;
   }
 }
 
-export function selectedRaceReducer(state: RaceItemExt = INITIAL_SELECTED_RACE, action: AnyAction) {
+export function selectedRaceReducer(
+  state: RaceItemExt = INITIAL_SELECTED_RACE,
+  action: AnyAction
+) {
   LoggingService.getInstance().logReducer(action, state);
   switch (action.type) {
     case SELECTED_RACE_REQUESTED:
@@ -71,7 +105,10 @@ export function selectedRaceReducer(state: RaceItemExt = INITIAL_SELECTED_RACE, 
         ...state,
         participants: {
           isFetching: false,
-          items: processRaceParticipants(state.participants.items, action as RaceParticipantsAction)
+          items: processRaceParticipants(
+            state.participants.items,
+            action as RaceParticipantsAction
+          )
         }
       };
     case RACE_PARTICIPANTS_UPDATE_FAILED:
@@ -80,6 +117,38 @@ export function selectedRaceReducer(state: RaceItemExt = INITIAL_SELECTED_RACE, 
         participants: {
           ...state.participants,
           isFetching: false
+        }
+      };
+    case RACE_CHANGE_STATE_SUCCESS:
+      const raceAction = action as RaceChangeStateAction;
+      if (state.id !== raceAction.raceID) return state;
+      return {
+        ...state,
+        state: raceAction.state
+      };
+    case RACE_RESULTS_SUBSCRIPTION_STARTED:
+    case RACE_RESULTS_SUBSCRIPTION_DATA_RECEIVED:
+      return {
+        ...state,
+        results: {
+          isFetching: true,
+          items:
+            action.type === RACE_RESULTS_SUBSCRIPTION_STARTED
+              ? Optional.empty<RacerResults[]>()
+              : (action as RaceResultsSubscriptionDataAction).data
+        }
+      };
+    case RACE_RESULTS_SUBSCRIPTION_STOPPED:
+    case RACE_RESULTS_SUBSCRIPTION_FAILED:
+      return {
+        ...state,
+        results: {
+          ...state.results,
+          isFetching: false,
+          items:
+            action.type === RACE_RESULTS_SUBSCRIPTION_FAILED
+              ? Optional.empty<RacerResults[]>()
+              : state.results.items
         }
       };
     default:
@@ -94,7 +163,11 @@ function processRaceParticipants(
   const removed = action.itemsRemoved.orElse([]);
 
   let items = currentItems.orElse([]);
-  items = items.filter(item => removed.find(curr => item.uuid === curr.uuid) === undefined);
+  items = items.filter(
+    item => removed.find(curr => item.uuid === curr.uuid) === undefined
+  );
   items = items.concat(action.itemsAdded.orElse([]));
-  return items.length === 0 ? Optional.empty<RacerProfile[]>() : Optional.of(items);
+  return items.length === 0
+    ? Optional.empty<RacerProfile[]>()
+    : Optional.of(items);
 }

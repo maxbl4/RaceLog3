@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { RouteComponentProps } from "react-router-dom";
 import {
   RaceItemExt,
@@ -13,7 +13,7 @@ import {
   RACE_ITEM_INFO_DESCR
 } from "../../model/utils/constants";
 import { FetchingComponent } from "../common/fetching.component";
-import { makeStyles } from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Container from "@material-ui/core/Container";
@@ -23,8 +23,12 @@ import { commonStyles } from "../styles/common";
 import RaceParticipantListComponent from "./race-participant-list.component";
 import RaceRegistrationListComponent from "./race-registration-list.component";
 import Optional from "optional-js";
+import RaceResultsComponent from "./race-results.component";
+import { RaceState } from "../../model/types/races.model";
+import { CSSProperties } from "@material-ui/core/styles/withStyles";
+import { needToSubscribeToRaceResults } from "../../model/actions/race.results.actions";
 
-const useStyles = makeStyles((theme: Theme) => {
+const styles = (theme: Theme) => {
   const common = commonStyles(theme);
   return {
     "@global": common.global,
@@ -32,26 +36,26 @@ const useStyles = makeStyles((theme: Theme) => {
     paper: {
       ...common.paper,
       marginTop: theme.spacing(2)
-    },
+    } as CSSProperties,
     logout: {
       margin: theme.spacing(3, 0, 2)
-    },
+    } as CSSProperties,
     heading: common.heading,
     profileContainer: common.profileContainer,
     justifyText: {
       textAlign: "justify"
-    },
+    } as CSSProperties,
     centerText: {
       textAlign: "center"
-    }
+    } as CSSProperties
   };
-});
+};
 
 interface RaceInfoParams {
   id: string;
 }
 
-interface RaceInfoComponentProps extends RouteComponentProps<RaceInfoParams> {
+interface RaceInfoProps extends RouteComponentProps<RaceInfoParams> {
   user: Optional<UserInfo>;
   raceItemExt: RaceItemExt;
   racerProfiles: Optional<RacerProfile[]>;
@@ -62,69 +66,134 @@ interface RaceInfoComponentProps extends RouteComponentProps<RaceInfoParams> {
     added: RacerProfile[],
     removed: RacerProfile[]
   ) => void;
+  onSubscribeToResults: (userUUID: string, raceID: number) => void;
+  onUnsubscribeFromResults: (userUUID: string, raceID: number) => void;
 }
 
-const RaceInfoComponent: React.FC<RaceInfoComponentProps> = (props: RaceInfoComponentProps) => {
-  const classes = useStyles();
-  useEffect(() => {
-    const raceID = props.match.params.id;
-    props.onDataReload(raceID ? parseInt(raceID) : DEFAULT_ID);
-  }, [props.match.params.id]);
-  const registrationUpdateHandler = (added: RacerProfile[], removed: RacerProfile[]): void => {
-    props.onRegistrationUpdate(
-      props.user.orElse(INITIAL_USER_INFO).uuid,
-      props.raceItemExt.id,
+class RaceInfoComponent extends React.Component<RaceInfoProps> {
+  componentDidMount() {
+    const raceID = this.props.match.params.id;
+    this.props.onDataReload(raceID ? parseInt(raceID) : DEFAULT_ID);
+    this.subscribeToResults(this.props.raceItemExt.id, this.props.raceItemExt.state);
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFromResults(this.props.raceItemExt.id);
+  }
+
+  componentDidUpdate(prevProps: RaceInfoProps) {
+    if (this.props.raceItemExt.id !== prevProps.raceItemExt.id) {
+      this.unsubscribeFromResults(prevProps.raceItemExt.id);
+
+      if (this.props.raceItemExt.id !== DEFAULT_ID) {
+        this.subscribeToResults(this.props.raceItemExt.id, this.props.raceItemExt.state);
+      }
+    }
+  }
+
+  subscribeToResults = (raceID: number, state: RaceState): void => {
+    if (raceID && raceID !== DEFAULT_ID && needToSubscribeToRaceResults(state)) {
+      this.props.user.ifPresent(info => {
+        this.props.onSubscribeToResults(info.uuid, raceID);
+      });
+    }
+  };
+
+  unsubscribeFromResults = (raceID: number): void => {
+    this.props.user.ifPresent(info => {
+      this.props.onUnsubscribeFromResults(info.uuid, raceID);
+    });
+  };
+
+  registrationUpdateHandler = (added: RacerProfile[], removed: RacerProfile[]): void => {
+    this.props.onRegistrationUpdate(
+      this.props.user.orElse(INITIAL_USER_INFO).uuid,
+      this.props.raceItemExt.id,
       added,
       removed
     );
   };
 
-  if (props.raceItemExt.isFetching) {
-    return <FetchingComponent />;
-  } else {
-    return (
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Paper className={classes.paperTop}>
-          <Typography
-            id={RACE_ITEM_INFO_NAME}
-            component="h2"
-            variant="h4"
-            color="primary"
-            className={classes.centerText}
-            gutterBottom
-          >
-            {props.raceItemExt.name}
-          </Typography>
-          <Typography
-            id={RACE_ITEM_INFO_DATE_LOCATION}
-            component="p"
-            variant="h6"
-            className={classes.centerText}
-          >
-            {`${props.raceItemExt.location}, ${new Date(
-              props.raceItemExt.date
-            ).toLocaleDateString()}`}
-          </Typography>
-          <Typography
-            id={RACE_ITEM_INFO_DESCR}
-            color="textSecondary"
-            className={classes.justifyText}
-          >
-            {props.raceItemExt.description}
-          </Typography>
-        </Paper>
-        <RaceParticipantListComponent participants={props.raceItemExt.participants.items} />
-        <RaceRegistrationListComponent
-          loggedIn={props.user.isPresent()}
-          isUpdating={props.raceItemExt.participants.isFetching}
-          allProfiles={props.racerProfiles}
-          registeredProfiles={props.raceItemExt.participants.items}
-          onRegistrationUpdate={registrationUpdateHandler}
-        />
-      </Container>
+  getDisableRegistrationReason = (): Optional<string> => {
+    return Optional.ofNullable(
+      this.props.raceItemExt.state !== RaceState.NOT_STARTED
+        ? "Регистрация закончена"
+        : !this.props.user.isPresent()
+        ? "Войдите для регистрации"
+        : this.props.racerProfiles.isPresent()
+        ? null
+        : "Создайте профиль для регистрации"
     );
-  }
-};
+  };
 
-export default RaceInfoComponent;
+  getDesabledResultsReason = (): Optional<string> => {
+    return Optional.ofNullable(
+      this.props.raceItemExt.state === RaceState.NOT_STARTED ? "Гонка не началась" : null
+    );
+  };
+
+  render() {
+    // @ts-ignore
+    const { classes } = this.props;
+
+    if (this.props.raceItemExt.isFetching) {
+      return <FetchingComponent />;
+    } else {
+      return (
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Paper className={classes.paperTop}>
+            <Typography
+              id={RACE_ITEM_INFO_NAME}
+              component="h2"
+              variant="h4"
+              color="primary"
+              className={classes.centerText}
+              gutterBottom
+            >
+              {this.props.raceItemExt.name}
+            </Typography>
+            <Typography
+              id={RACE_ITEM_INFO_DATE_LOCATION}
+              component="p"
+              variant="h6"
+              className={classes.centerText}
+            >
+              {`${this.props.raceItemExt.location}, ${new Date(
+                this.props.raceItemExt.date
+              ).toLocaleDateString()}`}
+            </Typography>
+            <Typography
+              id={RACE_ITEM_INFO_DESCR}
+              color="textSecondary"
+              className={classes.justifyText}
+            >
+              {this.props.raceItemExt.description}
+            </Typography>
+          </Paper>
+          <RaceParticipantListComponent participants={this.props.raceItemExt.participants.items} />
+          <RaceRegistrationListComponent
+            disabled={
+              !this.props.user.isPresent() ||
+              this.props.raceItemExt.state !== RaceState.NOT_STARTED ||
+              !this.props.racerProfiles.isPresent()
+            }
+            disableReason={this.getDisableRegistrationReason()}
+            isUpdating={this.props.raceItemExt.participants.isFetching}
+            allProfiles={this.props.racerProfiles}
+            registeredProfiles={this.props.raceItemExt.participants.items}
+            onRegistrationUpdate={this.registrationUpdateHandler}
+          />
+          <RaceResultsComponent
+            disabled={this.props.raceItemExt.state === RaceState.NOT_STARTED}
+            disableReason={this.getDesabledResultsReason()}
+            participants={this.props.raceItemExt.participants.items}
+            results={this.props.raceItemExt.results.items}
+          />
+        </Container>
+      );
+    }
+  }
+}
+
+export default withStyles(styles, { withTheme: true })(RaceInfoComponent);

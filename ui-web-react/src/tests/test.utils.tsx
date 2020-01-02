@@ -12,7 +12,11 @@ import {
   INITIAL_RACER_PROFILES,
   INITIAL_ALERTS_QUEUE,
   INITIAL_USER,
-  INITIAL_SELECTED_RACE
+  INITIAL_SELECTED_RACE,
+  INITIAL_RACE_RESULTS,
+  RacerResults,
+  RaceResults,
+  RaceParticipants
 } from "../model/types/datatypes";
 import {
   RaceItem,
@@ -24,6 +28,8 @@ import {
   Races
 } from "../model/types/datatypes";
 import Optional from "optional-js";
+import { RaceState } from "../model/types/races.model";
+import { Role } from "../model/types/roles.model";
 
 // const {history, location, match} = routerTestProps(RACES_INFO, {id: "1"})
 // const {findByText} = renderWithReduxAndRouter(<RaceInfoContainer history={history} location={location} match={match}/>, DEFAULT_STORED_STATE)
@@ -93,16 +99,68 @@ export const inputText = (text: string) => {
   };
 };
 
+export function compareOptionalSimple<T>(item1: Optional<T>, item2: Optional<T>): boolean {
+  return compareOptional(item1, item2, (v1: T, v2: T) => v1 === v2);
+}
+
+export function compareOptional<T>(
+  item1: Optional<T>,
+  item2: Optional<T>,
+  compFn: (v1: T, v2: T) => boolean
+): boolean {
+  expect(item1.isPresent()).toEqual(item2.isPresent());
+  if (item1.isPresent() && item2.isPresent()) {
+    item1.ifPresent(value1 => {
+      item2.ifPresent(value2 => {
+        return compFn(value1, value2);
+      });
+    });
+    return true;
+  } else {
+    return false;
+  }
+}
+
+export function compareOptionalList<T>(
+  item1: Optional<T[]>,
+  item2: Optional<T[]>,
+  compFn: (v1: T, v2: T) => void
+): void {
+  expect(item1.isPresent()).toEqual(item2.isPresent());
+  item1.ifPresent(list1 => {
+    item2.ifPresent(list2 => {
+      expect(list1.length).toEqual(list2.length);
+      for (let i = 0; i < list1.length; i++) {
+        compFn(list1[i], list2[i]);
+      }
+    });
+  });
+}
+
 export const compareProfiles = (rp1: RacerProfile, rp2: RacerProfile): void => {
   expect(rp1.uuid).toEqual(rp2.uuid);
   expect(rp1.userUUID).toEqual(rp2.userUUID);
   expect(rp1.name).toEqual(rp2.name);
   expect(rp1.bikeNumber).toEqual(rp2.bikeNumber);
-  if (rp1.userUUID.isPresent()) {
-    expect(rp1.userUUID.get()).toEqual(rp2.userUUID.get());
-  } else {
-    expect(rp2.userUUID.isPresent()).toBeFalsy();
-  }
+  expect(compareOptionalSimple(rp1.userUUID, rp2.userUUID)).toBeTruthy();
+};
+
+export const compareRacerResults = (rr1: RacerResults, rr2: RacerResults): void => {
+  expect(rr1.racerUUID).toEqual(rr2.racerUUID);
+  expect(compareOptionalSimple(rr1.position, rr2.position)).toBeTruthy();
+  expect(compareOptionalSimple(rr1.time, rr2.time)).toBeTruthy();
+  expect(compareOptionalSimple(rr1.points, rr2.points)).toBeTruthy();
+  expect(compareOptionalSimple(rr1.laps, rr2.laps)).toBeTruthy();
+};
+
+export const compareRaceResults = (res1: RaceResults, res2: RaceResults): void => {
+  expect(res1.isFetching).toEqual(res2.isFetching);
+  compareOptionalList(res1.items, res2.items, compareRacerResults);
+};
+
+export const compareRaceParticipants = (part1: RaceParticipants, part2: RaceParticipants): void => {
+  expect(part1.isFetching).toEqual(part2.isFetching);
+  compareOptionalList(part1.items, part2.items, compareProfiles);
 };
 
 export const compareRaceItems = (ri1: RaceItemExt, ri2: RaceItemExt): void => {
@@ -111,24 +169,9 @@ export const compareRaceItems = (ri1: RaceItemExt, ri2: RaceItemExt): void => {
   expect(ri1.date).toEqual(ri2.date);
   expect(ri1.location).toEqual(ri2.location);
   expect(ri1.description).toEqual(ri2.description);
-  if (!!ri1.participants) {
-    expect(!!ri2.participants).toBeTruthy();
-
-    const partItems1 = ri1.participants.items;
-    const partItems2 = ri2.participants.items;
-    if (partItems1.isPresent()) {
-      const items1 = partItems1.orElse([]);
-      const items2 = partItems2.orElse([]);
-      expect(items1.length).toEqual(items2.length);
-      for (let i = 0; i < items1.length; i++) {
-        compareProfiles(items1[i], items2[i]);
-      }
-    } else {
-      expect(partItems2.isPresent()).toBeFalsy();
-    }
-  } else {
-    expect(!!ri2.participants).toBeFalsy();
-  }
+  expect(ri1.state).toEqual(ri2.state);
+  compareRaceParticipants(ri1.participants, ri2.participants);
+  compareRaceResults(ri1.results, ri2.results);
 };
 
 export const compareRaceItemsSimple = (ri1: RaceItem, ri2: RaceItem): void => {
@@ -136,6 +179,7 @@ export const compareRaceItemsSimple = (ri1: RaceItem, ri2: RaceItem): void => {
   expect(ri1.date).toEqual(ri2.date);
   expect(ri1.location).toEqual(ri2.location);
   expect(ri1.name).toEqual(ri2.name);
+  expect(ri1.state).toEqual(ri2.state);
 };
 
 export const compareRaces = (r1: Races, r2: Races): void => {
@@ -171,54 +215,58 @@ export const UNKNOWN_ACTION_TYPE = "UNKNOWN_ACTION_TYPE";
 export const DEFAULT_RACE_ITEM_1: RaceItem = {
   id: 1,
   name: "Grand Prix of France",
+  state: RaceState.NOT_STARTED,
   date: 1558040400000,
   location: "Le Mans, France"
 };
 export const DEFAULT_RACE_ITEM_2: RaceItem = {
   id: 2,
   name: "Grand Prix of Catalunya",
+  state: RaceState.NOT_STARTED,
   date: 1559854800000,
   location: "Barcelona, Spain"
 };
 export const DEFAULT_RACE_ITEM_3: RaceItem = {
   id: 3,
   name: "Grand Prix of Germany",
+  state: RaceState.NOT_STARTED,
   date: 1561064400000,
   location: "Sachsenring, Germany"
 };
 export const DEFAULT_RACE_ITEM_4: RaceItem = {
   id: 4,
   name: "Grand Prix of Great Britain",
+  state: RaceState.NOT_STARTED,
   date: 1567112400000,
   location: "Silverstone, Great Britain"
 };
 export const DEFAULT_RACE_ITEM_EXT_1: RaceItemExt = {
   ...DEFAULT_RACE_ITEM_1,
   isFetching: false,
-  description:
-    "Description for Grand Prix of France.",
-  participants: { ...INITIAL_RACER_PROFILES }
+  description: "Description for Grand Prix of France.",
+  participants: { ...INITIAL_RACER_PROFILES },
+  results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACE_ITEM_EXT_2: RaceItemExt = {
   ...DEFAULT_RACE_ITEM_2,
   isFetching: false,
-  description:
-    "Description for Grand Prix of Catalunya.",
-  participants: { ...INITIAL_RACER_PROFILES }
+  description: "Description for Grand Prix of Catalunya.",
+  participants: { ...INITIAL_RACER_PROFILES },
+  results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACE_ITEM_EXT_3: RaceItemExt = {
   ...DEFAULT_RACE_ITEM_3,
   isFetching: false,
-  description:
-    "Description for Grand Prix of Germany.",
-  participants: { ...INITIAL_RACER_PROFILES }
+  description: "Description for Grand Prix of Germany.",
+  participants: { ...INITIAL_RACER_PROFILES },
+  results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACE_ITEM_EXT_4: RaceItemExt = {
   ...DEFAULT_RACE_ITEM_4,
   isFetching: false,
-  description:
-    "Description for Grand Prix of Great Britain.",
-  participants: { ...INITIAL_RACER_PROFILES }
+  description: "Description for Grand Prix of Great Britain.",
+  participants: { ...INITIAL_RACER_PROFILES },
+  results: { ...INITIAL_RACE_RESULTS }
 };
 export const DEFAULT_RACER_PROFILE_1: RacerProfile = {
   uuid: "d816d19e-0eb0-11ea-8d71-362b9e155667",
@@ -245,6 +293,35 @@ export const DEFAULT_RACER_PROFILE_4: RacerProfile = {
   bikeNumber: 93
 };
 
+export const DEFAULT_RACER_RESULTS_1: RacerResults = {
+  racerUUID: "d816d19e-0eb0-11ea-8d71-362b9e155667",
+  position: Optional.of(1),
+  time: Optional.of(1577148081469),
+  laps: Optional.of(27),
+  points: Optional.of(25)
+};
+export const DEFAULT_RACER_RESULTS_2: RacerResults = {
+  racerUUID: "d816d2f2-0eb0-11ea-8d71-362b9e155667",
+  position: Optional.of(2),
+  time: Optional.of(1577148082495),
+  laps: Optional.of(27),
+  points: Optional.of(20)
+};
+export const DEFAULT_RACER_RESULTS_3: RacerResults = {
+  racerUUID: "d816d428-0eb0-11ea-8d71-362b9e155667",
+  position: Optional.of(3),
+  time: Optional.of(1577148083878),
+  laps: Optional.of(27),
+  points: Optional.of(16)
+};
+export const DEFAULT_RACER_RESULTS_4: RacerResults = {
+  racerUUID: "d816d554-0eb0-11ea-8d71-362b9e155667",
+  position: Optional.of(4),
+  time: Optional.of(1577148084795),
+  laps: Optional.of(27),
+  points: Optional.of(13)
+};
+
 export const DEFAULT_RACE_ITEM_EXT: RaceItemExt = {
   isFetching: false,
   id: 5,
@@ -256,6 +333,11 @@ export const DEFAULT_RACE_ITEM_EXT: RaceItemExt = {
   participants: {
     isFetching: false,
     items: Optional.of([DEFAULT_RACER_PROFILE_1, DEFAULT_RACER_PROFILE_2])
+  },
+  state: RaceState.NOT_STARTED,
+  results: {
+    isFetching: false,
+    items: Optional.of([DEFAULT_RACER_RESULTS_1, DEFAULT_RACER_RESULTS_2])
   }
 };
 export const DEFAULT_USER_INFO: UserInfo = {
@@ -263,7 +345,7 @@ export const DEFAULT_USER_INFO: UserInfo = {
   name: "Valentino Rossi",
   email: "valentino.rossi@yamaha.jp",
   password: "rossiGp46",
-  role: "user"
+  role: Role.ADMIN
 };
 export const DEFAULT_ALERT_1: Alert = {
   id: 1,

@@ -12,12 +12,14 @@ import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.firefox.FirefoxDriver
 import org.openqa.selenium.ie.InternetExplorerDriver
 import org.openqa.selenium.support.ui.ExpectedConditions
+import org.openqa.selenium.support.ui.Select
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.io.File
 import java.net.URISyntaxException
 import java.nio.file.Paths
 
 private const val EXCEPTION_TIMEOUT = 5 // in seconds
+private const val LONG_SLEEP_TIMEOUT: Long = 5000;
 
 const val HEADER_ENTER_BUTTON = "headerEnterButtonID"
 const val HEADER_ACCOUNT_BUTTON = "headerAccountButtonID"
@@ -52,6 +54,14 @@ const val RACE_REGISTRATION_LIST_PROFILE_ITEM = "raceRegistrationListProfileItem
 const val RACE_REGISTRATION_LIST_HEADER = "raceRegistrationListHeader"
 const val RACE_REGISTRATION_LIST_EXPAND_BUTTON = "raceRegistrationListExpandButton"
 const val RACE_REGISTRATION_LIST_SUBMIT_BUTTON = "raceRegistrationListSubmitButton"
+const val RACE_RESULTS_EXPAND_BUTTON = "raceResultsExpandButton";
+const val RACE_RESULTS_HEADER = "raceResultsHeader";
+const val RACE_RESULTS_TABLE = "raceResultsTable";
+const val ADMIN_RACE_INFO_EXPAND_BUTTON = "adminRaceInfoExpandButton";
+const val ADMIN_RACE_INFO_HEADER = "adminRaceInfoHeader";
+const val ADMIN_RACE_INFO_NAME_COMBO = "adminRaceInfoNameCombo";
+const val ADMIN_RACE_INFO_STATE_COMBO = "adminRaceInfoStateCombo";
+const val ADMIN_RACE_INFO_SUBMIT_BUTTON = "adminRaceInfoSubminButton";
 const val ALERT_HEADER = "alertHeader"
 const val ALERT_CONTENT = "alertContent"
 
@@ -149,6 +159,12 @@ abstract class BaseTest {
         Assertions.assertTrue(childElement == null)
     }
 
+    protected fun nestedElementExists(parentFieldID: String?, childXPath: String?) {
+        val parentElement = wait!!.until(ExpectedConditions.presenceOfElementLocated(By.id(parentFieldID)))
+        val childElement = wait!!.until(ExpectedConditions.presenceOfNestedElementLocatedBy(parentElement, By.xpath(childXPath)))
+        Assertions.assertTrue(childElement != null)
+    }
+
     protected fun clickElement(fieldID: String?, waitClickable: Boolean = true) {
         var element = wait!!.until(ExpectedConditions.presenceOfElementLocated(By.id(fieldID)))
         if (waitClickable) {
@@ -157,6 +173,14 @@ abstract class BaseTest {
         Assertions.assertTrue(element.isEnabled)
         sleep()
         element.click()
+    }
+
+    protected fun selectDropdownOption(fieldID: String, value: String) {
+        val element = wait!!.until(ExpectedConditions.presenceOfElementLocated(By.id(fieldID)))
+        val dropdown = Select(
+                wait!!.until(ExpectedConditions.elementToBeClickable(element))
+        )
+        dropdown.selectByVisibleText(value)
     }
 
     protected fun checkText(fieldID: String?, value: String?, assertText: String?) {
@@ -209,8 +233,12 @@ abstract class BaseTest {
     }
 
     protected fun sleep() {
+        sleepImpl(100)
+    }
+
+    private fun sleepImpl(timeout: Long) {
         try {
-            Thread.sleep(100)
+            Thread.sleep(timeout)
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }
