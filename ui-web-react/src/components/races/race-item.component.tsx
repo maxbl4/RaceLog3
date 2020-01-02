@@ -14,6 +14,7 @@ import {
   RACE_ITEM_CARD_DATE,
   RACE_ITEM_CARD_MORE_BUTTON
 } from "../../model/utils/constants";
+import RaceStateComponent from "./race.state.component";
 
 const useStyles = makeStyles({
   card: {
@@ -46,7 +47,8 @@ const RaceItemComponent: React.FC<RaceItemProps> = (props: RaceItemProps) => {
           color="textSecondary"
           gutterBottom
         >
-          {new Date(props.item.date).toLocaleDateString()}
+          <RaceStateComponent state={props.item.state} />{" "}
+          <span>{new Date(props.item.date).toLocaleDateString()}</span>
         </Typography>
         <Typography
           id={createID(RACE_ITEM_CARD_NAME)}
