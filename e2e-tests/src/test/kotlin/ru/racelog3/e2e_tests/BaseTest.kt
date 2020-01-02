@@ -236,10 +236,6 @@ abstract class BaseTest {
         sleepImpl(100)
     }
 
-    protected fun longSleep() {
-        sleepImpl(LONG_SLEEP_TIMEOUT)
-    }
-
     private fun sleepImpl(timeout: Long) {
         try {
             Thread.sleep(timeout)
