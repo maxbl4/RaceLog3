@@ -3,7 +3,8 @@ import {
   MESH_API_LOGOUT,
   MESH_API_ABOUT_ME,
   getServerURL,
-  MESH_API_USERS
+  MESH_API_USERS,
+  RACE_RESULTS_DATA
 } from "../utils/constants";
 import { LoggingService } from "../utils/logging-service";
 import Optional from "optional-js";
@@ -12,7 +13,7 @@ import { ITransport } from "./transport";
 import * as Cookies from "js-cookie";
 import { COOKIE_MESH_TOKEN } from "../utils/constants";
 import { INITIAL_USER_INFO } from "../types/datatypes";
-import { EventChannel } from "redux-saga";
+import { EventChannel, eventChannel } from "redux-saga";
 import { RaceState } from "../types/races.model";
 
 type CMSResponse = {
@@ -96,6 +97,18 @@ async function executeQuery(
 }
 
 export class MeshApi implements ITransport {
+  private channel: EventChannel<Optional<RacerResults[]>>;
+  private eventSource: EventSource;
+
+  constructor() {
+    this.eventSource = new EventSource(getServerURL());
+    this.channel = {
+      take: () => {},
+      flush: () => {},
+      close: () => {}
+    };
+  }
+
   async login(userName: string, userPassword: string): Promise<any> {
     const res = await meshLogin(userName, userPassword);
     return new Promise<string>((resolve, reject) => {
@@ -193,15 +206,38 @@ export class MeshApi implements ITransport {
     throw new Error("Method not implemented.");
   }
 
+  // Exmaples could be find here:
+  // https://medium.com/javascript-in-plain-english/real-time-data-with-redux-saga-event-channels-and-socket-io-ad6e64dbefd9?
+  // https://github.com/slava-lu/saga-socket-example
+  // or here
+  // https://dzone.com/articles/react-in-real-time
+  // https://github.com/RestDB/clientexamples/tree/master/realtime-react
+
   subscribeToRaceResults(userUUID: string, raceID: number): EventChannel<Optional<RacerResults[]>> {
-    // Exmaples could be find here:
-    // https://medium.com/javascript-in-plain-english/real-time-data-with-redux-saga-event-channels-and-socket-io-ad6e64dbefd9?
-    // https://github.com/slava-lu/saga-socket-example
-    throw new Error("Method not implemented.");
+    // We could leave this solution as is, or implement PING and queries for results on some events
+    this.channel = eventChannel(emitter => {
+      const dataHandler = (data: Event) => {
+        emitter(this.extractRaceResults(data));
+      };
+      this.eventSource.addEventListener(RACE_RESULTS_DATA, dataHandler);
+      return () => {
+        this.eventSource.removeEventListener(RACE_RESULTS_DATA, dataHandler);
+      };
+    });
+
+    return this.channel;
   }
 
+  extractRaceResults = (data: Event): Optional<RacerResults[]> => {
+    // TODO
+    return Optional.empty<RacerResults[]>();
+  };
+
   async unsubscribeFromRaceResults(userUUID: string, raceID: number): Promise<any> {
-    throw new Error("Method not implemented.");
+    return new Promise<any>(resolve => {
+      this.channel.close();
+      resolve();
+    });
   }
 
   async changeRaceState(raceID: number, state: RaceState): Promise<any> {

@@ -21,6 +21,9 @@ export const MESH_API_LOGOUT = MESH_API_PREFIX + "/auth/logout";
 export const MESH_API_ABOUT_ME = MESH_API_PREFIX + "/auth/me";
 export const MESH_API_USERS = MESH_API_PREFIX + "/users";
 
+export const RACE_RESULTS_PING = "/results/ping";
+export const RACE_RESULTS_DATA = "/results/data";
+
 export const LOGGER_PATH = "/logger";
 
 let currentAlertID = 1;
